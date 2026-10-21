@@ -1,0 +1,11 @@
+/* 기본 전체 글꼴 설정: Noto Sans KR 적용 */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
