@@ -39,7 +39,7 @@ a:hover,
 a:focus {
   color: var(--accent-color); /* 👈 마우스로 누른 후에도 포커스가 남아있어 계속 보라색 유지 */
 }
-}
+
 
 ul {
   list-style: none;
