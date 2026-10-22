@@ -1,20 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap');
-/* =========================================
-   다시, 나 - 포트폴리오 스타일
-   화이트 + 블랙 + 퍼플 포인트
-========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;700&display=swap');
 
-/* 1. 색상 변수 */
+/* ==========================================================================
+   01. 전역 디자인 변수 (Global Design Variables)
+   ========================================================================== */
 :root {
-  --main-color: #171717;
-  --point-color: #B77BDD;
-  --text-color: #333333;
-  --bg-color: #FAFAFA;
-  --white: #FFFFFF;
-  /* ★ 추가 */
+  --main-color: #171717;      /* 메인 블랙 */
+  --point-color: #B77BDD;     /* 포인트 라벤더 퍼플 */
+  --text-color: #333333;      /* 본문 텍스트 차콜 */
+  --bg-color: #FAFAFA;        /* 기본 배경 오프화이트 */
+  --white: #FFFFFF;           /* 순백색 */
 }
 
-/* 2. 기본 설정 */
+/* ==========================================================================
+   02. 기본 스타일 및 리셋 (Base Styles & Reset)
+   ========================================================================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -26,245 +25,319 @@ html {
 }
 
 body {
-  font-family: 'Noto Sans KR', sans-serif;
-  color: var(--text-color);
   background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Noto Sans KR', sans-serif;
   line-height: 1.7;
+  word-break: keep-all;
 }
 
-img {
+img,
+svg {
+  display: block;
   max-width: 100%;
   height: auto;
-  display: block;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
 }
 
 ul {
   list-style: none;
 }
 
-/* =========================================
-   3. 헤더와 메뉴
-========================================= */
+a {
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+  transition: color 0.3s ease;
+}
 
+a:hover {
+  color: var(--point-color);
+}
+
+a:focus {
+  outline: none;
+}
+
+/* ==========================================================================
+   03. 헤더 및 내비게이션 (Header & Navigation - Mobile First)
+   ========================================================================== */
 header {
   position: sticky;
   top: 0;
   z-index: 1000;
-
-  /* ★ 수정: 로고와 메뉴 가로 정렬 */
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-
+  gap: 16px;
+  padding: 20px 6%;
   background-color: var(--main-color);
   color: var(--white);
-
-  /* ★ 수정: 헤더 여백 축소 */
-  padding: 50px 6%;
-
-  /* ★ 수정: 은은한 그림자 */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Again, 로고 */
+/* 로고 타이틀 */
 header h1 {
-  font-family: 'Amatic SC', cursive;
-  font-size: 5rem;
-  /* font-weight: 700; */
-  color: var(--white);
-  letter-spacing: 3px; /* 글자 사이 간격 */
-
-  /* ★ 수정: 기존 아래쪽 여백 제거 */
   margin: 0;
-
-  /* ★ 추가: 로고 줄바꿈 방지 */
+  color: var(--white);
+  font-family: 'Amatic SC', cursive;
+  font-size: 3rem;
+  letter-spacing: 3px;
   white-space: nowrap;
 }
 
-/* 메뉴 영역 */
-header nav {
-  margin: 0;
-}
-
-/* 메뉴 가로 정렬 */
-header nav ul {
-  display: flex;
-  align-items: center;
-
-  /* ★ 수정: 메뉴 간격 */
-  gap: 32px;
-
-  /* ★ 수정: 위쪽 여백 제거 */
-  margin: 0;
-  padding: 0;
-
-  list-style: none;
-}
-
-/* 메뉴 링크 */
-/* header nav a {
-  display: block;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--white);
-
-  transition: color 0.3s ease;
-} */
-
-/* 손글씨 메뉴 */
-nav a {
-  font-family: 'Amatic SC', cursive;
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #FFFFFF;
-  white-space: nowrap;
-}
-
-/* 메뉴 앞에 [ 추가 */
-nav a::before {
-  content: '[';
-  margin-right: 8px;
-}
-
-/* 메뉴 뒤에 ] 추가 */
-nav a::after {
-  content: ']';
-  margin-left: 8px;
-}
-
-/* 메뉴 마우스 오버 */
-header nav a:hover {
+header h1 a:hover {
   color: var(--point-color);
 }
 
-/* =========================================
-   4. 본문 공통
-========================================= */
-
-main {
-  max-width: 1100px;
+/* 내비게이션 컨테이너 */
+header nav {
   width: 100%;
+  margin: 0;
+}
+
+/* 메뉴 목록 */
+header nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16px 20px;
+}
+
+/* 손글씨 메뉴 링크 */
+nav a {
+  display: inline-block;
+  color: var(--white);
+  font-family: 'Amatic SC', cursive;
+  font-size: 2rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+nav a::before {
+  content: '[';
+  margin-right: 6px;
+}
+
+nav a::after {
+  content: ']';
+  margin-left: 6px;
+}
+
+nav a.active {
+  color: var(--point-color);
+}
+
+/* ==========================================================================
+   04. 본문 공통 레이아웃 및 타이틀 (Main Common & Titles)
+   ========================================================================== */
+main {
+  width: 100%;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
 section {
-  padding: 48px 0;
+  padding: 44px 0;
   border-bottom: 3px dotted #cac9c8;
-
-  /* ★ 수정: 고정 헤더 높이 고려 */
-  scroll-margin-top: 110px;
+  scroll-margin-top: 140px;
 }
 
 section:last-child {
   border-bottom: none;
 }
 
-/* 섹션 제목 */
 section h2 {
-  font-size: 1.5rem;
-  color: var(--main-color);
-
-  margin-bottom: 0;
   width: fit-content;
-
-  /* ★ 추가: 제목과 밑줄 간격 축소 */
+  margin-bottom: 16px;
+  color: var(--main-color);
+  font-size: 1.6rem;
   line-height: 1.2;
 }
 
-/* 퍼플 밑줄 */
+/* 퍼플 밑줄 (공통) */
 section h2::after {
   content: '';
   display: block;
-
   width: 100%;
-  height: 10px;
-
-  /* ★ 추가: 밑줄 간격 */
+  height: 6px;
   margin-top: 4px;
-
   background-color: var(--point-color);
   border-radius: 1px;
 }
 
-/* =========================================
-   5. 소개 영역
-========================================= */
-
-#about {
-  display: grid;
-  /* gap: 16px; */
+/* ==========================================================================
+   05. 소개 전용 섹션 (About Section - Hand-Drawn Comic Theme)
+   ========================================================================== */
+#about-page {
+  padding: 40px 0 60px 0;
+  border-bottom: none;
 }
 
-#about img {
-  width: 500px;
-  height: 200px;
-  /* border-radius: 50%; */
-
-  object-fit: cover;
-  border: 1px solid var(--white);
-
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  margin: 20px 0px;
+.about-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
 }
 
-#about h2 {
-  /* font-size: 2rem; */
-  margin-bottom: 0;
+/* 좌측 일러스트 영역 */
+.about-illust {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#about h2::after {
-  margin-top: 4px;
+/* 캐릭터 이미지 크기 및 렌더링 스타일 */
+.about-profile-img {
+  width: 100%;
+  max-width: 280px; /* 모바일 기준 폭 */
+  height: auto;
+  display: block;
+  /* 💡 핵심: 이미지의 흰색 배경을 100% 투명하게 투과시켜 웹페이지 배경과 합성합니다 */
+  mix-blend-mode: multiply;
+
+  /* 선명도 유지 옵션 */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
-#about p {
-  font-size: 1.1rem;
+/* 우측 손글씨 텍스트 본문 */
+.about-bio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-family: 'Gaegu', cursive;
 }
 
-/* =========================================
-   6. 경력 카드
-========================================= */
+.bio-intro {
+  color: #a2a1a1;
+  font-family: 'Amatic SC', cursive;
+  font-size: 1.8rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  line-height: 1;
+}
 
-/* ★ 수정: HTML의 #experience 기준 */
+/* 대형 이름 손글씨 (글자 너비만큼 박스 크기 자동 맞춤) */
+.bio-name {
+  width: fit-content;
+  margin: 4px 0 12px 0;
+  color: var(--main-color);
+  font-family: 'Amatic SC', cursive;
+  font-size: 2.4rem;
+  letter-spacing: 4px;
+  line-height: 1;
+}
+
+/* 글자 길이에 정확히 100% 맞춰지는 퍼플 밑줄 */
+.bio-name::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 10px;
+  margin-top: 6px;
+  background-color: var(--point-color);
+  /* border-radius: 3px; */
+}
+
+.bio-sub {
+  margin-bottom: 24px;
+  color: var(--point-color);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+/* 손으로 그린 테두리의 소개 스토리 박스 (캐릭터 프레임과 동일한 펜 드로잉 단일선) */
+/* 캐릭터 액자와 완벽히 일치하는 손그림 펜 드로잉 박스 */
+.bio-story.hand-drawn-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 520px;
+  padding: 30px 32px;
+  background-color: var(--white);
+  
+  /* 1. 손으로 그은 듯한 불규칙한 펜 외곽선 */
+  border: 3px solid var(--main-color);
+  border-radius: 4px 255px 5px 225px / 255px 5px 225px 4px;
+  box-shadow: none;
+  
+  /* 2. SVG 잉크 왜곡 필터 적용 (직선이 아닌 손떨림 라인 완성) */
+  filter: url(#hand-drawn-filter);
+  transform: rotate(-0.4deg); /* 손으로 그린 듯한 미세한 기울기 */
+}
+
+/* 3. Tiago 드로잉 특유의 모서리 삐져나온 펜선 디테일 */
+.bio-story.hand-drawn-box::before,
+.bio-story.hand-drawn-box::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+/* 우측 상단 모서리 삐침 */
+.bio-story.hand-drawn-box::before {
+  top: -7px;
+  right: 12px;
+  width: 2px;
+  height: 14px;
+  background-color: var(--main-color);
+  transform: rotate(6deg);
+}
+
+/* 좌측 하단 모서리 삐침 */
+.bio-story.hand-drawn-box::after {
+  bottom: 8px;
+  left: -8px;
+  width: 16px;
+  height: 2.5px;
+  background-color: var(--main-color);
+  transform: rotate(-4deg);
+}
+
+.bio-story.hand-drawn-box p {
+  color: var(--text-color);
+  font-size: 1.55rem;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   06. 메인 콘텐츠 섹션 (Experience, Skills, Education)
+   ========================================================================== */
 #experience {
   display: grid;
   grid-template-columns: 1fr;
-  /* gap: 16px; */
+  gap: 16px;
 }
 
 #experience h2 {
   grid-column: 1 / -1;
-  /* margin-bottom: 4px; */
+  justify-self: start;
 }
 
 #experience article {
-  background-color: var(--white);
   padding: 20px;
-  border-radius: 12px;
-
+  background-color: var(--white);
   border-left: 6px solid var(--main-color);
-
+  border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 #experience h3 {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
+  color: var(--main-color);
 }
 
 #experience article p:first-of-type {
+  margin: 4px 0 8px 0;
   color: var(--point-color);
+  font-size: 0.95rem;
   font-weight: 700;
-  font-size: 0.9rem;
 }
-
-/* =========================================
-   7. 역량 · 교육 목록
-========================================= */
 
 #skills ul,
 #education ul {
@@ -274,9 +347,10 @@ section h2::after {
 
 #skills li,
 #education li {
-  background-color: var(--white);
   padding: 14px 18px;
+  background-color: var(--white);
   border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
 #skills li::before {
@@ -290,107 +364,137 @@ section h2::after {
   color: var(--point-color);
 }
 
-/* =========================================
-   8. 문의 영역
-========================================= */
-
-/* #contact {
-  text-align: center;
-} */
-
-/* ★ 수정: 가운데 정렬 
-#contact h2 {
-  margin-left: auto;
-  margin-right: auto;
-}*/
-
-#contact h2::after {
-  margin-top: 4px;
-}
-
-#contact img {
-  margin: 20px auto 0;
-  border-radius: 12px;
-}
-
-/* =========================================
-   9. 푸터
-========================================= */
-
+/* ==========================================================================
+   07. 푸터 (Footer - Exact Image Match)
+   ========================================================================== */
 footer {
-  background-color: var(--text-color);
-  color: #CCCCCC;
+  padding: 30px 20px;
+  background-color: var(--main-color);
+  border-top: 1px solid #292929;
   text-align: center;
-  padding: 20px;
-  font-size: 0.9rem;
 }
 
-/* =========================================
-   10. 반응형 - 태블릿
-========================================= */
+.footer-copy {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  color: #8E9AAF;
+  font-size: 1.05rem;
+  letter-spacing: 0.5px;
+}
 
-@media (max-width: 1024px) {
+/* 인라인 손글씨 포인트 텍스트 */
+.footer-brand {
+  color: var(--point-color);
+  font-family: 'Amatic SC', cursive;
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+/* ==========================================================================
+   08. 반응형: 태블릿 화면 스타일 (Min-width: 768px)
+   ========================================================================== */
+@media screen and (min-width: 768px) {
+  /* 08-1. 헤더 가로 배치 */
   header {
-    padding: 20px 4%;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 30px 6%;
   }
 
   header h1 {
-    font-size: 2rem;
-  }
-
-  header nav ul {
-    gap: 20px;
-  }
-
-  header nav a {
-    font-size: 0.85rem;
-  }
-}
-
-/* =========================================
-   11. 반응형 - 모바일
-========================================= */
-
-@media (max-width: 768px) {
-  header {
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    padding: 20px;
-  }
-
-  header h1 {
-    font-size: 2rem;
+    font-size: 3.5rem;
   }
 
   header nav {
-    width: 100%;
+    width: auto;
   }
 
   header nav ul {
-    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  nav a {
+    font-size: 2.2rem;
+  }
+
+  /* 08-2. About 섹션 2열 배치 */
+  .about-container {
+    flex-direction: row;
+    align-items: flex-start;
     justify-content: center;
-    gap: 12px 18px;
+    gap: 50px;
+    padding-top: 20px;
   }
 
-  header nav a {
-    font-size: 0.8rem;
+  .about-illust {
+    align-items: flex-start;
   }
 
-  main {
-    padding: 0 16px;
+  .about-profile-img {
+    max-width: 280px;
   }
 
-  section {
-    padding: 36px 0;
-    scroll-margin-top: 180px;
+  .about-bio {
+    align-items: flex-start;
+    text-align: left;
+    max-width: 480px;
   }
 
-  section h2 {
-    font-size: 1.5rem;
+  .bio-name {
+    font-size: 2.8rem;
   }
 
-  #about h2 {
-    font-size: 1.8rem;
+  /* 08-3. 메인 경력 및 목록 2열 그리드 */
+  #experience {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  #experience h2 {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  #skills ul,
+  #education ul {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+/* ==========================================================================
+   09. 반응형: 데스크톱 PC 화면 스타일 (Min-width: 1024px)
+   ========================================================================== */
+@media screen and (min-width: 1024px) {
+  header {
+    padding: 36px 6%;
+  }
+
+  header h1 {
+    font-size: 4.5rem ;
+  }
+
+  nav a {
+    font-size: 2.5rem;
+  }
+
+  .about-container {
+    gap: 70px;
+  }
+
+  .about-profile-img {
+    max-width: 310px;
+  }
+
+  .bio-name {
+    font-size: 3.2rem ;
+  }
+
+  .bio-story.hand-drawn-box p {
+    font-size: 1.65rem;
   }
 }

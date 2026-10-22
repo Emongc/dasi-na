@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Again, Emongc</title>
+
+    <!-- Google Fonts: Amatic SC, Gaegu, Noto Sans KR 연결 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- 외부 CSS 파일 연결: 상위 폴더(..)로 나간 뒤 css 폴더 참조 -->
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <!-- =========================================
+       헤더 영역: 로고 및 글로벌 내비게이션
+  ========================================= -->
+    <header>
+        <h1><a href="../index.html">Again,</a></h1>
+        <nav>
+            <ul>
+                <li><a href="about.html" class="active">ABOUT</a></li>
+                <li><a href="../index.html#experience">EXPERIENCE</a></li>
+                <li><a href="../index.html#skills">SKILLS</a></li>
+                <li><a href="../index.html#education">EDUCATION</a></li>
+                <li><a href="../index.html#contact">CONTACT</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- 손그림 잉크 떨림 효과를 주는 투명 필터 -->
+    <svg style="display: none;">
+        <defs>
+            <filter id="hand-drawn-filter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- =========================================
+       메인 콘텐츠 영역: About 단독 뷰
+  ========================================= -->
+    <main>
+        <section id="about-page">
+            <div class="about-container">
+
+                <!-- 좌측: 손으로 그린 테두리의 캐릭터 일러스트 프레임 -->
+                <div class="about-illust">
+                    <img src="../img/profile.png" alt="Creative Planner Emongc" class="about-profile-img">
+                </div>
+
+                <!-- 우측: 손글씨 텍스트 본문 -->
+                <div class="about-bio">
+                    <p class="bio-intro">MY NAME IS</p>
+                    <h2 class="bio-name">EMONG C</h2>
+                    <p class="bio-sub">BUT LOTS OF PEOPLE CALL ME "에몽씨"</p>
+
+                    <!-- 손으로 그린 테두리의 소개 스토리 박스 -->
+                    <div class="bio-story hand-drawn-box">
+                        <p>10년간 축적한 사무행정 실무와 체계적인 설계 능력을 바탕으로, 인공지능 도구를 활용해 더 빠르고 감각적인 결과를 만들어내는 크리에이터입니다.</p>
+                        <p>복잡한 문제를 직관적으로 정리하는 것을 좋아하며, 기획부터 비주얼 콘텐츠 제작, 바이브 코딩까지 유연하게 소화하는 올라운더를 지향합니다.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- =========================================
+       푸터 영역 (인라인 손글씨 포인트 적용)
+  ========================================= -->
+    <footer>
+        <p class="footer-copy">&copy; 2026 <span class="footer-brand">EMONGC</span>. All rights reserved.</p>
+    </footer>
+
+    <!-- 외부 JavaScript 연결: 상위 폴더(..)로 나간 뒤 js 폴더 참조 -->
+    <script src="../js/script.js"></script>
+</body>
+
+</html>
