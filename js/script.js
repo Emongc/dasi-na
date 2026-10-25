@@ -226,3 +226,25 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+
+// =========================================
+// CONTACT 글자 자동 한 글자씩 쪼개기 (떨림 효과용)
+// =========================================
+document.addEventListener("DOMContentLoaded", function() {
+    const contactTextEl = document.getElementById("animatedContactText");
+    
+    if (contactTextEl) {
+        const text = contactTextEl.textContent;
+        contactTextEl.innerHTML = ""; // 기존 텍스트 초기화
+        
+        for (let i = 0; i < text.length; i++) {
+            const span = document.createElement("span");
+            if (text[i] === " ") {
+                span.innerHTML = "&nbsp;";
+            } else {
+                span.textContent = text[i];
+            }
+            contactTextEl.appendChild(span);
+        }
+    }
+});

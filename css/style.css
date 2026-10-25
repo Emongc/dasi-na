@@ -900,7 +900,7 @@ footer {
 }
 
 /* CONTACT와 EMONG C를 감싸는 전체 부모 박스 */
-.contact-line-box {
+a.contact-line-box {
     position: relative;
     display: inline-flex;
     justify-content: center;
@@ -913,7 +913,7 @@ footer {
     color: inherit;
 }
 
-.contact-line-box:hover {
+a.contact-line-box:hover {
     color: inherit;           /* 링크 호버 시 색상 변동 방지 */
 }
 
