@@ -1,0 +1,521 @@
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;700&display=swap');
+
+/* ==========================================================================
+   01. 전역 디자인 변수 (Global Design Variables)
+   ========================================================================== */
+:root {
+  --main-color: #171717;      /* 메인 블랙 */
+  --point-color: #B77BDD;     /* 포인트 라벤더 퍼플 */
+  --text-color: #333333;      /* 본문 텍스트 차콜 */
+  --bg-color: #FAFAFA;        /* 기본 배경 오프화이트 */
+  --white: #FFFFFF;           /* 순백색 */
+}
+
+/* ==========================================================================
+   02. 기본 스타일 및 리셋 (Base Styles & Reset)
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Noto Sans KR', sans-serif;
+  line-height: 1.7;
+  word-break: keep-all;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--point-color);
+}
+
+a:focus {
+  outline: none;
+}
+
+/* ==========================================================================
+   03. 헤더 및 내비게이션 (Header & Navigation)
+   ========================================================================== */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 6%;
+  background-color: var(--main-color);
+  color: var(--white);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 사이트 로고 타이틀 */
+header h1 {
+  margin: 0;
+  color: var(--white);
+  font-family: 'Amatic SC', cursive;
+  font-size: 3rem;
+  letter-spacing: 3px;
+  white-space: nowrap;
+}
+
+header h1 a:hover {
+  color: var(--point-color);
+}
+
+/* 내비게이션 영역 */
+header nav {
+  width: 100%;
+  margin: 0;
+}
+
+header nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16px 20px;
+}
+
+/* 손글씨 메뉴 링크 */
+nav a {
+  display: inline-block;
+  color: var(--white);
+  font-family: 'Amatic SC', cursive;
+  font-size: 2rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+nav a::before {
+  content: '[';
+  margin-right: 6px;
+}
+
+nav a::after {
+  content: ']';
+  margin-left: 6px;
+}
+
+nav a.active {
+  color: var(--point-color);
+}
+
+/* ==========================================================================
+   04. 본문 공통 레이아웃 및 타이틀 (Common Layout & Titles)
+   ========================================================================== */
+main {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+section {
+  padding: 44px 0;
+  border-bottom: 3px dotted #cac9c8;
+  scroll-margin-top: 140px;
+}
+
+section:last-child {
+  border-bottom: none;
+}
+
+/* 섹션 공통 타이틀 */
+section h2 {
+  width: fit-content;
+  margin-bottom: 16px;
+  color: var(--main-color);
+  font-family: 'Gaegu', cursive;
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* 섹션 타이틀 퍼플 밑줄 */
+section h2::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 6px;
+  margin-top: 4px;
+  background-color: var(--point-color);
+  border-radius: 1px;
+}
+
+/* ==========================================================================
+   05. 소개 전용 섹션 (About Section)
+   ========================================================================== */
+#about-page {
+  padding: 40px 0 60px 0;
+  border-bottom: none;
+}
+
+.about-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+/* 좌측 일러스트 영역 */
+.about-illust {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 캐릭터 프로필 이미지 */
+.about-profile-img {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  mix-blend-mode: multiply;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* 우측 소개 본문 */
+.about-bio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-family: 'Gaegu', cursive;
+}
+
+.bio-intro {
+  color: #a2a1a1;
+  font-family: 'Amatic SC', cursive;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+/* 대표 영문 이름 */
+.bio-name {
+  width: fit-content;
+  margin: 4px 0 12px 0;
+  color: var(--main-color);
+  font-family: 'Amatic SC', cursive;
+  font-size: 2.4rem;
+  letter-spacing: 4px;
+  line-height: 1;
+}
+
+/* 영문 이름 퍼플 밑줄 */
+.bio-name::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 10px;
+  margin-top: 6px;
+  background-color: var(--point-color);
+}
+
+.bio-sub {
+  margin-bottom: 24px;
+  color: var(--point-color);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+/* 손그림 펜 드로잉 스타일 스토리 박스 */
+.bio-story.hand-drawn-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 520px;
+  padding: 30px 32px;
+  background-color: var(--white);
+  border: 3px solid var(--main-color);
+  border-radius: 4px 255px 5px 225px / 255px 5px 225px 4px;
+  box-shadow: none;
+  filter: url(#hand-drawn-filter);
+  transform: rotate(-0.4deg);
+}
+
+/* 드로잉 박스 모서리 교차선 효과 */
+.bio-story.hand-drawn-box::before,
+.bio-story.hand-drawn-box::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+.bio-story.hand-drawn-box::before {
+  top: -7px;
+  right: 12px;
+  width: 2px;
+  height: 14px;
+  background-color: var(--main-color);
+  transform: rotate(6deg);
+}
+
+.bio-story.hand-drawn-box::after {
+  bottom: 8px;
+  left: -8px;
+  width: 16px;
+  height: 2.5px;
+  background-color: var(--main-color);
+  transform: rotate(-4deg);
+}
+
+.bio-story.hand-drawn-box p {
+  color: var(--text-color);
+  font-size: 1.55rem;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   06. 메인 콘텐츠 섹션 (Experience, Skills, Education, Contact)
+   ========================================================================== */
+#about p,
+#about h3,
+#experience,
+#skills,
+#education,
+#contact {
+  font-family: 'Gaegu', cursive;
+}
+
+/* 메인 페이지(index.html) 소개 이미지 스타일 */
+.main-profile-img {
+  display: block;
+  width: 100%;
+  max-width: 240px; /* 홈 화면에 어울리는 아담한 크기 */
+  height: auto;
+  margin: 16px 0;
+  mix-blend-mode: multiply; /* 흰색 배경 투명화 */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+section p {
+  font-size: 1.4rem;
+  line-height: 1.6;
+}
+
+#about h3 {
+  margin-top: 10px;
+  color: var(--main-color);
+  font-size: 1.6rem;
+}
+
+#experience {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+#experience h2 {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+#experience article {
+  padding: 20px;
+  background-color: var(--white);
+  border-left: 6px solid var(--main-color);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+#experience h3 {
+  color: var(--main-color);
+  font-size: 1.4rem;
+}
+
+#experience article p:first-of-type {
+  margin: 4px 0 8px 0;
+  color: var(--point-color);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+#skills ul,
+#education ul {
+  display: grid;
+  gap: 12px;
+}
+
+#skills li,
+#education li {
+  padding: 14px 18px;
+  background-color: var(--white);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+#skills li::before {
+  content: '✔ ';
+  color: var(--main-color);
+  font-weight: 700;
+}
+
+#education li::before {
+  content: '★ ';
+  color: var(--point-color);
+}
+
+/* ==========================================================================
+   07. 푸터 (Footer)
+   ========================================================================== */
+footer {
+  padding: 30px 20px;
+  background-color: var(--main-color);
+  border-top: 1px solid #292929;
+  text-align: center;
+}
+
+.footer-copy {
+  display: inline-flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 6px;
+  color: #8E9AAF;
+  font-size: 1.05rem;
+  letter-spacing: 0.5px;
+}
+
+.footer-brand {
+  color: var(--point-color);
+  font-family: 'Amatic SC', cursive;
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+/* ==========================================================================
+   08. 반응형: 태블릿 화면 (Min-width: 768px)
+   ========================================================================== */
+@media screen and (min-width: 768px) {
+  header {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 30px 6%;
+  }
+
+  header h1 {
+    font-size: 3.5rem;
+  }
+
+  header nav {
+    width: auto;
+  }
+
+  header nav ul {
+    gap: 24px;
+  }
+
+  nav a {
+    font-size: 2.2rem;
+  }
+
+  .about-container {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 50px;
+    padding-top: 20px;
+  }
+
+  .about-illust {
+    align-items: flex-start;
+  }
+
+  .about-profile-img {
+    max-width: 280px;
+  }
+
+  .about-bio {
+    align-items: flex-start;
+    text-align: left;
+    max-width: 480px;
+  }
+
+  .bio-name {
+    font-size: 2.8rem;
+  }
+
+  #experience {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  #experience h2 {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  #skills ul,
+  #education ul {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+/* ==========================================================================
+   09. 반응형: 데스크톱 PC 화면 (Min-width: 1024px)
+   ========================================================================== */
+@media screen and (min-width: 1024px) {
+  header {
+    padding: 36px 6%;
+  }
+
+  header h1 {
+    font-size: 4.5rem;
+  }
+
+  nav a {
+    font-size: 2.5rem;
+  }
+
+  .about-container {
+    gap: 70px;
+  }
+
+  .about-profile-img {
+    max-width: 310px;
+  }
+
+  .bio-name {
+    font-size: 3.2rem;
+  }
+
+  .bio-story.hand-drawn-box p {
+    font-size: 1.65rem;
+  }
+}
