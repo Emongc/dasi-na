@@ -18,6 +18,23 @@
 </head>
 
 <body>
+
+<!-- 모바일 데스크톱 권장 안내 오버레이 -->
+    <div id="desktopWarningModal" class="desktop-warning-overlay">
+        <div class="warning-content">
+            <p class="warning-text">
+                THIS WEBSITE<br>
+                AND WORKS WITHIN<br>
+                ARE BEST SUITED<br>
+                FOR DESKTOP<br>
+                SCREENS.
+            </p>
+            <button id="dontCareBtn" class="dont-care-btn">
+                I DON'T CARE →
+            </button>
+        </div>
+    </div>
+
   <!-- ==================================================
      03. HEADER: 상단 로고 및 내비게이션 메뉴 영역
      ================================================== -->
@@ -53,9 +70,15 @@
 
     <!-- 05. HERO: 메인 화면 상단 배너 및 영상 프레임 영역 -->
     <section class="hero-media" aria-label="메인 소개 이미지">
-      <div class="hero-frame">
+      <div class="hero-frame" id="heroClickBox">
         <img class="hero-poster" src="img/imgvideo-poster.png" alt="손그림 테두리 안 중앙에 작은 안경 쓴 캐릭터 얼굴과 오른쪽에 hi 글자가 있는 그림"
           width="1672" height="941" fetchpriority="high">
+        
+        <!-- 👇 [추가] 캐릭터 클릭 시 나타나는 말풍선 텍스트 박스 -->
+        <div class="character-speech-bubble" id="speechBubble">
+          <span id="quoteText">캐릭터를 클릭해 보세요! ✨</span>
+        </div>
+
         <svg class="hero-frame-line" viewBox="0 0 1000 563" preserveAspectRatio="none" aria-hidden="true"
           focusable="false">
           <path
@@ -135,50 +158,57 @@
 
     <!-- 10. WORKS: 주요 작업물 및 포트폴리오 영역 -->
     <section id="works">
-      <h2>WORKS</h2>
-      <div class="works-grid">
-        <article class="work-card">
-          <h3>work 1</h3>
-          <p class="work-period">2026.10</p>
-          <p>설명</p>
+    <h2>WORKS</h2>
+    <div class="works-grid">
+        <article class="work-card" onclick="openWorkModal('work1')">
+            <h3>학교폭력 1</h3>
+            <p class="work-period">2026.10</p>
+            <p>습작</p>
         </article>
-        <article class="work-card">
-          <h3>work 2</h3>
-          <p class="work-period">2026.10</p>
-          <p>설명</p>
+        
+        <article class="work-card" onclick="openWorkModal('work2')">
+            <h3>학교폭력 2</h3>
+            <p class="work-period">2026.10</p>
+            <p>건너뛰기 불가능</p>
         </article>
-        <article class="work-card">
-          <h3>work 3</h3>
-          <p class="work-period">2026.10</p>
-          <p>설명</p>
+        
+        <article class="work-card" onclick="openWorkModal('work3')">
+            <h3>AI의 꿈?</h3>
+            <p class="work-period">2026.10</p>
+            <p>습작</p>
         </article>
-        <article class="work-card">
-          <h3>work 4</h3>
-          <p class="work-period">2026.10</p>
-          <p>설명</p>
+        
+        <article class="work-card" onclick="openWorkModal('work4')">
+            <h3>AI의 꿈?</h3>
+            <p class="work-period">2026.10</p>
+            <p>누구의 꿈?</p>
         </article>
-        <article class="work-card">
-          <h3>work 5</h3>
-          <p class="work-period">2026.10</p>
-          <p>설명</p>
+        
+        <article class="work-card" onclick="openWorkModal('work5')">
+            <h3>내 딸은 중2</h3>
+            <p class="work-period">2026.10</p>
+            <p>사춘기</p>
         </article>
-        <article class="work-card">
-          <h3>work 6</h3>
-          <p class="work-period">2026.10</p>
-          <p>설명</p>
+        
+        <article class="work-card" onclick="openWorkModal('work6')">
+            <h3>부부의 대화</h3>
+            <p class="work-period">2026.10</p>
+            <p>심통부인과 버럭남편</p>
         </article>
-        <article class="work-card">
-          <h3>work 7</h3>
-          <p class="work-period">2026.10</p>
-          <p>설명</p>
+        
+        <article class="work-card" onclick="openWorkModal('work7')">
+            <h3>랩배틀</h3>
+            <p class="work-period">2026.10</p>
+            <p>디스랩</p>
         </article>
-        <article class="work-card">
-          <h3>work 8</h3>
-          <p class="work-period">2026.10</p>
-          <p>설명</p>
+        
+        <article class="work-card" onclick="openWorkModal('work8')">
+            <h3>달빛걷기 포스터</h3>
+            <p class="work-period">2026.10</p>
+            <p>생명존중 캠페인</p>
         </article>
-      </div>
-    </section>
+    </div>
+</section>
 
     <!-- 11. CONTACT: 연락처 및 소통 채널 영역 -->
     <section id="contact">
@@ -275,6 +305,14 @@
 
   <!-- JavaScript 연결 -->
   <script src="js/script.js"></script>
+
+  <!-- 클릭했을 때 나타나는 상세 팝업 창 -->
+    <div id="workModal" class="work-detail-modal">
+        <button class="close-btn" onclick="closeModal()">✕ 닫기</button>
+        <div id="modalContent">
+            <!-- 여기에 상세 설명이나 아담한 크기의 영상(video, iframe 등)을 넣게 됩니다 -->
+        </div>
+    </div>
 
 </body>
 

@@ -248,3 +248,176 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 });
+
+// ==================================================
+// HERO 캐릭터 클릭 시 위트 있는 멘트 순차 출력 제어
+// ==================================================
+// ==================================================
+// HERO 캐릭터 클릭 시 위트 있는 멘트 + 좌우 위치 교차 출력
+// ==================================================
+document.addEventListener("DOMContentLoaded", function() {
+    const heroClickBox = document.getElementById("heroClickBox");
+    const speechBubble = document.getElementById("speechBubble");
+    const quoteText = document.getElementById("quoteText");
+
+    const characterQuotes = [
+        "어? 저 누르신 거예요? (안 누른 척 시선 회피 👀)",
+        "제 포트폴리오 보러 오셨군요? 후회 안 하시게 될걸요? 😎",
+        "궁금한 게 많으시군요? 저에 대해 하나씩 파헤쳐 볼까요? 🕵️‍♀️",
+        "참고로 저는 커피와 AI만 있으면 야근도 즐기는 사람입니다 ☕🤖",
+        "이력서보다 이 캐릭터를 더 오래 보고 계신 것 같은데요? ㅋㅋ",
+        "일단 스크롤 내리기 전에 WORKS 섹션은 꼭 구경하고 가셔야 합니다? (진지)",
+        "저랑 일하고 싶어지셨다구요? 눈빛만 봐도 다 압니다 하하",
+        "계속 누르다 보면 비밀이... 나올 리가 없잖아요, 빨리 아래로 내려가서 경력 보세오! 👇",
+        "개발과 디자인, 그리고 AI 활용까지 섭렵한 인재가 바로 여기 있습니다 ✨",
+        "끝까지 저를 눌러주셨군요! 자, 이제 망설이지 말고 CONTACT 버튼을 눌러볼까요? 💌"
+    ];
+
+    let currentIndex = 0;
+
+    if (heroClickBox && speechBubble && quoteText) {
+        heroClickBox.addEventListener("click", function() {
+            // 1. 대화 내용 변경
+            quoteText.textContent = characterQuotes[currentIndex];
+
+            // 2. 짝수 번째는 왼쪽(pos-left), 홀수 번째는 오른쪽(pos-right) 번갈아 적용
+            if (currentIndex % 2 === 0) {
+                speechBubble.classList.remove("pos-right");
+                speechBubble.classList.add("pos-left");
+            } else {
+                speechBubble.classList.remove("pos-left");
+                speechBubble.classList.add("pos-right");
+            }
+
+            // 3. 말풍선 등장 애니메이션 실행
+            speechBubble.classList.add("show");
+
+            // 4. 다음 인덱스로 순환
+            currentIndex = (currentIndex + 1) % characterQuotes.length;
+        });
+    }
+});
+
+// ==================================================
+// 화면 크기가 작아지면 무조건 데스크톱 권장 경고창 표시
+// ==================================================
+document.addEventListener("DOMContentLoaded", function() {
+    const warningModal = document.getElementById("desktopWarningModal");
+    const dontCareBtn = document.getElementById("dontCareBtn");
+
+    function checkScreenSize() {
+        // 창 가로 폭이 768px 이하로 줄어들면 무조건 활성화
+        if (window.innerWidth <= 767) {
+            if (warningModal) warningModal.classList.add("active");
+        } else {
+            if (warningModal) warningModal.classList.remove("active");
+        }
+    }
+
+    // 1. 페이지가 처음 열릴 때 체크
+    checkScreenSize();
+
+    // 2. PC에서 브라우저 창 크기를 강제로 줄일 때도 실시간으로 체크
+    window.addEventListener("resize", checkScreenSize);
+
+    // 3. "I DON'T CARE" 버튼을 누르면 잠시 창을 숨김 (현재 세션 동안만)
+    if (dontCareBtn && warningModal) {
+        dontCareBtn.addEventListener("click", function() {
+            warningModal.classList.remove("active");
+        });
+    }
+});
+
+// ==================================================
+// WORKS 카드 클릭 시 모달창 열기 및 닫기 함수
+// ==================================================
+function openWorkModal(workId) {
+    const modal = document.getElementById("workModal");
+    const modalContent = document.getElementById("modalContent");
+
+    if (!modal || !modalContent) {
+        console.error("모달 요소를 찾을 수 없습니다!");
+        return;
+    }
+
+    // 📍 Work 1
+    if (workId === 'work1') {
+        modalContent.innerHTML = `
+            <h3>학교폭력 1</h3>
+            <video src="img/work1.mp4" controls autoplay muted playsinline></video>
+            <p>학폭은 건너뛰기 할 수 없습니다.</p>
+        `;
+    } 
+    // 📍 Work 2
+    else if (workId === 'work2') {
+        modalContent.innerHTML = `
+            <h3>학교폭력 2</h3>
+            <video src="img/work2.mp4" controls autoplay muted playsinline></video>
+            <p>학폭은 건너뛰기 할 수 없습니다.</p>
+        `;
+    } 
+    // 📍 Work 3
+    else if (workId === 'work3') {
+        modalContent.innerHTML = `
+            <h3>내 꿈이 사라졌다 1</h3>
+            <video src="img/work3.mp4" controls autoplay muted playsinline></video>
+            <p>AI의 꿈이 이루어졌다..</p>
+        `;
+    } 
+    // 📍 Work 4 (파일명 work4.mp4로 수정)
+    else if (workId === 'work4') {
+        modalContent.innerHTML = `
+            <h3>내 꿈이 사라졌다 2</h3>
+            <video src="img/work4.mp4" controls autoplay muted playsinline></video>
+            <p>AI의 꿈이 이루어졌다..</p>
+        `;
+    } 
+    // 📍 Work 5 (중괄호 누락 수정 완료)
+    else if (workId === 'work5') {
+        modalContent.innerHTML = `
+            <h3>나는 중2</h3>
+            <video src="img/work5.mp4" controls autoplay muted playsinline></video>
+            <p>사춘기 여중생은..</p>
+        `;
+    } 
+    // 📍 Work 6
+    else if (workId === 'work6') {
+        modalContent.innerHTML = `
+            <h3>부부의 대화</h3>
+            <video src="img/work6.mp4" controls autoplay muted playsinline></video>
+            <p>심통이 아내와 버럭이 남편</p>
+        `;
+    } 
+    // 📍 Work 7
+    else if (workId === 'work7') {
+        modalContent.innerHTML = `
+            <h3>랩배틀</h3>
+            <video src="img/work7.mp4" controls autoplay muted playsinline></video>
+            <p>고양이와 개의 디스랩</p>
+        `;
+    } 
+    // 📍 Work 8
+    else if (workId === 'work8') {
+        modalContent.innerHTML = `
+            <h3>달빛걷기 포스터 4</h3>
+            <img src="img/work8.jpg" alt="작업물 8 이미지">
+            <p>생명존중 걷기 캠페인</p>
+        `;
+    } 
+    // 기본값
+    else {
+        modalContent.innerHTML = `
+            <h3>${workId} 상세 내용</h3>
+            <p>준비 중인 작업물입니다.</p>
+        `;
+    }
+
+    modal.classList.add("active");
+}
+
+function closeModal() {
+    const modal = document.getElementById("workModal");
+    if (modal) {
+        modal.classList.remove("active");
+    }
+}
