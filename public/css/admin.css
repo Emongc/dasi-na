@@ -1,0 +1,111 @@
+/* =========================================
+   다시, 나 - 관리자 화면 디자인 (4일차)
+   ========================================= */
+
+/* 1. 헤더: 사이트 이름 + 관리자 표시 */
+header h1 a:hover {
+    color: var(--point-color);
+}
+
+.admin-badge {
+    background-color: var(--point-color);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+/* 2. 로그인 폼 */
+#login-form {
+    display: grid;
+    gap: 8px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+#login-area h2 {
+    text-align: center;
+}
+
+#login-area h2::after {
+    margin: 8px auto 0;
+}
+
+#login-form input {
+    padding: 12px;
+    border: 1px solid #d6d3cc;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+#login-form button,
+#logout-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--main-color);
+    color: var(--white);
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#login-form button {
+    margin-top: 12px;
+}
+
+.error {
+    min-height: 1.5em;
+    color: #c0392b;
+    text-align: center;
+    font-weight: 700;
+}
+
+/* 3. 문의 목록 */
+.list-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+#count {
+    color: var(--point-color);
+}
+
+#message-list {
+    display: grid;
+    gap: 16px;
+}
+
+.message-card {
+    background-color: var(--white);
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 6px solid var(--point-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.message-card .meta {
+    color: #888888;
+    font-size: 0.9rem;
+}
+
+.message-card .content {
+    margin: 12px 0;
+    white-space: pre-wrap; /* 줄바꿈 그대로 보이기 */
+}
+
+.delete-btn {
+    padding: 6px 14px;
+    border: 1px solid #c0392b;
+    border-radius: 6px;
+    background: none;
+    color: #c0392b;
+    cursor: pointer;
+}
+
+.empty {
+    text-align: center;
+    color: #888888;
+}

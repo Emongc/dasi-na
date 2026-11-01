@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Again, - Emongc 포트폴리오</title>
+
+  <!-- Google Fonts 연결 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&amp;family=Gaegu:wght@400;700&amp;family=Noto+Sans+KR:wght@400;700&display=swap"
+    rel="stylesheet">
+
+  <!-- 외부 스타일시트 연결 -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- 모바일 데스크톱 권장 안내 오버레이 -->
+    <div id="desktopWarningModal" class="desktop-warning-overlay">
+        <div class="warning-content">
+            <p class="warning-text">
+                THIS WEBSITE<br>
+                AND WORKS WITHIN<br>
+                ARE BEST SUITED<br>
+                FOR DESKTOP<br>
+                SCREENS.
+            </p>
+            <button id="dontCareBtn" class="dont-care-btn">
+                I DON'T CARE →
+            </button>
+        </div>
+    </div>
+
+  <!-- ==================================================
+     03. HEADER: 상단 로고 및 내비게이션 메뉴 영역
+     ================================================== -->
+  <header>
+    <div class="header-inner">
+      <h1>
+        <span class="piano-letter" style="--i: 1;">A</span>
+        <span class="piano-letter" style="--i: 2;">g</span>
+        <span class="piano-letter" style="--i: 3;">a</span>
+        <span class="piano-letter" style="--i: 4;">i</span>
+        <span class="piano-letter" style="--i: 5;">n</span>
+        <span class="piano-letter" style="--i: 6;">,</span>
+      </h1>
+      <!-- 모바일 햄버거 메뉴 버튼 -->
+      <button id="menu-btn" aria-label="메뉴 열기" aria-expanded="false">☰</button>
+    </div>
+    <nav id="main-nav" aria-label="주요 메뉴">
+      <ul>
+        <li><a href="#about">ABOUT</a></li>
+        <li><a href="#education">EDUCATION</a></li>
+        <li><a href="#skills">SKILLS</a></li>
+        <li><a href="#experience">EXPERIENCE</a></li>
+        <li><a href="#works">WORKS</a></li>
+        <li><a href="#contact">CONTACT</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ==================================================
+     04. MAIN: 본문 콘텐츠 영역
+     ================================================== -->
+  <main>
+
+    <!-- 05. HERO: 메인 화면 상단 배너 및 영상 프레임 영역 -->
+    <section class="hero-media" aria-label="메인 소개 이미지">
+      <div class="hero-frame" id="heroClickBox">
+        <img class="hero-poster" src="img/imgvideo-poster.png" alt="손그림 테두리 안 중앙에 작은 안경 쓴 캐릭터 얼굴과 오른쪽에 hi 글자가 있는 그림"
+          width="1672" height="941" fetchpriority="high">
+        
+        <!-- 👇 [추가] 캐릭터 클릭 시 나타나는 말풍선 텍스트 박스 -->
+        <div class="character-speech-bubble" id="speechBubble">
+          <span id="quoteText">캐릭터를 클릭해 보세요! ✨</span>
+        </div>
+
+        <svg class="hero-frame-line" viewBox="0 0 1000 563" preserveAspectRatio="none" aria-hidden="true"
+          focusable="false">
+          <path
+            d="M28 30 Q105 25 178 29 T334 28 Q425 33 503 27 T670 30 Q770 24 848 28 L971 26 Q975 125 972 212 T973 380 L972 533 Q852 530 748 535 T526 532 Q405 537 302 533 T121 535 L28 531 Q24 440 28 352 T27 173 Z" />
+        </svg>
+      </div>
+    </section>
+
+    <!-- 06. ABOUT: 상세 프로필 및 손그림 스토리 박스 영역 -->
+    <section id="about">
+      <h2>About</h2>
+      <div class="about-container">
+        <!-- 좌측: 캐릭터 일러스트 영역 -->
+        <div class="about-illust">
+          <img src="img/profile.png" alt="Creative Planner Emongc" class="about-profile-img">
+        </div>
+        <!-- 우측: 소개 텍스트 및 손그림 스토리 박스 -->
+        <div class="about-bio">
+          <div class="bio-story hand-drawn-box">
+            <div class="bio-title-area">
+              <h3 class="bio-title">
+                <span class="bio-intro">MY NAME IS</span>
+                <span class="bio-name">&nbsp;EMONG C&nbsp;</span>
+              </h3>
+              <p class="bio-sub">BUT LOTS OF PEOPLE CALL ME "에몽씨"</p>
+            </div>
+            <div class="bio-text-content">
+              <p>저는 늘 컴퓨터를 활용해 새로운 것을 만들고 문제를 해결하는 일에 관심을 가져왔습니다. 변화하는 환경 속에서 기술을 이해하고 활용하는 능력이 앞으로의 업무에 꼭 필요하다고 생각합니다.
+              </p>
+              <p>특히, AI를 단순한 도구가 아니라 업무를 더 빠르고 정확하게 진행하기 위한 방법으로 배웠습니다. 필요한 정보를 정리하고, 아이디어를 구체화하며, 결과물의 완성도를 높이는 과정에 AI를
+                적극 활용하고자 합니다.</p>
+              <p>새로운 기술을 꾸준히 익히는 태도와 맡은 일을 끝까지 해내는 책임감을 바탕으로, 변화에 유연하게 대응하며 실질적인 결과를 만들어가겠습니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07. EDUCATION: 교육 이력 및 자격증 영역 -->
+    <section id="education">
+      <h2>EDUCATION</h2>
+      <ul class="education-list">
+        <li>2004 경북대학교 졸업</li>
+        <li>2005.01 ~ 2006.09 영국 어학연수</li>
+        <li>2009 웹 &amp; 그래픽디자인과정</li>
+        <li>2023 SBS아카데미컴퓨터학원</li>
+        <li>2026 커피 바리스타2급 자격증 취득과정</li>
+        <li>2026 제과 ◦ 제빵 기능사 과정</li>
+        <li>2026 사회복지사 2급 교육 이수 및 실습</li>
+        <li>2026 디지털 서비스융합 전문가 양성교육</li>
+      </ul>
+    </section>
+
+    <!-- 08. SKILLS: 기술 스택 및 역량 영역 -->
+    <section id="skills">
+      <h2>SKILLS</h2>
+      <ul class="skills-list">
+        <li>웹디자인기능사</li>
+        <li>컴퓨터그래픽스운용기능사</li>
+        <li>컴퓨터활용능력 2급</li>
+        <li>커피바리스타 2급</li>
+        <li>사회복지사 2급</li>
+      </ul>
+    </section>
+
+    <!-- 09. EXPERIENCE: 주요 경력 영역 -->
+    <section id="experience">
+      <h2>EXPERIENCE</h2>
+      <ul class="experience-list">
+        <li>2025 온라인 쇼핑몰 - 생산 및 상세페이지 관리</li>
+        <li>2009 웹디자이너 - 홈페이지 관리</li>
+        <li>2007 해외취업인력파견 - 면접 이력서 관리</li>
+        <li>2005 영국 런던 일식당 - 홀 담당</li>
+        <li>2003 ~ 2004 전통찻집 - 홀 담당</li>
+      </ul>
+    </section>
+
+    <!-- 10. WORKS: 주요 작업물 및 포트폴리오 영역 -->
+    <section id="works">
+    <h2>WORKS</h2>
+    <div class="works-grid">
+        <article class="work-card" onclick="openWorkModal('work1')">
+            <h3>학교폭력 1</h3>
+            <p class="work-period">2026.10</p>
+            <p>습작</p>
+        </article>
+        
+        <article class="work-card" onclick="openWorkModal('work2')">
+            <h3>학교폭력 2</h3>
+            <p class="work-period">2026.10</p>
+            <p>건너뛰기 불가능</p>
+        </article>
+        
+        <article class="work-card" onclick="openWorkModal('work3')">
+            <h3>AI의 꿈?</h3>
+            <p class="work-period">2026.10</p>
+            <p>습작</p>
+        </article>
+        
+        <article class="work-card" onclick="openWorkModal('work4')">
+            <h3>AI의 꿈?</h3>
+            <p class="work-period">2026.10</p>
+            <p>누구의 꿈?</p>
+        </article>
+        
+        <article class="work-card" onclick="openWorkModal('work5')">
+            <h3>내 딸은 중2</h3>
+            <p class="work-period">2026.10</p>
+            <p>사춘기</p>
+        </article>
+        
+        <article class="work-card" onclick="openWorkModal('work6')">
+            <h3>부부의 대화</h3>
+            <p class="work-period">2026.10</p>
+            <p>심통부인과 버럭남편</p>
+        </article>
+        
+        <article class="work-card" onclick="openWorkModal('work7')">
+            <h3>랩배틀</h3>
+            <p class="work-period">2026.10</p>
+            <p>디스랩</p>
+        </article>
+        
+        <article class="work-card" onclick="openWorkModal('work8')">
+            <h3>달빛걷기 포스터</h3>
+            <p class="work-period">2026.10</p>
+            <p>생명존중 캠페인</p>
+        </article>
+    </div>
+</section>
+
+    <!-- 11. CONTACT: 연락처 및 소통 채널 영역 -->
+    <section id="contact">
+      <h2>CONTACT</h2>
+      <p>아래 폼을 통해 편하게 문의해 주세요!</p>
+      <form id="contact-form">
+        <div class="form-group">
+          <label for="name">이름</label>
+          <input type="text" id="name" placeholder="이름을 입력해 주세요">
+        </div>
+        <div class="form-group">
+          <label for="email">이메일</label>
+          <input type="email" id="email" placeholder="abc@example.com">
+        </div>
+        <div class="form-group">
+          <label for="message">문의내용</label>
+          <textarea id="message" rows="4" placeholder="문의 내용을 10자 이상 입력해 주세요"></textarea>
+        </div>
+        <button type="submit" class="submit-btn">보내기</button>
+        <p id="form-msg"></p>
+      </form>
+    </section>
+
+    <!-- 13. HISTORY / JOURNEY: 연혁 타임라인 영역 (Experience와 독립된 공간) -->
+    <section id="history" class="history-section">
+
+      <!-- 배경색과 어우러지는 수직 손그림 선 컨테이너 -->
+      <div class="vertical-line-container">
+        <!-- SVG 필터를 적용하여 선 자체의 외곽선을 울퉁불퉁하게 만듭니다 -->
+        <svg class="hand-drawn-vertical-line" preserveAspectRatio="none" viewBox="0 0 20 1000">
+          <defs>
+            <!-- 거친 잉크/연필 질감 필터 -->
+            <filter id="rough-line-filter">
+              <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="4" result="noise" />
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+          </defs>
+
+          <!-- 👈 path의 좌표를 흔들리게 주어 전체적으로 울퉁불퉁하게 만듦 -->
+          <path d="M 10 0 Q 3 150 16 300 T 5 600 Q 15 800 10 1000" fill="none" stroke="var(--text-color)"
+            stroke-width="1.5" stroke-linecap="round" filter="url(#rough-line-filter)" opacity="0.8" />
+        </svg>
+
+        <!-- 선 중간중간에 들어가는 감성적인 텍스트 요소 (선택사항) -->
+        <span class="line-text text-top" style="top: 20%;">: You want more?</span>
+        <span class="line-text text-bottom" style="top: 60%;">: Just get my history.</span>
+      </div>
+
+      <!-- 하단 타임라인 이미지 박스 -->
+      <div class="timeline-image-container" id="timelineContainer">
+        <img src="img/timeline-image.png" alt="인생 타임라인 연혁" class="responsive-timeline-img" title="클릭하시오">
+      </div> <!-- 👈 이미지 컨테이너를 여기서 먼저 닫습니다! -->
+
+      <!-- 맨 아래 마무리 멘트 영역 (이미지 박스 바깥으로 독립 분리) -->
+      <div class="timeline-footer-text">
+          <h3 class="footer-title">THANK YOU!</h3>
+          
+          <a href="mailto:emongc1209@gmail.com" class="contact-line-box" target="_blank" title="email to : EmongC">
+              <!-- 글자 테두리를 감싸며 돌아서 내려오는 각진 사각형 SVG 라인 레이어 -->
+              <svg class="box-drawing-svg" viewBox="0 0 320 60" preserveAspectRatio="none">
+                  <rect x="5" y="5" width="310" height="50" class="draw-box-path" />
+              </svg>
+
+              <!-- 내부 글자 영역 -->
+              <div class="text-inner-wrapper">
+                  <span class="footer-sub" id="animatedContactText">CONTACT</span>
+                  <span class="emong-text">" EMONG C "</span>
+              </div>
+            </a>
+      </div>
+      </div>
+
+      <!-- 팝업 모달 구조 -->
+      <div id="imageModal" class="image-modal">
+        <span class="modal-close-btn" id="modalCloseBtn">&times;</span>
+        <img class="modal-content" id="expandedImg" src="img/timeline-image.png" alt="타임라인 확대보기">
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ==================================================
+     12. FOOTER: 하단 저작권 영역
+     ================================================== -->
+  <footer>
+    <p class="footer-copy">
+      &copy; 2026 <span class="footer-brand">EMONGC</span>. All rights reserved.
+    </p>
+  </footer>
+
+  <!-- TOP 버튼 -->
+  <button id="top-btn" aria-label="페이지 맨 위로 이동">TOP</button>
+
+  <!-- JavaScript 연결 -->
+  <script src="js/script.js"></script>
+
+  <!-- 클릭했을 때 나타나는 상세 팝업 창 -->
+    <div id="workModal" class="work-detail-modal">
+        <button class="close-btn" onclick="closeModal()">✕ 닫기</button>
+        <div id="modalContent">
+            <!-- 여기에 상세 설명이나 아담한 크기의 영상(video, iframe 등)을 넣게 됩니다 -->
+        </div>
+    </div>
+
+</body>
+
+</html>

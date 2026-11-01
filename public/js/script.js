@@ -50,42 +50,53 @@ if (topBtn) {
 }
 
 // =========================================
-// 3. 문의 폼 입력 확인
+// 3. 문의 폼 입력 확인 + 서버로 전송 (4일차 수정)
 // =========================================
 const contactForm = document.querySelector('#contact-form');
 const formMsg = document.querySelector('#form-msg');
-
-if (contactForm && formMsg) {
-  function showMessage(text, type) {
-    formMsg.textContent = text;
-    formMsg.className = type;
-  }
-
-  contactForm.addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    const name = document.querySelector('#name').value.trim();
-    const email = document.querySelector('#email').value.trim();
-    const message = document.querySelector('#message').value.trim();
-    const emailRule = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (name === '') {
-      showMessage('이름을 입력해 주세요.', 'error');
-      return;
-    }
-    if (!emailRule.test(email)) {
-      showMessage('올바른 이메일 주소를 입력해 주세요.', 'error');
-      return;
-    }
-    if (message.length < 10) {
-      showMessage('문의 내용을 10자 이상 입력해 주세요.', 'error');
-      return;
-    }
-
-    showMessage('문의가 접수되었습니다. 감사합니다!', 'success');
-    contactForm.reset();
-  });
+function showMessage(text, type) {
+formMsg.textContent = text;
+formMsg.className = type;
 }
+// async: 서버의 대답을 기다려야 하므로 붙임
+contactForm.addEventListener('submit', async function (event) {
+event.preventDefault();
+const name = document.querySelector('#name').value.trim();
+const email = document.querySelector('#email').value.trim();
+const message = document.querySelector('#message').value.trim();
+const emailRule = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+if (name === '') {
+showMessage('이름을 입력해 주세요.', 'error');
+return;
+}
+if (!emailRule.test(email)) {
+showMessage('올바른 이메일 주소를 입력해 주세요.', 'error');
+return;
+}
+if (message.length < 10) {
+- 99 -
+showMessage('문의 내용을 10자 이상 입력해 주세요.', 'error');
+return;
+}
+// 검사를 통과하면 서버로 보내기 (4일차 추가)
+try {
+const res = await fetch('/api/contact', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ name, email, message })
+});
+const data = await res.json();
+if (res.ok) {
+showMessage(data.message, 'success');
+contactForm.reset();
+} else {
+showMessage(data.message, 'error');
+}
+} catch (err) {
+// 서버가 꺼져 있거나 Live Server로 열었을 때
+showMessage('서버에 연결할 수 없습니다. npm start로 서버를 실행해 주세요.', 'error');
+}
+});
 
 // =========================================
 // 4. 네비게이션 스크롤 스파이 및 동적 활성화
