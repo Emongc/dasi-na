@@ -703,7 +703,7 @@ span.bio-name {
     /* background-color: #ffffff;  */
 
     /* 2. 보내주신 손그림 테두리 이미지를 배경으로 지정 */
-    background-image: url('../img/work-frame.png'); /* 👈 이미지 경로에 맞게 수정해주세요 */
+    background-image: url('../img/work-frame.svg'); /* 👈 이미지 경로에 맞게 수정해주세요 */
     background-size: 100% 100%; /* 카드의 크기에 딱 맞춰 늘려줌 */
     background-repeat: no-repeat;
     background-position: center;

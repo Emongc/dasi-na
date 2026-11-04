@@ -3,19 +3,25 @@
    ========================================= */
 
 /* 1. 헤더: 사이트 이름 + 관리자 표시 */
+header h1 a {
+    color: var(--bg-color);
+}
+
 header h1 a:hover {
     color: var(--point-color);
 }
 
 .admin-badge {
-    background-color: var(--point-color);
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
+    font-family: 'Gaegu', 'Amatic SC', 'Noto Sans KR', sans-serif;
+    /* background-color: var(--point-color); */
+    color: var(--point-color);
+    padding: 3px 20px;
+    border-radius: 2px;
+    font-size: 1.8rem;
     font-weight: 700;
 }
 
-/* 2. 로그인 폼 */
+/* 2. 로그인 폼 및 폼 요소 폰트 일괄 적용 */
 #login-form {
     display: grid;
     gap: 8px;
@@ -31,22 +37,28 @@ header h1 a:hover {
     margin: 8px auto 0;
 }
 
+/* 💡 인풋, 레이블, 버튼에 폰트 강제 적용 */
+#login-form input,
+#login-form button,
+#login-form label,
+#logout-btn {
+    font-family: 'Gaegu', 'Amatic SC', 'Noto Sans KR', sans-serif;
+}
+
 #login-form input {
     padding: 12px;
     border: 1px solid #d6d3cc;
     border-radius: 8px;
-    font-family: inherit;
     font-size: 1rem;
 }
 
 #login-form button,
 #logout-btn {
-    padding: 12px 20px;
+    padding: 8px 50px;
     border: none;
-    border-radius: 8px;
+    border-radius: 3px;
     background-color: var(--main-color);
     color: var(--white);
-    font-family: inherit;
     font-weight: 700;
     cursor: pointer;
 }
@@ -70,7 +82,7 @@ header h1 a:hover {
 }
 
 #count {
-    color: var(--point-color);
+    color: var(--text-color);
 }
 
 #message-list {
@@ -81,14 +93,33 @@ header h1 a:hover {
 .message-card {
     background-color: var(--white);
     padding: 20px;
-    border-radius: 12px;
-    border-left: 6px solid var(--point-color);
+    border-radius: 3px;
+    border-left: 15px solid #d8d8d8;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column; /* 기본적으로 위에서 아래로 쌓이게 설정 */
+    position: relative;
+}
+
+/* 날짜 표시용 스타일 (이메일과 같은 색상 및 크기 적용) */
+.message-card .card-date {
+    color: #888888;
+    font-size: 1.1rem; /* 원하시는 크기로 조절 가능합니다 */
+    margin-bottom: 4px; /* 아래 요소와의 간격 조절 */
+}
+
+/* 문의 카드 안의 작성자 이름(h3) 스타일 및 폰트 적용 */
+.message-card h3 {
+    font-family: 'Gaegu', 'Amatic SC', 'Noto Sans KR', sans-serif;
+    font-size: 1.4rem; /* 원하시는 크기로 조절 가능합니다 */
+    font-weight: 700;
+    margin-bottom: 4px;
 }
 
 .message-card .meta {
     color: #888888;
-    font-size: 0.9rem;
+    font-size: 1.2rem;
+    letter-spacing: 1px; /* 💡 글자 사이 간격을 넓혀줍니다 (숫자를 키우면 간격이 더 넓어집니다) */
 }
 
 .message-card .content {
@@ -97,12 +128,16 @@ header h1 a:hover {
 }
 
 .delete-btn {
+    align-self: flex-end;      /* 💡 카드의 오른쪽 끝으로 이동 */
+    width: fit-content;        /* 버튼 크기가 글자 크기에 맞게 줄어들도록 설정 */
+    font-size: 1.05rem;
     padding: 6px 14px;
     border: 1px solid #c0392b;
-    border-radius: 6px;
-    background: none;
-    color: #c0392b;
+    border-radius: 18px;
+    background: #c0392b;
+    color: var(--bg-color);
     cursor: pointer;
+    font-family: 'Gaegu', 'Amatic SC', 'Noto Sans KR', sans-serif; /* 💡 삭제 버튼에도 적용 */
 }
 
 .empty {

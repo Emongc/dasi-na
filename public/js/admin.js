@@ -35,17 +35,26 @@ async function loadMessages() {
         const card = document.createElement('article');
         card.className = 'message-card';
         
+        // 1. 날짜를 맨 위에 독립적으로 표시할 요소
+        const dateEl = document.createElement('p');
+        dateEl.className = 'card-date'; // 필요하면 CSS로 스타일 지정 가능
+        dateEl.textContent = new Date(item.created_at).toLocaleString('ko-KR');
+        
+        // 2. 작성자 이름
         const title = document.createElement('h3');
         title.textContent = item.name;
         
+        // 3. 이메일 정보
         const meta = document.createElement('p');
         meta.className = 'meta';
-        meta.textContent = `${item.email} · ${new Date(item.created_at).toLocaleString('ko-KR')}`;
+        meta.textContent = item.email;
         
+        // 4. 문의 내용
         const content = document.createElement('p');
         content.className = 'content';
         content.textContent = item.message; // textContent: 글자 그대로 표시 (해킹 방지)
         
+        // 5. 삭제 버튼
         const delBtn = document.createElement('button');
         delBtn.type = 'button';
         delBtn.className = 'delete-btn';
@@ -54,7 +63,8 @@ async function loadMessages() {
             deleteMessage(item.id);
         });
         
-        card.append(title, meta, content, delBtn);
+        // 💡 card.append 순서대로 위에서 아래로 배치됩니다. (dateEl이 맨 위!)
+        card.append(dateEl, title, meta, content, delBtn);
         messageList.append(card);
     });
 }
