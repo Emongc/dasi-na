@@ -72,7 +72,7 @@ async function loadMessages() {
 // 2. 로그인
 loginForm.addEventListener('submit', async function (event) {
     event.preventDefault();
-    const res = await fetch('/api/login', {
+    const res = await fetch('http://localhost:3000/admin.html/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
