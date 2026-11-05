@@ -127,7 +127,18 @@ async function initAdminTable() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
-        
+
+        // 💡 문의 저장 표(messages)도 없으면 만들기 (새 클라우드 DB에는 표가 없음)
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS messages (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(50) NOT NULL,
+                email VARCHAR(100) NOT NULL,
+                message TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            ) DEFAULT CHARSET = utf8mb4
+        `);
+
         // 관리자 계정('admin')의 비밀번호를 'emongc2026'으로 강제 생성/업데이트
         const hashedPassword = await bcrypt.hash('emongc2026', 10);
         
