@@ -105,7 +105,6 @@ res.status(500).json({ message: '삭제 중 오류가 발생했습니다.' });
 }
 });
 
-// 💡 서버 시작 전 클라우드 DB에 admins 테이블 및 관리자 계정 자동 생성
 async function initAdminTable() {
     try {
         await pool.query(`
@@ -117,14 +116,17 @@ async function initAdminTable() {
             )
         `);
         
+        // 관리자 계정('admin')의 비밀번호를 'emongc2026'으로 강제 생성/업데이트
+        const hashedPassword = await bcrypt.hash('emongc2026', 10);
+        
+        // 기존에 admin이 있으면 비번을 갱신하고, 없으면 새로 만듦
         const [rows] = await pool.query('SELECT * FROM admins WHERE username = ?', ['admin']);
-        if (rows.length === 0) {
-            // 기본 비밀번호 'emongc2026'을 안전하게 암호화해서 저장
-            const hashedPassword = await bcrypt.hash('emongc2026', 10);
-            await pool.query('INSERT INTO admins (username, password_hash) VALUES (?, ?)', ['admin', hashedPassword]);
-            console.log('✨ 기본 관리자 계정(admin) 자동 생성 완료!');
+        if (rows.length > 0) {
+            await pool.query('UPDATE admins SET password_hash = ? WHERE username = ?', [hashedPassword, 'admin']);
+            console.log('🔄 관리자 비밀번호 강제 갱신 완료!');
         } else {
-            console.log('✅ admins 테이블 및 관리자 계정 확인 완료');
+            await pool.query('INSERT INTO admins (username, password_hash) VALUES (?, ?)', ['admin', hashedPassword]);
+            console.log('✨ 기본 관리자 계정(admin) 생성 완료!');
         }
     } catch (err) {
         console.error('⚠️ 관리자 테이블 초기화 중 오류 발생:', err);
