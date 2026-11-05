@@ -36,6 +36,11 @@ app.use(session({
     }
 }));
 
+// 💡 보낸 데이터(JSON) 읽기 — 이 줄이 없으면 로그인·문의 내용을 서버가 못 읽음
+app.use(express.json());
+// 💡 public 폴더 보여주기 — 내 컴퓨터(localhost:3000)에서 사이트 확인용
+app.use(express.static(path.join(__dirname, 'public')));
+
 // 4. 로그인 확인 문지기 (관리자만 통과)
 function requireLogin(req, res, next) {
 if (req.session.adminId) {
