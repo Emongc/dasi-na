@@ -72,7 +72,7 @@ async function loadMessages() {
 // 2. 로그인
 loginForm.addEventListener('submit', async function (event) {
     event.preventDefault();
-    const res = await fetch('http://localhost:3000/admin.html/api/login', {
+    const res = await fetch('https://dasi-na-server.onrender.com/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -93,7 +93,7 @@ loginForm.addEventListener('submit', async function (event) {
 
 // 3. 로그아웃
 document.querySelector('#logout-btn').addEventListener('click', async function () {
-    await fetch('/api/logout', { method: 'POST' });
+    await fetch('https://dasi-na-server.onrender.com/api/logout', { method: 'POST' });
     loadMessages();
 });
 
