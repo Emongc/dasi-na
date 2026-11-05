@@ -104,6 +104,34 @@ console.error(err);
 res.status(500).json({ message: '삭제 중 오류가 발생했습니다.' });
 }
 });
+
+// 💡 서버 시작 전 클라우드 DB에 admins 테이블 및 관리자 계정 자동 생성
+async function initAdminTable() {
+    try {
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS admins (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                username VARCHAR(50) NOT NULL,
+                password_hash VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        
+        const [rows] = await pool.query('SELECT * FROM admins WHERE username = ?', ['admin']);
+        if (rows.length === 0) {
+            // 기본 비밀번호 'emongc2026'을 안전하게 암호화해서 저장
+            const hashedPassword = await bcrypt.hash('emongc2026', 10);
+            await pool.query('INSERT INTO admins (username, password_hash) VALUES (?, ?)', ['admin', hashedPassword]);
+            console.log('✨ 기본 관리자 계정(admin) 자동 생성 완료!');
+        } else {
+            console.log('✅ admins 테이블 및 관리자 계정 확인 완료');
+        }
+    } catch (err) {
+        console.error('⚠️ 관리자 테이블 초기화 중 오류 발생:', err);
+    }
+}
+initAdminTable();
+
 // 10. 서버 시작
 app.listen(PORT, () => {
 console.log(`다시, 나 서버 실행 중: http://localhost:${PORT}`);
