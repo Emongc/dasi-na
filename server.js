@@ -14,21 +14,28 @@ const pool = require('./db/pool');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// 💡 Render 같은 클라우드 서버 환경에서 프록시 신뢰 설정 (필수)
+app.set('trust proxy', 1);
+
 // 💡 여기에 CORS 설정을 추가합니다!
 app.use(cors({
     origin: ['https://again-emongc.netlify.app', 'http://localhost:3000'],
     credentials: true
 }));
 
-// 3. 기본 설정
-app.use(express.json()); // JSON 데이터 읽기
-app.use(express.static(path.join(__dirname, 'public'))); // 화면 파일 제공
-app.use(session({ // 로그인 상태 유지
-secret: process.env.SESSION_SECRET || 'dev-secret',
-resave: false,
-saveUninitialized: false,
-cookie: { httpOnly: true, maxAge: 1000 * 60 * 60 } // 1시간 유지
+// 3. 기본 설정 (세션 설정 수정)
+app.use(session({ 
+    secret: process.env.SESSION_SECRET || 'dev-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+        httpOnly: true, 
+        secure: true,       // HTTPS 환경에서 필수
+        sameSite: 'none',   // 서로 다른 도메인(Netlify <-> Render) 간 쿠키 허용
+        maxAge: 1000 * 60 * 60 // 1시간 유지
+    }
 }));
+
 // 4. 로그인 확인 문지기 (관리자만 통과)
 function requireLogin(req, res, next) {
 if (req.session.adminId) {
