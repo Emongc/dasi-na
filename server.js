@@ -6,6 +6,7 @@
 require('dotenv').config({ quiet: true });
 // 2. 필요한 도구 불러오기
 const express = require('express');
+const cors = require('cors');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
 const path = require('path');
