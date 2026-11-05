@@ -10,7 +10,7 @@ const countText = document.querySelector('#count');
 
 // 1. 문의 목록 불러오기
 async function loadMessages() {
-    const res = await fetch('/api/messages');
+    const res = await fetch('https://dasi-na-server.onrender.com/api/messages');
     
     // 로그인이 안 되어 있으면 로그인 화면 보이기
     if (res.status === 401) {
@@ -103,7 +103,7 @@ async function deleteMessage(id) {
     if (!confirm('이 문의를 삭제할까요?')) {
         return;
     }
-    await fetch(`/api/messages/${id}`, { method: 'DELETE' });
+    await fetch(`https://dasi-na-server.onrender.com/api/messages/${id}`, { method: 'DELETE' });
     loadMessages();
 }
 
