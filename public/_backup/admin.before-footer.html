@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Again, | 관리자</title>
+    
+    <!-- Google Fonts: Noto Sans KR -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+    href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&amp;family=Gaegu:wght@400;700&amp;family=Noto+Sans+KR:wght@400;700&display=swap"
+    rel="stylesheet">
+    
+    <!-- 공통 디자인 + 관리자 화면 디자인 -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="js/admin.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">Again</a></h1>
+        <span class="admin-badge">ADMIN</span>
+    </header>
+    
+    <main>
+        <!-- 로그인 영역: 로그인 전에만 보임 -->
+        <section id="login-area">
+            <h2>관리자 로그인</h2>
+            <form id="login-form">
+                <label for="username">ID</label>
+                <input type="text" id="username" autocomplete="username">
+                
+                <label for="password">PASSWORD</label>
+                <input type="password" id="password" autocomplete="current-password">
+                
+                <button type="submit">Login</button>
+                <p id="login-msg" class="error" aria-live="polite"></p>
+            </form>
+        </section>
+
+        <!-- 문의 목록 영역: 로그인 후에만 보임 -->
+        <section id="list-area" hidden>
+            <div class="list-top">
+                <h2>List <span id="count"></span></h2>
+                <button type="button" id="logout-btn">Logout</button>
+            </div>
+            <div id="message-list"></div>
+        </section>
+    </main>
+</body>
+</html>
