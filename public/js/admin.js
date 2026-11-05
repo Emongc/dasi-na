@@ -10,7 +10,9 @@ const countText = document.querySelector('#count');
 
 // 1. 문의 목록 불러오기
 async function loadMessages() {
-    const res = await fetch('https://dasi-na-server.onrender.com/api/messages');
+    const res = await fetch('https://dasi-na-server.onrender.com/api/messages', {
+    credentials: 'include'
+});
     
     // 로그인이 안 되어 있으면 로그인 화면 보이기
     if (res.status === 401) {
@@ -72,14 +74,15 @@ async function loadMessages() {
 // 2. 로그인
 loginForm.addEventListener('submit', async function (event) {
     event.preventDefault();
-    const res = await fetch('https://dasi-na-server.onrender.com/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            username: document.querySelector('#username').value.trim(),
-            password: document.querySelector('#password').value
-        })
-    });
+   const res = await fetch('https://dasi-na-server.onrender.com/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        username: document.querySelector('#username').value.trim(),
+        password: document.querySelector('#password').value
+    }),
+    credentials: 'include' // 🔑 추가
+});
     
     const data = await res.json();
     if (res.ok) {
@@ -93,7 +96,10 @@ loginForm.addEventListener('submit', async function (event) {
 
 // 3. 로그아웃
 document.querySelector('#logout-btn').addEventListener('click', async function () {
-    await fetch('https://dasi-na-server.onrender.com/api/logout', { method: 'POST' });
+    await fetch('https://dasi-na-server.onrender.com/api/logout', { 
+    method: 'POST',
+    credentials: 'include' // 🔑 추가
+});
     loadMessages();
 });
 
@@ -103,7 +109,10 @@ async function deleteMessage(id) {
     if (!confirm('이 문의를 삭제할까요?')) {
         return;
     }
-    await fetch(`https://dasi-na-server.onrender.com/api/messages/${id}`, { method: 'DELETE' });
+    await fetch(`https://dasi-na-server.onrender.com/api/messages/${id}`, { 
+    method: 'DELETE',
+    credentials: 'include' // 🔑 추가
+});
     loadMessages();
 }
 
