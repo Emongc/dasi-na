@@ -13,6 +13,13 @@ const path = require('path');
 const pool = require('./db/pool');
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// 💡 여기에 CORS 설정을 추가합니다!
+app.use(cors({
+    origin: ['https://again-emongc.netlify.app', 'http://localhost:3000'],
+    credentials: true
+}));
+
 // 3. 기본 설정
 app.use(express.json()); // JSON 데이터 읽기
 app.use(express.static(path.join(__dirname, 'public'))); // 화면 파일 제공
