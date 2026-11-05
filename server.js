@@ -139,17 +139,27 @@ async function initAdminTable() {
             ) DEFAULT CHARSET = utf8mb4
         `);
 
-        // 관리자 계정('admin')의 비밀번호를 'emongc2026'으로 강제 생성/업데이트
-        const hashedPassword = await bcrypt.hash('emongc2026', 10);
-        
-        // 기존에 admin이 있으면 비번을 갱신하고, 없으면 새로 만듦
-        const [rows] = await pool.query('SELECT * FROM admins WHERE username = ?', ['admin']);
+        // 🔒 관리자 아이디·비밀번호는 코드에 적지 않고 환경변수에서 읽음
+        //    (Render: Environment 탭 / 내 컴퓨터: .env 파일)
+        const adminUsername = process.env.ADMIN_USERNAME || 'admin';
+        const adminPassword = process.env.ADMIN_PASSWORD;
+
+        // 비밀번호 환경변수가 없으면 기존 계정을 그대로 둠
+        if (!adminPassword) {
+            console.log('ℹ️ ADMIN_PASSWORD가 없어 관리자 계정은 그대로 둡니다.');
+            return;
+        }
+
+        const hashedPassword = await bcrypt.hash(adminPassword, 10);
+
+        // 기존에 계정이 있으면 비번을 갱신하고, 없으면 새로 만듦
+        const [rows] = await pool.query('SELECT id FROM admins WHERE username = ?', [adminUsername]);
         if (rows.length > 0) {
-            await pool.query('UPDATE admins SET password_hash = ? WHERE username = ?', [hashedPassword, 'admin']);
-            console.log('🔄 관리자 비밀번호 강제 갱신 완료!');
+            await pool.query('UPDATE admins SET password_hash = ? WHERE username = ?', [hashedPassword, adminUsername]);
+            console.log(`🔄 관리자(${adminUsername}) 비밀번호 갱신 완료!`);
         } else {
-            await pool.query('INSERT INTO admins (username, password_hash) VALUES (?, ?)', ['admin', hashedPassword]);
-            console.log('✨ 기본 관리자 계정(admin) 생성 완료!');
+            await pool.query('INSERT INTO admins (username, password_hash) VALUES (?, ?)', [adminUsername, hashedPassword]);
+            console.log(`✨ 관리자 계정(${adminUsername}) 생성 완료!`);
         }
     } catch (err) {
         console.error('⚠️ 관리자 테이블 초기화 중 오류 발생:', err);
