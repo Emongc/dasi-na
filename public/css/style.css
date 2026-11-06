@@ -1482,42 +1482,24 @@ span.bio-name {
    ================================================== */
 .site-footer {
 	position: relative;
-	padding: 16px 70px;
+	padding: 16px 24px;
 	background-color: var(--bg-color); /* 페이지와 같은 색: 띠를 만들지 않음 */
 	text-align: center;
 }
 
 /* 손글씨 대문자 한 줄 */
 .footer-line {
-	font-family: 'Amatic SC', cursive;
-	font-size: 1.35rem;
-	font-weight: 700;
+	font-family: 'Patrick Hand SC', 'Gaegu', cursive; /* [수정] 정사각형 비율의 손글씨 대문자 */
+	font-size: 1.05rem;
+	font-weight: 400;
 	letter-spacing: 1.5px;
-	line-height: 1.2;
+	line-height: 1;
 	color: var(--main-color);
 }
 
-/* 맨 아래에서만 보이는 작은 TOP 글자 링크 */
-.footer-top {
-	position: absolute;
-	right: 30px;
-	top: 50%;
-	transform: translateY(-50%);
-	font-family: 'Amatic SC', cursive;
-	font-size: 1.35rem;
-	font-weight: 700;
-	letter-spacing: 1px;
-	color: #8E8E8E;
-	text-decoration: none;
-	transition: color 0.2s ease;
-}
-.footer-top:hover,
-.footer-top:focus-visible { color: var(--main-color); }
-
 @media screen and (max-width: 767px) {
-	.site-footer { padding: 14px 56px 14px 16px; }
-	.footer-line { font-size: 1.15rem; }
-	.footer-top { right: 14px; font-size: 1.15rem; }
+	.site-footer { padding: 14px 16px; }
+	.footer-line { font-size: 0.95rem; }
 }
 
 /* ==================================================
@@ -1867,33 +1849,26 @@ html.loupe-on * {
     max-width: min(1100px, 92vw);
 }
 
-/* 닫기 버튼: 손글씨 라벨
-   [수정] 화면 오른쪽 위 끝 → 열린 이미지의 오른쪽 위 바깥 (이미지 바로 위, 오른쪽 끝 맞춤) */
+/* 닫기 버튼: 손으로 그은 듯한 X (사이트 전체 공통 — WORKS 상세창과 같은 모양)
+   위치: 열린 이미지의 오른쪽 위 안쪽 */
 .modal-close-btn {
     position: absolute;
-    right: 0;
-    bottom: calc(100% + 10px);
-    padding: 2px 16px;
-    background: #fff;
+    top: 8px;
+    right: 8px;
+    z-index: 3;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
     color: var(--main-color);
-    border: 1.5px solid var(--main-color);
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-    box-shadow: 2px 2px 0 rgba(23, 23, 23, 0.2);
-    font-family: 'Gaegu', cursive;   /* [수정] 한글 손글씨체 */
-    font-size: 1.15rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    border: 0;
     cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-
-.modal-close-btn:hover,
-.modal-close-btn:focus-visible {
-    background: var(--point-color);
-    color: #fff;
-    transform: translateY(-2px);
-    outline: none;
-}
+.modal-close-btn svg { width: 26px; height: 26px; display: block; margin: auto; }
+.modal-close-btn:hover { transform: rotate(-8deg) scale(1.12); }
+.modal-close-btn:focus-visible { outline: 1.5px dashed var(--point-color); outline-offset: 2px; }
 
 .viewer-tip {
     font-family: 'Gaegu', cursive;   /* [수정] 한글 손글씨체 */
@@ -2724,6 +2699,58 @@ a:focus-visible,
 }
 .ce-item:nth-child(even) .ce-stamp { transform: rotate(9deg); }
 
+/* [수정] RESUME 정리: 세로 길이 줄이기 + 설명 글씨는 Noto Sans (손글씨=제목·연도, 고딕=설명) */
+.resume-panels { padding: 24px 40px; }
+.r-row { padding: 8px 0; }
+#panel-edu .r-row { padding: 8px 0; }
+#panel-edu .r-row + .r-head { margin-top: 32px; }
+.ex-row { padding: 11px 0; }
+.ex-desc, .ce-meta, .r-sub, .sk-ai small, #panel-skl .sk-row .r-year {
+    font-family: 'Noto Sans KR', sans-serif;
+    letter-spacing: -0.01em;
+}
+.ex-desc { margin-top: 3px; font-size: 0.95rem; line-height: 1.5; color: #6b6b6b; }
+.ce-meta { margin-top: 2px; font-size: 0.8rem; color: #7f7f7f; }
+.r-sub { font-size: 0.82em; }
+#panel-skl .sk-row .r-year { padding-top: 7px; font-size: 0.88rem; }
+.sk-row { padding: 12px 0; }
+#panel-skl .sk-row + .r-head { margin-top: 30px; }
+.sk-tags { padding-top: 10px; gap: 12px 22px; }
+.ce-grid { gap: 28px 48px; }
+.ce-item { padding: 8px 0; }
+/* [수정] 글씨 위계: 손글씨(제목·연도) 조금 크게, 고딕 설명은 작고 연하게 → 레이아웃 크기는 그대로 */
+.r-row { font-size: 1.42rem; }
+.r-head { font-size: 1.25rem; }
+.sk { font-size: 1.2rem; }
+.sk-tags li { font-size: 1.35rem; }
+.ce-name { font-size: 1.3rem; }
+.ex-row { padding: 14px 0; }
+#panel-edu .r-row { padding: 6px 0; }
+#panel-edu .r-row + .r-head { margin-top: 26px; }
+.ex-desc { margin-top: 1px; font-size: 0.84rem; line-height: 1.45; color: #8a8a8a; }
+.ce-meta { font-size: 0.74rem; color: #8f8f8f; }
+#panel-skl .sk-row .r-year { font-size: 0.8rem; padding-top: 8px; }
+/* [수정] SKILLS 도구: 라벨=손글씨, 도구 이름=고딕 굵게, 테두리는 얇고 연한 손그림 선 */
+#panel-skl .sk-row .r-year { font-family: 'Gaegu', cursive; font-size: 1.3rem; letter-spacing: 0; padding-top: 3px; }
+.sk {
+    padding: 5px 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #2B2B2B;
+    border: 1.5px solid #a39dab;
+}
+.sk-ai { border-color: var(--point-color); }
+.sk-ai small { font-size: 0.85em; }
+.sk-try { color: #8a8a8a; font-weight: 500; border: 1.5px dashed #c4beb7; }
+
+/* [수정] 묶음 간격: 묶음 "사이"는 넓게, 묶음 "안"은 촘촘하게 → 덩어리로 보이게 */
+#panel-skl .sk-row + .r-head { margin-top: 64px; }   /* 쓰는 도구 ↔ 이런 걸 만들 수 있어요 */
+#panel-edu .r-row + .r-head { margin-top: 60px; }    /* 학력 ↔ 교육 이수 */
+#panel-edu .r-row { padding: 4px 0; line-height: 1.3; } /* 학력·교육 이수 안의 줄 간격 */
+#panel-edu .r-head { margin-bottom: 8px; }           /* 묶음 제목 ↔ 첫 줄 */
+
 /* 아래 "다음은 WORKS" 안내 */
 .resume-next {
     align-self: center;
@@ -2746,10 +2773,11 @@ a:focus-visible,
     .resume-chars { display: none; }
     .resume-panels { padding: 16px 18px; }
     .r-row { grid-template-columns: 76px 1fr; font-size: 1.05rem; }
+    .ex-desc { font-size: 0.8rem; }
     .ce-grid { grid-template-columns: 1fr; gap: 20px; height: auto; }
     .ce-name { font-size: 1.05rem; }
     .sk-row { grid-template-columns: 1fr; gap: 6px; font-size: 1.05rem; }
-    .sk { font-size: 0.98rem; }
+    .sk { font-size: 0.86rem; }
     .sk-tags li { font-size: 1.05rem; }
 }
 
@@ -2781,22 +2809,6 @@ a:focus-visible,
 /* ==================================================
    [수정] WORKS — 필름 밀착 인화지
    ================================================== */
-#works.works {
-    display: block;
-}
-.works-intro {
-    margin: 10px 0 22px;
-    font-family: 'Gaegu', cursive;
-    font-size: 1.2rem;
-    line-height: 1.6;
-    color: #555;
-}
-.wk-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2px 18px;
-    margin: 0 0 18px;
-}
 .wk-tabs .wk-tab {
     margin-left: 0;
     /* [수정] 탭 이름이 한글이라 영문 전용 Amatic SC 대신 한글 손글씨체 Gaegu */
@@ -2804,266 +2816,7 @@ a:focus-visible,
     font-size: 1.4rem;
     letter-spacing: 0.5px;
 }
-/* 탭 옆 작품 개수 */
-.wk-count {
-    margin-left: 4px;
-    font-size: 0.6em;
-    vertical-align: super;
-    color: #9a9a9a;
-}
-.wk-tab.on .wk-count { color: var(--point-color); }
-
-.wk-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 52px 36px;
-}
-.wk-card {
-    cursor: pointer;
-    outline: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-.wk-card.out { display: none; }
-.wk-card:focus-visible .wk-thumb { outline: 1.5px dashed var(--point-color); outline-offset: 5px; }
-
-/* [수정] 굵은 크레파스 테두리 → 얇은 선 + 그림자, 테이프로 붙인 사진 느낌 */
-.wk-thumb {
-    position: relative;
-    aspect-ratio: 16 / 9;
-    background: #171717;
-    outline: 1px solid rgba(23, 23, 23, 0.16);
-    outline-offset: 5px;
-    box-shadow: 0 6px 14px -10px rgba(0, 0, 0, 0.4);
-    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
-}
-.wk-card:hover .wk-thumb { transform: translateY(-4px); box-shadow: 0 14px 24px -14px rgba(0, 0, 0, 0.35); }
-.wk-thumb img,
-.wk-thumb video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-/* 번호 = 히어로와 같은 머스타드 마스킹테이프 위 손글씨 */
-.wk-tape {
-    position: absolute;
-    top: -12px;
-    left: 16px;
-    z-index: 4;
-    width: 54px;
-    height: 23px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(217, 164, 65, 0.62);
-    transform: rotate(-4deg);
-    font-family: 'Gaegu', cursive;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #3A2E14;
-}
-.wk-card:nth-child(even) .wk-tape { transform: rotate(3deg); }
-/* 발전시킨 영상 표시 = 보라 테이프 */
-.wk-ver {
-    position: absolute;
-    right: 14px;
-    bottom: -11px;
-    z-index: 4;
-    height: 23px;
-    padding: 0 11px;
-    display: flex;
-    align-items: center;
-    background: rgba(183, 123, 221, 0.5);
-    transform: rotate(3deg);
-    font-family: 'Gaegu', cursive;
-    font-size: 1rem;
-    font-weight: 700;
-    color: #2E1A3D;
-}
-.wk-thumb video { opacity: 0; transition: opacity 0.3s ease; }
-.wk-card.playing .wk-thumb video { opacity: 1; }
-.wk-badge {
-    position: absolute;
-    right: 10px;
-    bottom: 8px;
-    z-index: 3;
-    font-size: 0.8rem;
-    color: #fff;
-    opacity: 0.85;
-}
-
-/* 필름 번호 */
-.wk-no {
-    margin: 12px 0 0;
-    font-family: 'Amatic SC', cursive;
-    font-size: 1.15rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: var(--point-color);
-}
-#works .wk-title {
-    position: relative;
-    isolation: isolate;
-    display: inline-block;
-    margin: 20px 0 0;
-    font-family: 'Gaegu', cursive;
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: var(--main-color);
-}
-/* 마우스 올리면 제목 아래 보라 크레파스 밑줄 */
-#works .wk-title::after {
-    content: '';
-    position: absolute;
-    left: -4px;
-    right: -6px;
-    bottom: 0.15em;
-    height: 11px;
-    z-index: -1;
-    background-color: var(--point-color);
-    opacity: 0;
-    transform: scaleX(0.2);
-    transform-origin: left center;
-    transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 20' preserveAspectRatio='none'%3E%3Cfilter id='c' x='-5%' y='-30%' width='110%' height='160%'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04 0.3' numOctaves='2' seed='4' result='w'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='w' scale='4' xChannelSelector='R' yChannelSelector='G' result='s'/%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55 1.1' numOctaves='2' seed='9' result='g'/%3E%3CfeColorMatrix in='g' type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  3 0 0 0 -0.45' result='ga'/%3E%3CfeComposite in='s' in2='ga' operator='in'/%3E%3C/filter%3E%3Cpath d='M3 6 Q 45 2.5 100 5 T 197 3.5 L 198 15 Q 140 17.5 80 16 T 2 17 Z' fill='white' filter='url(%23c)'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 20' preserveAspectRatio='none'%3E%3Cfilter id='c' x='-5%' y='-30%' width='110%' height='160%'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04 0.3' numOctaves='2' seed='4' result='w'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='w' scale='4' xChannelSelector='R' yChannelSelector='G' result='s'/%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55 1.1' numOctaves='2' seed='9' result='g'/%3E%3CfeColorMatrix in='g' type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  3 0 0 0 -0.45' result='ga'/%3E%3CfeComposite in='s' in2='ga' operator='in'/%3E%3C/filter%3E%3Cpath d='M3 6 Q 45 2.5 100 5 T 197 3.5 L 198 15 Q 140 17.5 80 16 T 2 17 Z' fill='white' filter='url(%23c)'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
-}
-#works .wk-card:hover .wk-title::after,
-#works .wk-card:focus-visible .wk-title::after { opacity: 0.8; transform: scaleX(1); }
-.wk-line {
-    margin: 2px 0 6px;
-    font-family: 'Gaegu', cursive;
-    font-size: 1.05rem;
-    color: #777;
-}
-.wk-tags {
-    margin: 2px 0 0;
-    font-size: 0.82rem;
-    letter-spacing: 0.02em;
-    color: #6e6e6e;
-}
-
-/* 작품 뷰어 */
-.work-viewer .wv-box {
-    display: grid;
-    grid-template-columns: 1.7fr 1fr;
-    gap: 28px;
-    width: min(1100px, 92vw);
-    max-width: none;
-    padding: 22px;
-    background: #fff;
-}
-.wv-stage {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #171717;
-    min-height: 240px;
-}
-.wv-stage video,
-.wv-stage img {
-    display: block;
-    width: 100%;
-    max-height: calc(100vh - 220px);
-    object-fit: contain;
-}
-.wv-left { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-.wv-vers { display: flex; flex-wrap: wrap; gap: 6px; }
-.wv-vers[hidden], .wv-change[hidden] { display: none; }
-.wv-ver-btn {
-    min-height: 40px;
-    padding: 0 14px;
-    border: 0;
-    background: transparent;
-    font-family: 'Gaegu', cursive;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #8a8a8a;
-    cursor: pointer;
-}
-.wv-ver-btn:hover { color: var(--main-color); }
-.wv-ver-btn[aria-pressed="true"] { color: var(--main-color); background: rgba(183, 123, 221, 0.3); }
-.wv-ver-btn:focus-visible { outline: 1.5px dashed var(--point-color); outline-offset: 3px; }
-.wv-change {
-    margin-top: 18px;
-    padding: 12px 14px;
-    background: #F6F2EA;
-}
-.wv-change p { margin: 4px 0 0; font-size: 1.05rem; line-height: 1.5; color: #333; }
-.wv-change .wv-change-h { margin: 0 0 2px; font-size: 1.15rem; font-weight: 700; color: var(--main-color); }
-.wv-info { padding: 6px 6px 6px 0; font-family: 'Gaegu', cursive; }
-.wv-title {
-    margin: 2px 0 14px;
-    font-family: 'Gaegu', cursive;
-    font-size: 1.8rem;
-    color: var(--main-color);
-}
-.wv-dl dt {
-    margin-top: 12px;
-    color: var(--point-color);
-    font-weight: 700;
-    font-size: 1rem;
-}
-.wv-dl dd {
-    margin: 2px 0 0;
-    font-size: 1.12rem;
-    line-height: 1.5;
-    color: #333;
-}
-
-/* [추가] 그림책 카드: 종이 위에 그림 여러 장을 나란히, 마우스 올리면 옆으로 흘러감 */
-.wk-thumb.wk-book { background: #F3EEE5; }
-.wk-clip { position: absolute; inset: 0; overflow: hidden; }
-.wk-thumb.wk-book .wk-ver { bottom: auto; top: 10px; right: 12px; }
-.wk-pages {
-    position: absolute;
-    top: 50%;
-    left: 6%;
-    display: flex;
-    gap: 14px;
-    height: 58%;
-    transform: translateY(-50%);
-    transition: transform 2.6s cubic-bezier(0.45, 0, 0.2, 1);
-}
-.wk-thumb .wk-pages img {
-    position: static;
-    inset: auto;
-    width: auto;
-    height: 100%;
-    aspect-ratio: 1 / 1;
-    border: 1px solid rgba(23, 23, 23, 0.12);
-    background: #fff;
-}
-.wk-card:hover .wk-pages,
-.wk-card:focus-visible .wk-pages { transform: translate(-50%, -50%); }
-
-/* [추가] 상세창 연결 버튼 */
-.wv-links { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 18px; }
-.wv-links[hidden] { display: none; }
-.wv-link {
-    padding: 4px 2px;
-    border: 0;
-    background: none;
-    font-family: 'Gaegu', cursive;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--main-color);
-    text-decoration: none;
-    cursor: pointer;
-    border-bottom: 1.5px dashed #c9c2b8;
-}
-.wv-link:hover { color: #7A4FA0; }
-.wv-link.main {
-    padding: 8px 20px;
-    border: 1.5px solid var(--main-color);
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-    background: rgba(217, 164, 65, 0.45);
-    font-size: 1.25rem;
-}
-.wv-link.main:hover { background: rgba(217, 164, 65, 0.7); color: var(--main-color); }
-.wv-link:focus-visible { outline: 1.5px dashed var(--point-color); outline-offset: 4px; }
-@media (prefers-reduced-motion: reduce) { .wk-pages { transition: none; } }
+/* (WORKS 카드 · 상세창 스타일은 css/works.css 로 옮김) */
 
 /* ==================================================
    [수정] CONTACT — 편지 한 장
@@ -3177,21 +2930,14 @@ a:focus-visible,
     transform: rotate(0deg) translateY(-2px);
 }
 
-@media screen and (max-width: 1023px) {
-    .wk-grid { grid-template-columns: repeat(2, 1fr); }
-}
 @media screen and (max-width: 767px) {
-    .wk-grid { grid-template-columns: 1fr; gap: 40px; }
     .wk-tabs .wk-tab { font-size: 1.12rem; }
-    #works .wk-title { font-size: 1.1rem; }
-    .wk-line { font-size: 0.92rem; }
-    .work-viewer .wv-box { grid-template-columns: 1fr; gap: 12px; padding: 14px; max-height: calc(100vh - 110px); overflow-y: auto; }
     .ct-wrap { grid-template-columns: 1fr; gap: 20px; }
     .ct-char { width: 160px; }
     .ct-box { padding: 20px 18px 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
-    .wk-thumb, .wk-card, #works .wk-title::after, .ct-bubble { transition: none; }
+    .ct-bubble { transition: none; }
 }
 
 /* ==================================================
@@ -3234,14 +2980,37 @@ a:focus-visible,
     flex-direction: column;
     align-items: center;
 }
+.end-left,
+.end-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* [추가] PC: 좌우 배치 (왼쪽 큰 손글씨 / 오른쪽 작은 글 + 버튼, 가운데는 여백) */
+@media screen and (min-width: 1024px) {
+    .ending {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+    .end-left { align-items: flex-start; }
+    .end-right { align-items: flex-end; text-align: right; padding-bottom: 8px; }
+    .end-sign { margin-left: -6px; }
+}
 .ending .end-thanks {
     margin: 0;
     font-family: 'Amatic SC', cursive;
-    font-size: 4.2rem;
+    font-size: 3.4rem; /* [수정] 4.2rem → 3.4rem */
     font-weight: 700;
     letter-spacing: 3px;
     line-height: 1;
     color: var(--point-color);
+    transform: scaleY(0.8); /* [추가] 키만 낮춤 (1 = 원래 높이, 작을수록 납작) */
+    transform-origin: center bottom;
+}
+@media screen and (min-width: 1024px) {
+    .ending .end-thanks { transform-origin: left bottom; }
 }
 .end-letter { display: inline-block; }
 .ending.ready .end-letter { opacity: 0; }
@@ -3251,21 +3020,30 @@ a:focus-visible,
 }
 
 .end-sign {
-    width: 220px;
+    width: 270px; /* [수정] 꼬리 공간만큼 넓힘 (사인 크기는 그대로) */
     height: auto;
     margin-top: 6px;
     overflow: visible;
     fill: none;
     stroke: #2B2B2B;
-    stroke-width: 2.6;
+    stroke-width: 3.6; /* [수정] 2.6 → 3.6 크레파스처럼 굵게 */
     stroke-linecap: round;
     stroke-linejoin: round;
 }
-.end-sign .end-sign-line { stroke-width: 2; stroke: var(--point-color); }
+.end-sign .end-sign-line { stroke-width: 4.2; stroke: var(--point-color); }
+/* 휘갈긴 꼬리: 밑줄보다 가늘게 → 끝이 빠지는 느낌 */
+.end-sign .end-sign-tail { stroke: var(--point-color); }
 .ending.ready .end-sign path { stroke-dasharray: 1; stroke-dashoffset: 1; }
-.ending.in .end-sign path { animation: signDraw 1.5s cubic-bezier(0.55, 0.05, 0.4, 1) 0.9s forwards; }
-.ending.in .end-sign path:nth-child(2) { animation-duration: 0.35s; animation-delay: 2.4s; }
-.ending.in .end-sign path:nth-child(3) { animation-duration: 0.6s; animation-delay: 2.8s; }
+.ending.in .end-sign path { animation: signDraw 0.9s cubic-bezier(0.55, 0.05, 0.4, 1) 0.9s forwards; } /* [수정] 사인 쓰는 속도 1.5s → 0.9s */
+.ending.in .end-sign path:nth-child(2) { animation-duration: 0.25s; animation-delay: 1.8s; }
+.ending.in .end-sign path:nth-child(3) { animation-duration: 0.4s; animation-delay: 2.1s; animation-timing-function: cubic-bezier(0.4, 0, 1, 1); }
+/* 꼬리 8토막: 밑줄 속도 그대로 이어서 쭉 빠지며, 토막마다 조금씩 가늘어짐 (3.8 → 약 0.9) */
+.end-sign .end-sign-tail { stroke-width: calc(3.8px - var(--k) * 0.42px); }
+.ending.in .end-sign path.end-sign-tail {
+    animation-duration: 0.02s;
+    animation-delay: calc(2.5s + var(--k) * 0.02s);
+    animation-timing-function: linear;
+}
 @keyframes signDraw { to { stroke-dashoffset: 0; } }
 
 .ending .end-line {
@@ -3273,7 +3051,7 @@ a:focus-visible,
     font-family: 'Gaegu', cursive;
     font-size: 1.15rem;
     color: #777;
-    transition: opacity 0.6s ease 3.2s;
+    transition: opacity 0.6s ease 2.7s; /* 사인이 빨라진 만큼 앞당김 */
 }
 .ending.ready .end-line { opacity: 0; }
 .ending.in .end-line { opacity: 1; }
@@ -3313,8 +3091,8 @@ a:focus-visible,
 }
 
 @media screen and (max-width: 767px) {
-    .ending .end-thanks { font-size: 3rem; }
-    .end-sign { width: 170px; }
+    .ending .end-thanks { font-size: 2.6rem; }
+    .end-sign { width: 210px; }
 }
 @media (prefers-reduced-motion: reduce) {
     .ending.ready .end-letter, .ending.ready .end-line { opacity: 1; }

@@ -10,11 +10,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&amp;family=Gaegu:wght@400;700&amp;family=Noto+Sans+KR:wght@400;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&amp;family=Patrick+Hand+SC&amp;family=Gaegu:wght@400;700&amp;family=Noto+Sans+KR:wght@400;700&display=swap"
     rel="stylesheet">
 
   <!-- 외부 스타일시트 연결 -->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=19">
+  <link rel="stylesheet" href="css/works.css?v=19">
 </head>
 
 <body>
@@ -334,54 +335,16 @@
     </section>
 
     <!-- [수정] 10. WORKS — 필름 밀착 인화지 컨셉 (썸네일 + 마우스 올리면 미리보기 + 클릭하면 뷰어)
-         · 작품 설명(기획 의도 · 사용 도구 · 내 역할)은 js/script.js 의 WORKS_DATA 에서 수정 (현재는 Claude 초안) -->
+         · 작품 목록과 설명은 js/works-data.js 에서 수정 -->
     <section id="works" class="works">
       <div class="resume-head">
         <h2>WORKS</h2>
         <p class="resume-sub">: 말보다 결과로 보여주는 것들</p>
       </div>
-      <p class="works-intro">레퍼런스에서 출발해, AI와 함께 방향을 구체화합니다.</p>
-
-      <!-- 분류 탭: js가 카드의 data-cat 을 세어서 자동으로 만듦 (작품이 있는 분야만, 개수 표시) -->
+      <!-- 탭과 카드는 js/works.js 가 js/works-data.js(작품 목록)로 만듦 — 작품 추가·수정은 works-data.js 에서 -->
       <div class="wk-tabs" id="wkTabs" role="tablist" aria-label="작품 분류"></div>
-
-      <div class="wk-grid">
-        <article class="wk-card" data-cat="video" data-work="school" tabindex="0" role="button" aria-label="학교폭력 공익광고 자세히 보기">
-          <div class="wk-thumb"><span class="wk-tape" aria-hidden="true">00</span><span class="wk-ver" aria-hidden="true">v1 → v2</span><img src="img/works/work2-thumb.jpg" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="img/works/work2-preview.mp4"></video><span class="wk-badge" aria-hidden="true">▶</span></div>
-          <h3 class="wk-title">학교폭력 공익광고</h3>
-          <p class="wk-tags">AI 영상 · 공익 캠페인</p>
-        </article>
-        <article class="wk-card" data-cat="video" data-work="dream" tabindex="0" role="button" aria-label="AI의 꿈 자세히 보기">
-          <div class="wk-thumb"><span class="wk-tape" aria-hidden="true">00</span><span class="wk-ver" aria-hidden="true">v1 → v2</span><img src="img/works/work4-thumb.jpg" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="img/works/work4-preview.mp4"></video><span class="wk-badge" aria-hidden="true">▶</span></div>
-          <h3 class="wk-title">AI의 꿈</h3>
-          <p class="wk-tags">AI 영상 · 메시지</p>
-        </article>
-        <article class="wk-card" data-cat="video" data-work="5" tabindex="0" role="button" aria-label="내 딸은 중2 자세히 보기">
-          <div class="wk-thumb"><span class="wk-tape" aria-hidden="true">00</span><img src="img/works/work5-thumb.jpg" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="img/works/work5-preview.mp4"></video><span class="wk-badge" aria-hidden="true">▶</span></div>
-          <h3 class="wk-title">내 딸은 중2</h3>
-          <p class="wk-tags">AI 영상 · 애니메이션</p>
-        </article>
-        <article class="wk-card" data-cat="video" data-work="6" tabindex="0" role="button" aria-label="부부의 대화 자세히 보기">
-          <div class="wk-thumb"><span class="wk-tape" aria-hidden="true">00</span><img src="img/works/work6-thumb.jpg" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="img/works/work6-preview.mp4"></video><span class="wk-badge" aria-hidden="true">▶</span></div>
-          <h3 class="wk-title">부부의 대화</h3>
-          <p class="wk-tags">AI 영상 · 코미디</p>
-        </article>
-        <article class="wk-card" data-cat="video" data-work="7" tabindex="0" role="button" aria-label="랩배틀 자세히 보기">
-          <div class="wk-thumb"><span class="wk-tape" aria-hidden="true">00</span><img src="img/works/work7-thumb.jpg" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="img/works/work7-preview.mp4"></video><span class="wk-badge" aria-hidden="true">▶</span></div>
-          <h3 class="wk-title">랩배틀</h3>
-          <p class="wk-tags">AI 영상 · 숏폼</p>
-        </article>
-        <article class="wk-card" data-cat="book" data-work="book" tabindex="0" role="button" aria-label="그림책 꿈 자세히 보기">
-          <div class="wk-thumb wk-book"><span class="wk-tape" aria-hidden="true">00</span><span class="wk-ver" aria-hidden="true">그림책 · 24p</span><div class="wk-clip" aria-hidden="true"><div class="wk-pages"><img src="img/works/book-p01.webp" alt="" loading="lazy"><img src="img/works/book-p03.webp" alt="" loading="lazy"><img src="img/works/book-p06.webp" alt="" loading="lazy"><img src="img/works/book-p10.webp" alt="" loading="lazy"><img src="img/works/book-p13.webp" alt="" loading="lazy"><img src="img/works/book-p17.webp" alt="" loading="lazy"></div></div></div>
-          <h3 class="wk-title">그림책 〈꿈〉</h3>
-          <p class="wk-tags">그림책 · 일러스트</p>
-        </article>
-        <article class="wk-card" data-cat="promo" data-work="8" tabindex="0" role="button" aria-label="달빛걷기 포스터 자세히 보기">
-          <div class="wk-thumb"><span class="wk-tape" aria-hidden="true">00</span><img src="img/works/work8-thumb.jpg" alt="" loading="lazy"><span class="wk-badge" aria-hidden="true">◎</span></div>
-          <h3 class="wk-title">달빛걷기 포스터</h3>
-          <p class="wk-tags">디자인 · 포스터</p>
-        </article>
-      </div>
+      <div class="wk-grid" id="wkGrid"></div>
+      <noscript><p>작품 목록을 보려면 자바스크립트를 켜 주세요.</p></noscript>
     </section>
 
     <!-- [수정] 11. CONTACT — 편지 한 장 컨셉 (폼의 id는 그대로라 기존 보내기 기능 유지) -->
@@ -486,22 +449,48 @@
       <!-- [수정] 마지막 장면: "Again,"으로 시작해 "Thank you,"로 끝나는 수미상관
            (예전 THANK YOU! + CONTACT 상자는 위 CONTACT 섹션과 겹쳐서 정리) -->
       <div class="timeline-footer-text ending" id="ending">
-        <p class="end-thanks" aria-label="Thank you,"><span class="end-letter" style="--i:0">T</span><span class="end-letter" style="--i:1">h</span><span class="end-letter" style="--i:2">a</span><span class="end-letter" style="--i:3">n</span><span class="end-letter" style="--i:4">k</span><span class="end-letter" style="--i:5">&nbsp;</span><span class="end-letter" style="--i:6">y</span><span class="end-letter" style="--i:7">o</span><span class="end-letter" style="--i:8">u</span><span class="end-letter" style="--i:9">,</span></p>
-        <svg class="end-sign" viewBox="0 0 260 90" role="img" aria-label="Emongc 서명">
-          <path pathLength="1" d="M44 24 C 30 14 14 26 26 38 C 30 42 36 42 40 41 C 22 42 12 56 22 66 C 30 74 46 70 54 60 C 57 54 60 46 63 58 C 64 63 64 63 65 58 C 67 47 72 45 74 58 C 75 63 75 63 76 58 C 78 47 84 45 85 60 C 87 53 92 49 97 51 C 103 54 100 64 93 64 C 87 64 87 55 93 53 C 98 52 101 56 104 58 C 106 52 108 47 110 60 C 112 50 118 46 121 60 C 123 54 128 50 133 52 C 138 55 134 63 128 63 C 123 63 123 56 128 54 C 133 53 135 56 136 58 C 136 66 135 76 131 82 C 127 88 117 87 119 80 C 121 73 134 68 146 62" />
-          <path pathLength="1" d="M163 52 C 156 47 147 55 150 62 C 153 67 161 65 167 59" />
-          <path pathLength="1" class="end-sign-line" d="M28 82 C 80 76 150 74 236 64" />
-        </svg>
-        <p class="end-line">끝까지 봐 주셔서 고마워요. 다시, 만나요.</p>
-        <a href="#top" class="end-top" id="endTop">↑ 다시 처음으로</a>
+        <!-- [수정] PC: 왼쪽(인사+서명) / 오른쪽(한마디+버튼) 좌우 배치, 태블릿·폰: 세로로 쌓임 -->
+        <div class="end-left">
+          <p class="end-thanks" aria-label="Thank you,"><span class="end-letter" style="--i:0">T</span><span class="end-letter" style="--i:1">h</span><span class="end-letter" style="--i:2">a</span><span class="end-letter" style="--i:3">n</span><span class="end-letter" style="--i:4">k</span><span class="end-letter" style="--i:5">&nbsp;</span><span class="end-letter" style="--i:6">y</span><span class="end-letter" style="--i:7">o</span><span class="end-letter" style="--i:8">u</span><span class="end-letter" style="--i:9">,</span></p>
+          <!-- [수정] 사인: 굵게 + 크레파스 질감 + 밑줄을 휘갈겨 길게 꼬리 빼기 -->
+          <svg class="end-sign" viewBox="0 0 320 96" role="img" aria-label="Emongc 서명">
+            <defs>
+              <filter id="sign-crayon" x="-5%" y="-10%" width="110%" height="120%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="6" result="wobble" />
+                <feDisplacementMap in="SourceGraphic" in2="wobble" scale="2.4" xChannelSelector="R" yChannelSelector="G" result="line" />
+                <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="11" result="grain" />
+                <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3.2 0 0 0 -0.35" result="grainAlpha" /> <!-- 크레파스 진하기: 마지막 숫자(-0.35)가 0에 가까울수록 진하고 꽉 참, -0.7처럼 작을수록 희미하고 거칠어짐 -->
+                <feComposite in="line" in2="grainAlpha" operator="in" />
+              </filter>
+            </defs>
+            <g filter="url(#sign-crayon)">
+              <path pathLength="1" d="M44 24 C 30 14 14 26 26 38 C 30 42 36 42 40 41 C 22 42 12 56 22 66 C 30 74 46 70 54 60 C 57 54 60 46 63 58 C 64 63 64 63 65 58 C 67 47 72 45 74 58 C 75 63 75 63 76 58 C 78 47 84 45 85 60 C 87 53 92 49 97 51 C 103 54 100 64 93 64 C 87 64 87 55 93 53 C 98 52 101 56 104 58 C 106 52 108 47 110 60 C 112 50 118 46 121 60 C 123 54 128 50 133 52 C 138 55 134 63 128 63 C 123 63 123 56 128 54 C 133 53 135 56 136 58 C 136 66 135 76 131 82 C 127 88 117 87 119 80 C 121 73 134 68 146 62" />
+              <path pathLength="1" d="M163 52 C 156 47 147 55 150 62 C 153 67 161 65 167 59" />
+              <path pathLength="1" class="end-sign-line" d="M24 86 C 90 82 170 76 236 67" />
+              <!-- 꼬리: 8토막으로 나눠 굵기를 조금씩 줄여 매끄럽게 가늘어지게 -->
+              <path pathLength="1" class="end-sign-tail" style="--k:0" d="M236.0 67.0 C 239.8 66.5 243.4 66.0 247.1 65.5" />
+              <path pathLength="1" class="end-sign-tail" style="--k:1" d="M247.1 65.5 C 250.7 64.9 254.3 64.4 257.8 63.8" />
+              <path pathLength="1" class="end-sign-tail" style="--k:2" d="M257.8 63.8 C 261.3 63.2 264.8 62.6 268.3 62.0" />
+              <path pathLength="1" class="end-sign-tail" style="--k:3" d="M268.3 62.0 C 271.7 61.4 275.1 60.8 278.5 60.1" />
+              <path pathLength="1" class="end-sign-tail" style="--k:4" d="M278.5 60.1 C 281.9 59.5 285.2 58.8 288.5 58.1" />
+              <path pathLength="1" class="end-sign-tail" style="--k:5" d="M288.5 58.1 C 291.9 57.4 295.2 56.6 298.4 55.9" />
+              <path pathLength="1" class="end-sign-tail" style="--k:6" d="M298.4 55.9 C 301.7 55.1 305.0 54.3 308.2 53.5" />
+              <path pathLength="1" class="end-sign-tail" style="--k:7" d="M308.2 53.5 C 311.5 52.7 314.8 51.9 318.0 51.0" />
+            </g>
+          </svg>
+        </div>
+        <div class="end-right">
+          <p class="end-line">&nbsp;&nbsp;&nbsp;끝까지 봐 주셔서 감사합니다.</p>
+          <a href="#top" class="end-top" id="endTop">↑ 다시 처음으로</a>
+        </div>
       </div>
       </div>
 
       <!-- [수정] 팝업 모달 → 제자리에서 펼쳐지는 뷰어 -->
       <div id="imageModal" class="image-modal" role="dialog" aria-modal="true" aria-label="히스토리 크게 보기" aria-hidden="true">
-        <!-- [수정] 닫기 버튼을 이미지 오른쪽 위 바깥에 붙이기 위해 이미지와 함께 묶음 -->
+        <!-- [수정] 닫기 버튼을 열린 이미지의 오른쪽 위 안쪽에 두기 위해 이미지와 함께 묶음 -->
         <div class="viewer-box">
-          <button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="닫기">닫기 ✕</button>
+          <button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.4 5.9c2.7 2.5 5.6 5.7 8.3 8.7 1.5 1.6 3 3.2 4.6 4.6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" fill="none"/><path d="M18.4 5.2c-2.6 2.4-5.4 5.6-8 8.6-1.6 1.9-3.2 3.6-4.8 5.3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" fill="none"/></svg></button>
           <div class="viewer-stage" id="viewerStage">
             <img class="modal-content" id="expandedImg" src="img/timeline-image.png" alt="타임라인 확대보기" draggable="false">
           </div>
@@ -516,51 +505,20 @@
   <!-- ==================================================
      12. FOOTER: 하단 저작권 영역
      ================================================== -->
-  <!-- [수정] footer: 색 없이 얇은 한 줄 (손글씨 대문자) / 맨 아래에선 떠 있는 TOP 대신 글자 링크 -->
+  <!-- [수정] footer: 색 없이 얇은 한 줄 (손글씨 대문자) / 위로 가기는 "다시 처음으로" 버튼이 담당 -->
   <footer class="site-footer" id="siteFooter">
     <p class="footer-line">&copy; 2026 EMONGC &mdash; HAND-DRAWN &amp; HAND-CODED</p>
-    <a href="#" class="footer-top" id="footerTop" aria-label="페이지 맨 위로 이동">&uarr; TOP</a>
   </footer>
 
   <!-- TOP 버튼 -->
   <button id="top-btn" aria-label="페이지 맨 위로 이동">TOP</button>
 
   <!-- JavaScript 연결 -->
-  <script src="js/script.js?v=20261105c"></script>
+  <script src="js/script.js?v=20261106a"></script>
+  <script src="js/works-data.js?v=20"></script>
+  <script src="js/works.js?v=19"></script>
 
-  <!-- [추가] WORKS 뷰어: history 뷰어와 같은 모양 (뒤 흐림 · 닫기 ✕ · Esc) -->
-  <div id="workViewer" class="image-modal work-viewer" role="dialog" aria-modal="true" aria-label="작품 자세히 보기" aria-hidden="true">
-    <div class="viewer-box wv-box">
-      <button type="button" class="modal-close-btn" id="wvClose" aria-label="닫기">닫기 ✕</button>
-      <div class="wv-left">
-        <div class="wv-stage" id="wvStage"></div>
-        <div class="wv-vers" id="wvVers" role="group" aria-label="버전 선택" hidden></div>
-      </div>
-      <div class="wv-info">
-        <p class="wk-no" id="wvNo"></p>
-        <h3 class="wv-title" id="wvTitle"></h3>
-        <dl class="wv-dl">
-          <dt>기획 의도</dt><dd id="wvWhy"></dd>
-          <dt>사용 도구</dt><dd id="wvTools"></dd>
-          <dt>내 역할</dt><dd id="wvRole"></dd>
-        </dl>
-        <div class="wv-change" id="wvChange" hidden>
-          <p class="wv-change-h">v1 → v2, 무엇을 바꿨나</p>
-          <p><b>v1</b> <span id="wvV1"></span></p>
-          <p><b>v2</b> <span id="wvV2"></span></p>
-        </div>
-        <div class="wv-links" id="wvLinks" hidden></div>
-      </div>
-    </div>
-  </div>
 
-  <!-- (예전) 클릭했을 때 나타나는 상세 팝업 창 — 지금은 사용 안 함 -->
-    <div id="workModal" class="work-detail-modal">
-        <button class="close-btn" onclick="closeModal()">✕ 닫기</button>
-        <div id="modalContent">
-            <!-- 여기에 상세 설명이나 아담한 크기의 영상(video, iframe 등)을 넣게 됩니다 -->
-        </div>
-    </div>
 
 </body>
 

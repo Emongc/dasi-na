@@ -178,19 +178,12 @@ if (topBtn) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  // [추가] footer가 보이면 떠 있는 버튼은 숨기고, footer 안의 TOP 글자 링크를 사용
+  // [추가] footer가 보이면 떠 있는 버튼은 숨김 (맨 아래에선 "다시 처음으로" 버튼 사용)
   const siteFooter = document.querySelector('#siteFooter');
-  const footerTop = document.querySelector('#footerTop');
   if (siteFooter && 'IntersectionObserver' in window) {
     new IntersectionObserver(function (entries) {
       topBtn.classList.toggle('at-footer', entries[0].isIntersecting);
     }).observe(siteFooter);
-  }
-  if (footerTop) {
-    footerTop.addEventListener('click', function (e) {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
   }
 }
 
@@ -417,7 +410,12 @@ document.addEventListener("DOMContentLoaded", function () {
             const r = thumb.getBoundingClientRect();
             const x = e.clientX - r.left;
             const y = e.clientY - r.top;
-            const near = x > -EDGE && y > -EDGE && x < r.width + EDGE && y < r.height + EDGE;
+            // [수정] 마우스가 상단 메뉴 위(또는 메뉴 높이 안)에 있으면 돋보기를 끔
+            //        → 메뉴 위에서 커서가 사라지거나 돋보기가 끼어들지 않게
+            const hdr = document.querySelector("header");
+            const overHeader = (e.target && e.target.closest && e.target.closest("header")) ||
+                               (hdr && e.clientY < hdr.getBoundingClientRect().bottom);
+            const near = !overHeader && x > -EDGE && y > -EDGE && x < r.width + EDGE && y < r.height + EDGE;
             if (!near) {
                 if (box.classList.contains("peeking") && userPeeked) {
                     box.classList.remove("peeking");
@@ -794,103 +792,6 @@ document.addEventListener("DOMContentLoaded", function() {
     window.addEventListener("resize", checkScreenSize);
     if (closeBtn) closeBtn.addEventListener("click", foldNote);
 });
-
-// ==================================================
-// WORKS 카드 클릭 시 모달창 열기 및 닫기 함수
-// ==================================================
-function openWorkModal(workId) {
-    const modal = document.getElementById("workModal");
-    const modalContent = document.getElementById("modalContent");
-
-    if (!modal || !modalContent) {
-        console.error("모달 요소를 찾을 수 없습니다!");
-        return;
-    }
-
-    // 📍 Work 1
-    if (workId === 'work1') {
-        modalContent.innerHTML = `
-            <h3>학교폭력 1</h3>
-            <video src="img/work1.mp4" controls autoplay muted playsinline></video>
-            <p>학폭은 건너뛰기 할 수 없습니다.</p>
-        `;
-    } 
-    // 📍 Work 2
-    else if (workId === 'work2') {
-        modalContent.innerHTML = `
-            <h3>학교폭력 2</h3>
-            <video src="img/work2.mp4" controls autoplay muted playsinline></video>
-            <p>학폭은 건너뛰기 할 수 없습니다.</p>
-        `;
-    } 
-    // 📍 Work 3
-    else if (workId === 'work3') {
-        modalContent.innerHTML = `
-            <h3>내 꿈이 사라졌다 1</h3>
-            <video src="img/work3.mp4" controls autoplay muted playsinline></video>
-            <p>AI의 꿈이 이루어졌다..</p>
-        `;
-    } 
-    // 📍 Work 4 (파일명 work4.mp4로 수정)
-    else if (workId === 'work4') {
-        modalContent.innerHTML = `
-            <h3>내 꿈이 사라졌다 2</h3>
-            <video src="img/work4.mp4" controls autoplay muted playsinline></video>
-            <p>AI의 꿈이 이루어졌다..</p>
-        `;
-    } 
-    // 📍 Work 5 (중괄호 누락 수정 완료)
-    else if (workId === 'work5') {
-        modalContent.innerHTML = `
-            <h3>나는 중2</h3>
-            <video src="img/work5.mp4" controls autoplay muted playsinline></video>
-            <p>사춘기 여중생은..</p>
-        `;
-    } 
-    // 📍 Work 6
-    else if (workId === 'work6') {
-        modalContent.innerHTML = `
-            <h3>부부의 대화</h3>
-            <video src="img/work6.mp4" controls autoplay muted playsinline></video>
-            <p>심통이 아내와 버럭이 남편</p>
-        `;
-    } 
-    // 📍 Work 7
-    else if (workId === 'work7') {
-        modalContent.innerHTML = `
-            <h3>랩배틀</h3>
-            <video src="img/work7.mp4" controls autoplay muted playsinline></video>
-            <p>고양이와 개의 디스랩</p>
-        `;
-    } 
-    // 📍 Work 8
-    else if (workId === 'work8') {
-        modalContent.innerHTML = `
-            <h3>달빛걷기 포스터 4</h3>
-            <img src="img/work8.jpg" alt="작업물 8 이미지">
-            <p>생명존중 걷기 캠페인</p>
-        `;
-    } 
-    // 기본값
-    else {
-        modalContent.innerHTML = `
-            <h3>${workId} 상세 내용</h3>
-            <p>준비 중인 작업물입니다.</p>
-        `;
-    }
-
-    modal.classList.add("active");
-}
-
-function closeModal() {
-    const modal = document.getElementById("workModal");
-    if (modal) {
-        modal.classList.remove("active");
-    }
-    // 닫은 뒤에도 영상 소리가 계속 나지 않도록 내용 비우기
-    const modalContent = document.getElementById("modalContent");
-    if (modalContent) modalContent.innerHTML = "";
-}
 
 // ==================================================
 // [추가] 세로선 연출
@@ -1313,262 +1214,12 @@ window.drawCrayonFrames = (function () {
 })();
 
 // ==================================================
-// [추가] WORKS: 분류 탭 · 마우스 올리면 미리보기 · 클릭하면 뷰어
-// 작품 설명은 아래 WORKS_DATA 에서 고치면 됨 (현재 Claude 초안)
+// [수정] WORKS 는 js/works.js + js/works-data.js 로 옮김
+// 여기서는 CONTACT 편지 상자에 크레파스 테두리만 붙임 (예전 WORKS 코드에 같이 있던 부분)
 // ==================================================
-const WORKS_DATA = {
-  // 같은 주제를 발전시킨 영상은 한 항목으로 묶음 → versions 에 v1, v2 순서로
-  "school": {
-    "no": "01",
-    "title": "학교폭력 공익광고",
-    "kind": "video",
-    "versions": [
-      { "label": "v1 · 처음 버전", "src": "img/works/work1.mp4" },
-      { "label": "v2 · 발전시킨 버전", "src": "img/works/work2.mp4" }
-    ],
-    "why": "광고를 \"건너뛰고 싶은\" 시청자의 습관을 거꾸로 이용했습니다. 우리는 30초도 넘기고 싶어 하지만, 피해 학생은 그 순간을 건너뛸 수 없다는 메시지를 담은 공익 광고입니다.",
-    "tools": "Google Flow (AI 영상 생성) · 캡컷 (편집 · 자막)",
-    "role": "기획 · 프롬프트 설계 · 편집",
-    "v1": "[처음 버전에서 아쉬웠던 점 한 줄]",
-    "v2": "[그래서 바꾼 점 한 줄 — 예: 건너뛰기 순간 학생이 직접 말을 거는 구성]"
-  },
-  // 그림책 〈꿈〉 (번호는 탭별로 js가 자동) — 이 그림책을 먼저 만들고, 그 이야기를 AI 영상 〈AI의 꿈〉으로 발전시킴
-  "book": {
-    "no": "02",
-    "title": "그림책 〈꿈〉",
-    "kind": "image",
-    "src": "img/book/p09.webp",
-    "why": "묻고, 맡기고, 기대는 일이 익숙해진 일상. 편리함 끝에 '내 꿈'까지 AI에게 맡겨 버린 엄마의 이야기를 24쪽 그림책으로 담았습니다. 이 그림책이 이후 AI 영상 〈AI의 꿈〉의 출발점이 되었습니다.",
-    "tools": "[AI 이미지 생성]",
-    "role": "기획 · 글 · 그림 · 편집",
-    "links": [
-      { "label": "책 펼쳐보기", "href": "book.html", "main": true },
-      { "label": "이 이야기로 만든 영상 〈AI의 꿈〉 →", "work": "dream" }
-    ]
-  },
-  "dream": {
-    "no": "03",
-    "title": "AI의 꿈",
-    "kind": "video",
-    "versions": [
-      { "label": "v1 · 처음 버전", "src": "img/works/work3.mp4" },
-      { "label": "v2 · 발전시킨 버전", "src": "img/works/work4.mp4" }
-    ],
-    "why": "가족의 일상에 들어온 작은 빛(AI)이 점점 커지는 모습으로, 편리함에 기대는 사이 생각까지 맡기게 되는 우리를 은유했습니다.",
-    "tools": "Google Flow · 캡컷",
-    "role": "기획 · 스토리 구성 · 프롬프트 설계 · 편집",
-    "v1": "[처음 버전에서 아쉬웠던 점 한 줄]",
-    "v2": "[그래서 바꾼 점 한 줄 — 예: 기억 속 엄마의 모습으로 \"편리함의 대가\"를 보여줌]",
-    "links": [
-      { "label": "← 원작 그림책 〈꿈〉 보기", "work": "book" }
-    ]
-  },
-  "5": {
-    "no": "04",
-    "title": "내 딸은 중2",
-    "kind": "video",
-    "src": "img/works/work5.mp4",
-    "why": "무뚝뚝해 보여도 속은 여린 중2 딸의 하루를 애니메이션 스타일로 담았습니다. 엄마의 시선으로 사춘기를 유쾌하게 바라본 숏폼입니다.",
-    "tools": "Google Flow · 캡컷",
-    "role": "기획 · 캐릭터 설정 · 편집"
-  },
-  "6": {
-    "no": "05",
-    "title": "부부의 대화",
-    "kind": "video",
-    "src": "img/works/work6.mp4",
-    "why": "같은 소파, 다른 기분. 대사보다 표정과 몸짓으로 티격태격하는 부부의 대화를 코믹하게 연출했습니다.",
-    "tools": "Google Flow · 캡컷",
-    "role": "기획 · 연출 · 편집"
-  },
-  "7": {
-    "no": "06",
-    "title": "랩배틀",
-    "kind": "video",
-    "src": "img/works/work7.mp4",
-    "why": "고양이와 강아지가 무대에서 맞붙는 디스랩입니다. 캐릭터 의상, 무대 조명, 리듬에 맞춘 컷 편집으로 숏폼의 재미를 살렸습니다.",
-    "tools": "Google Flow · 캡컷",
-    "role": "기획 · 캐릭터 설정 · 편집"
-  },
-  "8": {
-    "no": "07",
-    "title": "달빛걷기 포스터",
-    "kind": "image",
-    "src": "img/work8.jpg",
-    "why": "생명존중 걷기 캠페인 홍보 포스터입니다. 밤길을 함께 걷는 \"달빛\" 이미지로 따뜻함과 함께하는 마음을 표현했습니다.",
-    "tools": "포토샵 · 일러스트",
-    "role": "디자인 전체 (기획 · 레이아웃 · 이미지 편집)"
-  }
-};
-
 document.addEventListener("DOMContentLoaded", function () {
-    const cards = Array.prototype.slice.call(document.querySelectorAll(".wk-card"));
-    if (!cards.length) return;
     document.querySelectorAll(".ct-box").forEach(function (b) { b.classList.add("crayon-frame"); });
-    document.querySelectorAll(".wv-box").forEach(function (b) { b.classList.add("crayon-frame"); });
     if (window.drawCrayonFrames) window.drawCrayonFrames();
-
-    // 분류 탭 — 카드의 data-cat 으로 자동 생성
-    // 새 분야를 쓰려면 아래 WORK_CATS 에 있는 이름(key)을 카드의 data-cat 에 적기만 하면 됨
-    const WORK_CATS = [
-        { key: "video", label: "AI 영상" },
-        { key: "book",  label: "출판·일러스트" },
-        { key: "promo", label: "홍보물·캠페인" },
-        { key: "ad",    label: "광고·브랜딩" },
-        { key: "plan",  label: "기획·행사" }
-    ];
-    const tabBox = document.getElementById("wkTabs");
-    const used = WORK_CATS.filter(function (k) { return cards.some(function (c) { return c.dataset.cat === k.key; }); });
-    // 분야마다 번호를 01부터 (테이프 숫자)
-    used.forEach(function (k) {
-        cards.filter(function (c) { return c.dataset.cat === k.key; }).forEach(function (c, i) {
-            const tape = c.querySelector(".wk-tape");
-            if (tape) tape.textContent = String(i + 1).padStart(2, "0");
-        });
-    });
-    const tabs = used.map(function (k) {
-        const n = cards.filter(function (c) { return c.dataset.cat === k.key; }).length;
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = "resume-tab wk-tab";
-        b.setAttribute("role", "tab");
-        b.dataset.filter = k.key;
-        b.innerHTML = k.label + '<span class="wk-count">' + n + "</span>";
-        b.setAttribute("aria-label", k.label + " " + n + "개");
-        tabBox.appendChild(b);
-        return b;
-    });
-    function showCat(key) {
-        tabs.forEach(function (x) {
-            const on = x.dataset.filter === key;
-            x.classList.toggle("on", on);
-            x.setAttribute("aria-selected", on ? "true" : "false");
-            x.tabIndex = on ? 0 : -1;
-        });
-        cards.forEach(function (c) { c.classList.toggle("out", c.dataset.cat !== key); });
-        if (window.drawCrayonFrames) window.drawCrayonFrames();
-    }
-    tabs.forEach(function (t, i) {
-        t.addEventListener("click", function () { showCat(t.dataset.filter); });
-        t.addEventListener("keydown", function (e) {   // ← → 로 탭 이동
-            if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-            e.preventDefault();
-            const n = tabs[(i + (e.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length];
-            n.focus(); showCat(n.dataset.filter);
-        });
-    });
-    if (tabs.length) showCat(tabs[0].dataset.filter);
-
-    // 마우스 올리면 미리보기 (마우스가 있는 기기만)
-    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (fine && !reduce) {
-        cards.forEach(function (c) {
-            const v = c.querySelector("video");
-            if (!v) return;
-            c.addEventListener("mouseenter", function () {
-                if (!v.src) v.src = v.dataset.src;
-                const p = v.play();
-                if (p && p.then) p.then(function () { c.classList.add("playing"); }).catch(function () {});
-            });
-            c.addEventListener("mouseleave", function () { v.pause(); c.classList.remove("playing"); });
-        });
-    }
-
-    // 뷰어
-    const viewer = document.getElementById("workViewer");
-    const stage = document.getElementById("wvStage");
-    const closeBtn = document.getElementById("wvClose");
-    let lastCard = null;
-    function open(card) {
-        const d = WORKS_DATA[card.dataset.work];
-        if (!d || !viewer) return;
-        lastCard = card;
-        // 버전 묶음이면 v1/v2 버튼을 만들고, 기본은 마지막(발전시킨) 버전
-        const vers = document.getElementById("wvVers");
-        const change = document.getElementById("wvChange");
-        function play(src) { stage.innerHTML = '<video src="' + src + '" controls autoplay playsinline></video>'; }
-        vers.innerHTML = "";
-        if (d.versions) {
-            d.versions.forEach(function (ver, i) {
-                const b = document.createElement("button");
-                b.type = "button";
-                b.className = "wv-ver-btn";
-                b.textContent = ver.label;
-                b.setAttribute("aria-pressed", i === d.versions.length - 1 ? "true" : "false");
-                b.addEventListener("click", function () {
-                    vers.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
-                    play(ver.src);
-                });
-                vers.appendChild(b);
-            });
-            play(d.versions[d.versions.length - 1].src);
-            document.getElementById("wvV1").textContent = d.v1 || "";
-            document.getElementById("wvV2").textContent = d.v2 || "";
-            vers.hidden = false;
-            change.hidden = false;
-        } else {
-            vers.hidden = true;
-            change.hidden = true;
-            if (d.kind === "video") play(d.src);
-            else stage.innerHTML = '<img src="' + d.src + '" alt="' + d.title + '">';
-        }
-        const tp = card.querySelector(".wk-tape");
-        document.getElementById("wvNo").textContent = tp ? tp.textContent : d.no;
-        document.getElementById("wvTitle").textContent = d.title;
-        document.getElementById("wvWhy").textContent = d.why;
-        document.getElementById("wvTools").textContent = d.tools;
-        document.getElementById("wvRole").textContent = d.role;
-        // 연결 버튼 (책 펼쳐보기 · 원작/영상으로 이동)
-        const links = document.getElementById("wvLinks");
-        links.innerHTML = "";
-        (d.links || []).forEach(function (l) {
-            let el;
-            if (l.href) { el = document.createElement("a"); el.href = l.href; }
-            else {
-                el = document.createElement("button");
-                el.type = "button";
-                el.addEventListener("click", function () {
-                    const c = document.querySelector('.wk-card[data-work="' + l.work + '"]');
-                    if (c) { showCat(c.dataset.cat); open(c); }   // 다른 탭 작품이면 그 탭으로 바꿔 둠
-                });
-            }
-            el.className = "wv-link" + (l.main ? " main" : "");
-            el.textContent = l.label;
-            links.appendChild(el);
-        });
-        links.hidden = !(d.links && d.links.length);
-        cards.forEach(function (c) { const v = c.querySelector("video"); if (v) v.pause(); });
-        viewer.classList.add("open");
-        viewer.setAttribute("aria-hidden", "false");
-        document.documentElement.style.overflow = "hidden";
-        setTimeout(function () { if (window.drawCrayonFrames) window.drawCrayonFrames(); closeBtn.focus({ preventScroll: true }); }, 60);
-    }
-    function close() {
-        if (!viewer.classList.contains("open")) return;
-        const v = stage.querySelector("video"); if (v) v.pause();
-        viewer.classList.remove("open");
-        viewer.setAttribute("aria-hidden", "true");
-        document.documentElement.style.overflow = "";
-        setTimeout(function () { stage.innerHTML = ""; }, 350);
-        if (lastCard) lastCard.focus({ preventScroll: true });
-    }
-    cards.forEach(function (c) {
-        c.addEventListener("click", function () { open(c); });
-        c.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(c); } });
-    });
-    if (closeBtn) closeBtn.addEventListener("click", close);
-    if (viewer) viewer.addEventListener("click", function (e) { if (e.target === viewer) close(); });
-    document.addEventListener("keydown", function (e) {
-        if (!viewer || !viewer.classList.contains("open")) return;
-        if (e.key === "Escape") close();
-        if (e.key === "Tab") {
-            const f = Array.prototype.slice.call(viewer.querySelectorAll("button, a[href], video[controls]")).filter(function (x) { return x.offsetParent !== null; });
-            const i = f.indexOf(document.activeElement);
-            e.preventDefault();
-            f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
-        }
-    });
 });
 
 // ==================================================

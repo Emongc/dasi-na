@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Again, - Emongc 포트폴리오</title>
+
+  <!-- Google Fonts 연결 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&amp;family=Gaegu:wght@400;700&amp;family=Noto+Sans+KR:wght@400;700&display=swap"
+    rel="stylesheet">
+
+  <!-- 외부 스타일시트 연결 -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- [수정] 모바일 안내: 화면 전체를 막던 경고창 → 손그림 포스트잇 -->
+    <div id="desktopWarningModal" class="desktop-warning-overlay" role="note" aria-label="PC 권장 안내">
+        <div class="warning-content">
+            <p class="warning-text">
+                Best on desktop :)
+                <span class="warning-sub">PC로 보면 더 재밌어요</span>
+            </p>
+            <button type="button" id="dontCareBtn" class="dont-care-btn">
+                I DON'T CARE →
+            </button>
+        </div>
+    </div>
+
+  <!-- ==================================================
+     03. HEADER: 상단 로고 및 내비게이션 메뉴 영역
+     ================================================== -->
+  <header>
+    <div class="header-inner">
+      <h1>
+        <!-- [수정] 로고를 누르면 맨 위(처음 화면)로 이동 -->
+        <a href="#top" class="logo-link" aria-label="Again, 처음 화면으로 이동">
+        <span class="piano-letter" style="--i: 1;">A</span>
+        <span class="piano-letter" style="--i: 2;">g</span>
+        <span class="piano-letter" style="--i: 3;">a</span>
+        <span class="piano-letter" style="--i: 4;">i</span>
+        <span class="piano-letter" style="--i: 5;">n</span>
+        <span class="piano-letter" style="--i: 6;">,</span>
+        </a>
+      </h1>
+      <!-- 모바일 햄버거 메뉴 버튼 -->
+      <button id="menu-btn" aria-label="메뉴 열기" aria-expanded="false">☰</button>
+    </div>
+    <nav id="main-nav" aria-label="주요 메뉴">
+      <ul>
+        <li><a href="#about">ABOUT</a></li>
+        <!-- [수정] EDUCATION / SKILLS / EXPERIENCE → RESUME 하나로 통합 -->
+        <li><a href="#resume">RESUME</a></li>
+        <li><a href="#works">WORKS</a></li>
+        <li><a href="#contact">CONTACT</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ==================================================
+     04. MAIN: 본문 콘텐츠 영역
+     ================================================== -->
+  <main>
+
+    <!-- 05. HERO: 메인 화면 상단 배너 및 영상 프레임 영역 -->
+    <section class="hero-media" aria-label="메인 소개 이미지">
+      <div class="hero-frame" id="heroClickBox" role="button" tabindex="0" aria-label="캐릭터를 눌러 말 걸기">
+        <!-- 캐릭터: 스크립트가 SVG를 직접 넣어서 눈·입·모자를 움직인다 -->
+        <div class="hero-char-wrap" id="charWrap" data-src="img/hero-char.svg">
+          <img src="img/hero-char.svg" alt="머스타드 비니를 쓰고 오른쪽을 바라보는 에몽씨 캐릭터">
+        </div>
+
+        <!-- 입에서 퍼져 나가는 손그림 효과선 -->
+        <svg class="talk-lines" id="talkLines" viewBox="0 0 22 30" aria-hidden="true" focusable="false">
+          <path d="M3 11 L13 3 M4 15 L17 15 M3 19 L13 27" />
+        </svg>
+
+        <!-- 이전 말로 돌아가기 (두 번째 말부터 보임) -->
+        <button type="button" class="hero-back" id="heroBackBtn" aria-label="이전 말 보기">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10.5 3.5 L5.5 8 L10.5 12.5" /></svg>
+        </button>
+
+        <!-- 마우스 올리면 나타나는 블록 글자 안내 -->
+        <span class="click-hint" aria-hidden="true"><i style="--d:0">c</i><i style="--d:1">l</i><i style="--d:2">i</i><i style="--d:3">c</i><i style="--d:4">k</i><i class="gap"></i><i style="--d:6">m</i><i style="--d:7">e</i></span>
+
+        <!-- 캐릭터가 하는 말 -->
+        <!-- [추가] 바쁜 분을 위한 지름길: 누르면 history까지 급행 (옷걸이 에몽씨가 쌩 내려감) -->
+        <button type="button" class="express-btn" id="expressBtn" aria-label="히스토리로 바로 이동">
+          바쁘신 분은 직행 <span class="express-arrow" aria-hidden="true">↓</span>
+        </button>
+
+        <div class="character-speech-bubble hi" id="speechBubble" aria-live="polite">
+          <span id="quoteText">hi.</span>
+        </div>
+
+        <!-- 테두리: 아래 세로선과 같은 크레파스 질감 (조금 더 약하게). 처음 열 때 한 번 그어진다
+             스크립트가 화면 크기에 맞춰 좌표를 다시 계산해서, 질감이 가로로 늘어나지 않게 한다 -->
+        <svg class="hero-frame-line" id="heroFrameLine" viewBox="0 0 1000 563" preserveAspectRatio="none" aria-hidden="true"
+          focusable="false">
+          <defs>
+            <filter id="hero-crayon" x="-5%" y="-5%" width="110%" height="110%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="4" result="wobble" />
+              <feDisplacementMap in="SourceGraphic" in2="wobble" scale="2.2" xChannelSelector="R" yChannelSelector="G" result="line" />
+              <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="2" seed="9" result="grain" />
+              <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3 0 0 0 -0.75" result="grainAlpha" />
+              <feComposite in="line" in2="grainAlpha" operator="in" />
+            </filter>
+          </defs>
+          <g filter="url(#hero-crayon)">
+            <path class="frame-main" pathLength="1" data-d="M28 30 Q105 25 178 29 T334 28 Q425 33 503 27 T670 30 Q770 24 848 28 L971 26 Q975 125 972 212 T973 380 L972 533 Q852 530 748 535 T526 532 Q405 537 302 533 T121 535 L28 531 Q24 440 28 352 T27 173 Z" d="M28 30 Q105 25 178 29 T334 28 Q425 33 503 27 T670 30 Q770 24 848 28 L971 26 Q975 125 972 212 T973 380 L972 533 Q852 530 748 535 T526 532 Q405 537 302 533 T121 535 L28 531 Q24 440 28 352 T27 173 Z" />
+            <path class="frame-over" pathLength="1" data-d="M28 30 Q105 25 178 29 T334 28 Q425 33 503 27 T670 30 Q770 24 848 28 L971 26 Q975 125 972 212 T973 380 L972 533 Q852 530 748 535 T526 532 Q405 537 302 533 T121 535 L28 531 Q24 440 28 352 T27 173 Z" d="M28 30 Q105 25 178 29 T334 28 Q425 33 503 27 T670 30 Q770 24 848 28 L971 26 Q975 125 972 212 T973 380 L972 533 Q852 530 748 535 T526 532 Q405 537 302 533 T121 535 L28 531 Q24 440 28 352 T27 173 Z" />
+            <path class="frame-ticks" pathLength="1" data-d="M8 12 L18 22 M22 4 L26 18 M982 444 L994 438 M984 456 L996 456 M52 166 L60 160 M52 174 L60 176" d="M8 12 L18 22 M22 4 L26 18 M982 444 L994 438 M984 456 L996 456 M52 166 L60 160 M52 174 L60 176" />
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- 06. ABOUT: 상세 프로필 및 손그림 스토리 박스 영역 -->
+    <section id="about">
+      <h2>About</h2>
+      <div class="about-container">
+        <!-- 좌측: 원본 사진(색감만 필름 톤) + 벡터 손글씨/크레파스 테두리 -->
+        <figure class="about-illust">
+          <svg class="about-photo" viewBox="0 0 572 1024" role="img"
+            aria-label="Hi. I'm Emongc — 빨간 비니를 쓰고 크로스백을 멘 에몽씨의 뒷모습">
+            <defs>
+              <filter id="about-crayon" x="-5%" y="-5%" width="110%" height="110%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="4" result="wobble" />
+                <feDisplacementMap in="SourceGraphic" in2="wobble" scale="6" xChannelSelector="R" yChannelSelector="G" result="line" />
+                <feTurbulence type="fractalNoise" baseFrequency="0.35 0.12" numOctaves="3" seed="9" result="grain" />
+                <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  2.6 0 0 0 -0.75" result="grainAlpha" />
+                <feComposite in="line" in2="grainAlpha" operator="in" />
+              </filter>
+              <!-- 크레파스 점: 동그란 점 가장자리를 살짝 거칠게 -->
+              <filter id="about-dot" x="-10%" y="-10%" width="120%" height="120%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.25" numOctaves="2" seed="3" result="w" />
+                <feDisplacementMap in="SourceGraphic" in2="w" scale="2.4" xChannelSelector="R" yChannelSelector="G" result="d" />
+                <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="12" result="g" />
+                <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.4 0 0 0 0" result="ga" />
+                <feComposite in="d" in2="ga" operator="in" />
+              </filter>
+              <!-- 연필 선: 살짝 울퉁불퉁 + 흑연 입자 -->
+              <filter id="about-pencil" x="-20%" y="-20%" width="140%" height="140%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="2" seed="11" result="w" />
+                <feDisplacementMap in="SourceGraphic" in2="w" scale="3.2" xChannelSelector="R" yChannelSelector="G" result="line" />
+                <feTurbulence type="fractalNoise" baseFrequency="1.2 0.6" numOctaves="2" seed="6" result="g" />
+                <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.6 0 0 0 -0.1" result="ga" />
+                <feComposite in="line" in2="ga" operator="in" />
+              </filter>
+            </defs>
+            <image href="img/about-person.webp" x="0" y="0" width="572" height="1024" />
+            <!-- "Hi." : 입 앞쪽, 비니 메모와 간격 두고 -->
+            <path class="photo-hand" fill-rule="evenodd" transform="translate(-18 52)" d="M309.50 195.88 L309.12 195.62 L308.00 195.75 L300.25 199.75 L296.12 201.00 L295.50 201.50 L295.38 202.25 L295.88 202.75 L297.00 202.75 L302.25 200.88 L308.50 197.50 L309.50 196.62Z M349.62 183.50 L348.88 184.00 L348.75 185.12 L349.12 185.75 L350.12 186.00 L351.00 185.38 L351.12 184.50 L350.62 183.62Z M301.50 182.75 L300.88 183.00 L300.12 183.88 L296.88 190.25 L293.50 195.00 L293.50 195.88 L293.75 196.12 L294.50 196.25 L295.62 195.25 L298.62 191.00 L301.75 184.88 L302.00 184.12 L302.00 183.25Z M338.38 176.75 L337.75 177.38 L337.75 178.25 L339.25 183.62 L340.88 187.62 L341.50 188.12 L342.25 188.12 L342.75 187.50 L342.62 186.62 L341.12 183.25 L340.62 181.12 L339.25 177.50Z M338.00 170.00 L337.00 169.50 L336.00 169.62 L335.00 170.25 L334.62 171.00 L334.62 171.62 L335.50 172.12 L337.25 171.50 L338.00 171.00Z M328.75 168.62 L327.88 168.75 L327.62 169.88 L330.12 178.25 L329.38 179.25 L326.12 180.50 L322.38 182.62 L321.62 182.38 L321.00 181.38 L320.88 180.62 L319.38 177.12 L318.75 174.38 L318.00 172.62 L317.62 172.25 L317.25 172.25 L316.75 173.00 L316.88 174.12 L317.75 176.25 L319.12 181.62 L319.75 183.12 L319.88 184.25 L321.38 187.88 L322.88 193.00 L323.75 194.62 L324.38 195.00 L325.00 194.88 L325.38 194.50 L325.50 193.75 L323.38 188.75 L323.00 187.00 L322.38 185.62 L322.38 184.88 L323.00 184.12 L330.00 180.75 L330.62 180.88 L331.38 181.88 L332.12 185.12 L334.00 190.38 L335.12 191.62 L335.88 191.62 L336.38 190.88 L336.25 190.00 L335.38 188.38 L333.50 183.12 L333.00 180.75 L331.00 175.00 L329.62 169.75 L329.25 169.00Z" />
+            <!-- "I'm Emongc" : 메모와 같은 회색 + 다른 화살표와 같은 굵기의 구부러진 화살표 -->
+            <g class="photo-memo memo-emongc">
+              <path class="memo-arrow" d="M318 378 C322 346 362 340 384 368 M383 357 L384 368 L374 365" />
+              <path class="photo-hand-gray" fill-rule="evenodd" transform="translate(-6 -164)" d="M477.62 566.12 L475.50 566.88 L474.62 567.75 L472.38 571.38 L471.62 574.12 L471.88 577.12 L473.12 579.38 L474.62 580.62 L476.88 581.38 L479.00 581.12 L481.62 580.12 L482.50 579.50 L482.38 578.75 L481.62 578.38 L478.62 579.12 L476.12 579.00 L474.88 578.38 L473.75 577.00 L473.62 575.25 L473.88 574.50 L473.88 573.00 L475.38 569.50 L476.62 568.38 L477.25 568.12 L478.12 568.12 L479.38 568.75 L480.00 568.38 L480.00 567.75 L479.25 566.88Z M464.88 564.50 L463.88 564.62 L462.50 565.25 L461.12 566.50 L459.88 568.25 L458.62 571.62 L458.75 574.12 L459.75 575.62 L461.12 576.88 L463.12 576.88 L464.75 575.62 L465.25 575.62 L465.62 576.12 L465.12 577.88 L464.00 584.75 L463.25 587.00 L461.25 590.00 L460.25 590.88 L459.25 590.88 L458.62 590.50 L456.12 587.75 L455.50 587.62 L455.12 588.00 L455.12 588.88 L455.88 590.38 L457.75 592.12 L459.50 593.00 L460.25 593.00 L462.38 591.88 L463.62 590.50 L465.38 587.25 L466.75 582.50 L466.75 580.62 L467.12 579.38 L467.12 577.12 L467.88 575.00 L467.88 573.25 L468.50 571.00 L468.62 568.50 L468.12 567.38 L466.38 565.12Z M465.00 566.25 L465.50 566.50 L466.25 567.50 L466.25 568.75 L465.62 571.38 L464.75 573.00 L463.25 574.62 L462.25 575.00 L461.62 574.88 L461.00 574.38 L460.75 573.38 L460.75 572.38 L461.50 569.50 L462.00 568.38 L463.38 566.88 L464.50 566.25Z M447.00 563.88 L446.50 564.88 L446.00 570.62 L445.38 573.00 L445.38 576.25 L446.00 576.75 L446.75 576.50 L448.00 571.88 L449.25 569.50 L450.75 567.25 L451.62 566.38 L452.25 566.25 L452.88 567.00 L453.12 569.38 L453.00 572.88 L452.75 573.62 L452.88 576.88 L453.38 577.75 L454.62 577.75 L455.12 576.88 L455.00 574.00 L455.38 571.88 L455.12 568.00 L454.62 566.12 L453.25 564.38 L452.38 564.00 L451.75 564.00 L450.50 564.62 L448.62 566.62 L448.38 566.62 L448.00 566.25 L447.88 564.25 L447.50 563.88Z M439.62 562.38 L437.75 562.25 L436.38 562.75 L434.50 565.50 L433.75 567.75 L433.50 571.25 L434.12 573.62 L434.88 574.75 L436.75 575.62 L438.25 575.62 L439.50 575.12 L441.62 572.62 L442.62 571.12 L443.12 569.88 L443.25 566.88 L442.88 565.25 L441.25 563.12Z M439.50 564.38 L440.38 564.75 L441.12 565.50 L441.38 566.12 L441.50 567.88 L441.00 570.25 L440.62 571.12 L439.25 573.00 L437.88 573.75 L436.75 573.88 L436.00 573.38 L435.12 571.75 L435.38 567.62 L435.88 566.50 L436.00 565.50 L436.75 564.62 L437.75 564.12Z M415.25 560.25 L415.00 564.50 L414.25 568.50 L414.25 571.88 L414.75 572.75 L415.75 572.88 L416.25 572.50 L417.00 568.25 L417.88 566.75 L419.38 562.75 L420.25 562.25 L421.00 563.00 L421.38 564.88 L421.38 567.38 L420.88 570.00 L421.00 571.75 L421.75 572.25 L422.75 571.88 L423.12 571.12 L423.25 569.75 L425.00 564.88 L426.62 562.88 L427.62 562.75 L428.38 563.62 L428.88 565.75 L428.75 569.50 L428.12 571.25 L428.12 573.25 L428.88 573.88 L429.62 573.50 L430.12 572.12 L430.00 566.88 L430.38 565.25 L430.38 563.88 L430.00 562.25 L428.88 561.00 L428.00 560.50 L426.75 560.50 L426.12 560.75 L425.00 561.88 L424.12 563.50 L423.38 564.00 L423.00 563.62 L422.50 561.75 L421.00 560.12 L419.62 560.12 L418.12 562.12 L417.50 562.62 L417.12 562.38 L417.00 561.12 L416.62 560.25 L416.00 559.88Z M401.88 550.25 L401.38 551.12 L401.75 552.38 L401.75 553.88 L401.25 555.62 L401.38 557.50 L400.88 559.38 L400.75 562.00 L400.12 563.75 L400.00 565.62 L399.75 566.25 L400.00 571.00 L401.12 572.00 L403.25 572.25 L407.75 571.88 L410.38 572.12 L411.50 571.88 L411.88 571.25 L411.75 570.62 L410.62 569.88 L402.00 570.25 L401.12 569.62 L401.00 568.50 L401.50 566.88 L402.00 563.38 L402.62 562.38 L404.25 562.12 L410.62 562.75 L411.12 562.25 L411.12 561.50 L409.88 560.75 L406.12 560.50 L405.00 560.12 L403.25 560.12 L402.75 559.75 L402.62 559.00 L403.00 557.12 L403.25 552.25 L403.88 551.75 L407.38 552.00 L409.62 552.62 L411.38 552.75 L411.88 552.25 L411.88 551.38 L411.25 550.88 L409.38 550.38 L406.75 550.25 L406.00 550.00 L403.50 550.00Z M424.12 530.50 L423.75 534.38 L422.88 539.62 L422.88 541.25 L423.25 541.88 L424.12 541.88 L424.75 541.25 L424.88 539.00 L425.50 535.88 L426.12 534.00 L426.88 532.50 L427.62 531.62 L428.62 531.25 L429.25 531.75 L429.50 535.25 L429.38 537.62 L428.88 540.38 L429.25 541.38 L429.88 541.75 L430.50 541.62 L431.00 540.88 L431.75 539.00 L432.12 536.62 L433.50 533.75 L435.12 532.00 L435.88 531.88 L436.50 532.50 L436.75 533.25 L436.75 539.38 L436.38 542.75 L436.50 543.12 L437.25 543.62 L438.12 543.25 L438.50 542.50 L438.88 540.50 L438.75 534.00 L437.75 531.00 L436.50 529.62 L435.38 529.50 L434.75 529.75 L431.88 532.62 L431.50 532.62 L431.12 532.25 L430.75 531.00 L429.38 529.12 L428.12 529.12 L425.62 531.00 L425.25 531.00 L424.50 530.25Z M422.38 519.12 L421.38 519.12 L420.75 519.88 L419.75 523.00 L419.00 524.38 L419.00 525.50 L419.50 525.88 L419.88 525.75 L420.75 524.75 L422.75 520.50 L422.75 519.50Z M408.38 518.25 L407.38 518.88 L407.25 519.50 L407.75 520.12 L409.12 520.38 L409.62 520.88 L409.62 522.25 L409.12 524.75 L409.00 527.62 L408.62 528.75 L408.62 532.25 L408.25 534.50 L408.12 537.75 L407.50 538.75 L405.88 539.00 L405.50 539.25 L405.38 539.75 L405.50 540.12 L406.50 540.88 L409.38 541.25 L411.75 541.25 L412.88 540.75 L412.88 539.88 L411.88 539.25 L410.50 539.25 L409.88 538.50 L410.25 536.88 L410.25 533.50 L411.12 526.75 L411.12 523.62 L412.00 520.62 L412.38 520.38 L414.00 520.38 L414.38 519.50 L413.88 518.88 L412.75 518.50Z" />
+            </g>
+            <g class="photo-frame" filter="url(#about-crayon)">
+              <path stroke-width="6" d="M30 40 Q200 33 380 37 T560 34 Q557 300 561 520 T558 978 Q400 984 250 979 T32 982 Q27 700 31 480 T30 40" />
+              <path stroke-width="3" opacity="0.55" d="M33 44 Q210 38 385 41 T556 39 Q553 310 557 525 T554 974 Q395 979 245 975 T36 977 Q32 690 35 470 T33 44" />
+            </g>
+            <!-- 손글씨 메모 -->
+            <g class="photo-memo">
+              <path class="memo-arrow" d="M286 116 Q254 118 244 156 M252 149 L244 156 L240 146" />
+              <text x="294" y="126">비니 모으는 중?</text>
+                          </g>
+            <g class="photo-memo memo-bag">
+              <g class="bag-cta" aria-hidden="true">
+                <path class="memo-arrow" d="M366 584 C356 566 344 556 330 550 M336 559 L330 550 L341 548" />
+                <text x="360" y="616">what's</text>
+                <text x="360" y="658">in my bag?</text>
+              </g>
+            </g>
+            <g class="photo-memo">
+              <path class="memo-arrow" d="M362 824 C352 806 340 798 324 796 M332 803 L324 796 L334 791" />
+              <text x="368" y="838">편한 게 최고</text>
+            </g>
+            <!-- What's in my bag: 가방에 마우스를 올리거나 누르면 내용물이 와르르 -->
+            <g class="bag-items" aria-hidden="true">
+              <g class="bag-pouch">
+                <!-- 깔끔한 타원 + 동그란 점이 이어지는 크레파스 점선 테두리 -->
+                <ellipse class="pouch-fill" cx="340" cy="360" rx="190" ry="145" />
+                <ellipse class="pouch-dots" cx="340" cy="360" rx="190" ry="145" />
+              </g>
+              <g class="bag-item c-purple" style="--x:250px;--y:302px;--r:-3deg;--i:0"><g class="ink" filter="url(#about-pencil)"><rect x="-15" y="-27" width="30" height="52" rx="6"/><path d="M-5 17 H5"/></g><text y="48">폰</text></g>
+              <g class="bag-item c-mustard" style="--x:340px;--y:300px;--r:2deg;--i:1"><g class="ink" filter="url(#about-pencil)"><rect x="-24" y="-16" width="48" height="32" rx="5"/><path d="M-24 -4 H24"/><circle cx="15" cy="-4" r="3.5"/></g><text y="48">지갑</text></g>
+              <g class="bag-item c-red" style="--x:430px;--y:302px;--r:-7deg;--i:2"><g class="ink" filter="url(#about-pencil)"><rect x="-12" y="-30" width="24" height="60" rx="7"/><path d="M-12 -13 H12"/></g><text class="ink-text" x="0" y="0" transform="translate(5 10) rotate(-90)">LIP</text><text y="48">립밤</text></g>
+              <g class="bag-item c-purple" style="--x:262px;--y:408px;--r:4deg;--i:3"><g class="ink" filter="url(#about-pencil)"><rect x="-20" y="-15" width="40" height="30" rx="12"/><path d="M-20 -4 H20"/><circle cx="0" cy="4" r="2"/></g><text y="48">에어팟</text></g>
+              <g class="bag-item c-mustard" style="--x:340px;--y:406px;--r:-2deg;--i:4"><g class="ink" filter="url(#about-pencil)"><path class="ink-line" d="M-10 -8 Q-10 -26 0 -26 Q10 -26 10 -8"/><path d="M-20 -8 L20 -8 L17 28 L-17 28 Z"/></g><text y="48">장바구니</text></g>
+              <g class="bag-item c-red" style="--x:418px;--y:408px;--r:-5deg;--i:5"><g class="ink" filter="url(#about-pencil)"><path d="M-10 -26 L10 -26 L13 16 L-13 16 Z"/><rect x="-6" y="16" width="12" height="9" rx="2"/><path d="M-6 -16 H6"/></g><text y="48">핸드크림</text></g>
+            </g>
+            <ellipse class="bag-hit" cx="200" cy="525" rx="112" ry="82" tabindex="0" role="button"
+              aria-label="가방 속 물건 보기" aria-expanded="false" />
+          </svg>
+        </figure>
+        <!-- 우측: 소개 텍스트 -->
+        <div class="about-bio">
+          <div class="bio-story hand-drawn-box">
+            <div class="bio-title-area">
+              <h3 class="bio-title">
+                <span class="bio-intro">MY NAME IS</span>
+                <span class="bio-name">&nbsp;Sunmi Hong&nbsp;</span>
+              </h3>
+            </div>
+            <div class="bio-text-content">
+              <p class="bio-lead">감각으로 만들고, 책임으로 완성하는 사람.</p>
+              <ul class="bio-keys">
+                <li><span class="key-tag">&nbsp;&nbsp;디자인</span>
+                  <p><strong class="key-point">감각은 작은 디테일에서 드러납니다.</strong><span class="key-more">색과 여백, 글자 하나까지 이유 있게 고릅니다.</span></p></li>
+                <li><span class="key-tag">&nbsp;&nbsp;콘텐츠</span>
+                  <p><strong class="key-point">한 장면으로도 마음을 움직일 수 있습니다.</strong><span class="key-more">영상과 포스터를 기획부터 완성까지 직접 만듭니다.</span></p></li>
+                <li><span class="key-tag">&nbsp;&nbsp;기획·운영</span>
+                  <p><strong class="key-point">티 나지 않게 준비하고, 티 나게 결과를 냅니다.</strong><span class="key-more">일정과 자료를 미리 정리해, 막힘없이 진행되게 합니다.</span></p></li>
+              </ul>
+              <p class="bio-close">&nbsp;&nbsp;다시(Again,) 손으로 그리듯 하나하나 정성껏 만들겠습니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- [수정] 07~09. RESUME: EXPERIENCE / SKILLS / EDUCATION / CERTIFICATES 탭 상자
+         (원본: backup 폴더 "index - 탭적용전.html")
+         · 줄을 추가/수정할 때는 r-row 한 줄을 복사해서 r-year(연도·분류)와 r-text(내용)만 바꾸면 됨 -->
+    <section id="resume" class="resume">
+      <!-- 예전 메뉴 주소(#education 등)로 들어와도 같은 자리로 오게 -->
+      <span id="education" class="tab-anchor" aria-hidden="true"></span>
+      <span id="skills" class="tab-anchor" aria-hidden="true"></span>
+      <span id="experience" class="tab-anchor" aria-hidden="true"></span>
+
+      <div class="resume-head">
+        <h2>RESUME</h2>
+        <p class="resume-sub">: 경험의 장소에서 얻은 것들</p>
+      </div>
+
+      <div class="resume-box" id="resumeBox">
+        <div class="resume-side">
+          <div class="resume-tabs" role="tablist" aria-label="이력 보기">
+            <button type="button" class="resume-tab on" role="tab" id="tab-exp" aria-controls="panel-exp" aria-selected="true" data-char="exp">EXPERIENCE</button>
+            <button type="button" class="resume-tab" role="tab" id="tab-skl" aria-controls="panel-skl" aria-selected="false" tabindex="-1" data-char="skl">SKILLS</button>
+            <button type="button" class="resume-tab" role="tab" id="tab-edu" aria-controls="panel-edu" aria-selected="false" tabindex="-1" data-char="edu">EDUCATION</button>
+            <button type="button" class="resume-tab" role="tab" id="tab-cer" aria-controls="panel-cer" aria-selected="false" tabindex="-1" data-char="cer">CERTIFICATES</button>
+          </div>
+          <!-- 탭마다 옷·소품을 바꿔 입는 에몽씨 (img/resume 폴더) -->
+          <div class="resume-chars" aria-hidden="true">
+            <img class="resume-char on" data-char="exp" src="img/resume/experience.svg" alt="">
+            <img class="resume-char" data-char="skl" src="img/resume/skills.svg" alt="">
+            <img class="resume-char" data-char="edu" src="img/resume/education.svg" alt="">
+            <img class="resume-char" data-char="cer" src="img/resume/certificates.svg" alt="">
+          </div>
+        </div>
+
+        <div class="resume-panels">
+          <div class="resume-panel" id="panel-exp" role="tabpanel" aria-labelledby="tab-exp">
+            <!-- [수정] EXPERIENCE: 직무명 + 설명 한 줄만. 디자인 경력은 연도를 보라색으로(ex-d) -->
+              <div class="r-row ex-row ex-d"><span class="r-year">2025</span><div class="r-text">
+                <p class="ex-title">온라인 쇼핑몰 · 디자이너</p>
+                <p class="ex-desc">상세페이지 · 인쇄물 제작 (포토샵 · 일러스트 · 캡컷)</p>
+              </div></div>
+              <div class="r-row ex-row ex-d"><span class="r-year">2009</span><div class="r-text">
+                <p class="ex-title">웹디자이너 (신입)</p>
+                <p class="ex-desc">뒤늦게 배워 도전한 첫 디자인 직무, 사수와 함께 대구MBC 외 여러 업체 홈페이지 운영 · 관리</p>
+              </div></div>
+              <div class="r-row ex-row"><span class="r-year">2007</span><div class="r-text">
+                <p class="ex-title">해외취업인력파견 · 행정/상담</p>
+                <p class="ex-desc">지원자 면접 진행, 이력서 영문 번역 · 첨삭</p>
+              </div></div>
+              <div class="r-row ex-row"><span class="r-year">2005</span><div class="r-text">
+                <p class="ex-title">영국 런던 일식당 · 홀</p>
+                <p class="ex-desc">어학연수 중 생활비를 직접 벌며 현지에서 일한 경험</p>
+              </div></div>
+              <div class="r-row ex-row"><span class="r-year">2003–04</span><div class="r-text">
+                <p class="ex-title">전통찻집 · 홀</p>
+                <p class="ex-desc">손님 응대 · 매장 운영</p>
+              </div></div>
+          </div>
+          <div class="resume-panel" id="panel-skl" role="tabpanel" aria-labelledby="tab-skl" hidden>
+            <!-- [수정] SKILLS: 도구 스티커(진하게=주로 씀, 점선=써 봄) + 만들 수 있는 것 태그 -->
+            <p class="r-head">쓰는 도구</p>
+            <div class="sk-row">
+              <span class="r-year">주로 써요</span>
+              <ul class="sk-list">
+                <li class="sk sk-main">포토샵</li><li class="sk sk-main">일러스트</li><li class="sk sk-main">캡컷</li><li class="sk sk-main">미리캔버스</li><li class="sk sk-main">Canva</li>
+              </ul>
+            </div>
+            <div class="sk-row">
+              <span class="r-year">AI 활용</span>
+              <ul class="sk-list">
+                <li class="sk sk-main">Google Flow</li><li class="sk sk-main">생성형 AI</li><li class="sk sk-ai">AI와 함께 웹 제작 <small>지금 보시는 이 사이트!</small></li>
+              </ul>
+            </div>
+            <div class="sk-row">
+              <span class="r-year">써 봤어요</span>
+              <ul class="sk-list">
+                <li class="sk sk-try">프리미어</li><li class="sk sk-try">애프터이펙트</li><li class="sk sk-try">Figma</li>
+              </ul>
+            </div>
+            <p class="r-head">이런 걸 만들 수 있어요 <span class="r-note">손으로, 그리고 AI로</span></p>
+            <ul class="sk-tags">
+              <li>상세페이지</li><li>홍보 포스터</li><li>카드뉴스</li><li>숏폼 영상</li><li>행사 안내물</li><li>문서 · 서식 정리</li>
+            </ul>
+          </div>
+          <div class="resume-panel" id="panel-edu" role="tabpanel" aria-labelledby="tab-edu" hidden>
+            <p class="r-head">학력</p>
+              <div class="r-row"><span class="r-year">2004</span><span class="r-text">경북대학교 졸업</span></div>
+              <div class="r-row"><span class="r-year">2005–06</span><span class="r-text">영국 어학연수</span></div>
+            <p class="r-head">교육 이수 <span class="r-note">다시, 배우는 중</span></p>
+              <div class="r-row"><span class="r-year">2009</span><span class="r-text">웹 &amp; 그래픽디자인과정</span></div>
+              <div class="r-row"><span class="r-year">2023</span><span class="r-text">SBS아카데미컴퓨터학원</span></div>
+              <div class="r-row"><span class="r-year">2026</span><span class="r-text">커피 바리스타 2급 자격증 취득과정</span></div>
+              <div class="r-row"><span class="r-year">2026</span><span class="r-text">제과 ◦ 제빵 기능사 과정</span></div>
+              <div class="r-row"><span class="r-year">2026</span><span class="r-text">사회복지사 2급 교육 이수 및 실습</span></div>
+              <div class="r-row"><span class="r-year">2026</span><span class="r-text">디지털 서비스융합 전문가 양성교육</span></div>
+          </div>
+          <div class="resume-panel" id="panel-cer" role="tabpanel" aria-labelledby="tab-cer" hidden>
+            <!-- [수정] CERTIFICATES: 분야별 묶음 + 손그림 "합격" 도장 (디자인 묶음만 진하게) -->
+            <div class="ce-grid">
+              <div class="ce-group"><p class="r-head">디자인</p><ul class="ce-list"><li class="ce-item ce-d"><span class="ce-stamp" aria-hidden="true">합격</span><span class="ce-name">웹디자인기능사<span class="ce-meta">2009 · 한국산업인력공단</span></span></li><li class="ce-item ce-d"><span class="ce-stamp" aria-hidden="true">합격</span><span class="ce-name">컴퓨터그래픽스운용기능사<span class="ce-meta">2004 · 한국산업인력공단</span></span></li></ul></div>
+              <div class="ce-group"><p class="r-head">사무 · IT</p><ul class="ce-list"><li class="ce-item"><span class="ce-stamp" aria-hidden="true">합격</span><span class="ce-name">정보처리기사<span class="ce-meta">2004 · 한국산업인력공단</span></span></li><li class="ce-item"><span class="ce-stamp" aria-hidden="true">합격</span><span class="ce-name">인터넷정보검색사<span class="ce-meta">2004 · 한국정보통신산업협회</span></span></li><li class="ce-item"><span class="ce-stamp" aria-hidden="true">합격</span><span class="ce-name">컴퓨터활용능력 2급<span class="ce-meta">2003 · 대한상공회의소</span></span></li></ul></div>
+              <div class="ce-group"><p class="r-head">사람 · 서비스</p><ul class="ce-list"><li class="ce-item"><span class="ce-stamp" aria-hidden="true">합격</span><span class="ce-name">사회복지사 2급<span class="ce-meta">2026.11 · 보건복지부</span></span></li><li class="ce-item"><span class="ce-stamp" aria-hidden="true">합격</span><span class="ce-name">커피바리스타 2급<span class="ce-meta">2026.04</span></span></li></ul></div>
+              <div class="ce-group"><p class="r-head">기타</p><ul class="ce-list"><li class="ce-item"><span class="ce-stamp" aria-hidden="true">합격</span><span class="ce-name">운전면허 1종 보통</span></li></ul></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a href="#works" class="resume-next">↓ 다음은 WORKS</a>
+    </section>
+
+    <!-- [수정] 10. WORKS — 필름 밀착 인화지 컨셉 (썸네일 + 마우스 올리면 미리보기 + 클릭하면 뷰어)
+         · 작품 설명(기획 의도 · 사용 도구 · 내 역할)은 js/script.js 의 WORKS_DATA 에서 수정 (현재는 Claude 초안) -->
+    <section id="works" class="works">
+      <div class="resume-head">
+        <h2>WORKS</h2>
+        <p class="resume-sub">: 말보다 결과로 보여주는 것들</p>
+      </div>
+      <p class="works-intro">레퍼런스에서 출발해, AI와 함께 방향을 구체화합니다.</p>
+
+      <!-- 분류 탭: js가 카드의 data-cat 을 세어서 자동으로 만듦 (작품이 있는 분야만, 개수 표시) -->
+      <div class="wk-tabs" id="wkTabs" role="tablist" aria-label="작품 분류"></div>
+
+      <div class="wk-grid">
+        <article class="wk-card" data-cat="video" data-work="school" tabindex="0" role="button" aria-label="학교폭력 공익광고 자세히 보기">
+          <div class="wk-thumb"><span class="wk-tape" aria-hidden="true">00</span><span class="wk-ver" aria-hidden="true">v1 → v2</span><img src="img/works/work2-thumb.jpg" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="img/works/work2-preview.mp4"></video><span class="wk-badge" aria-hidden="true">▶</span></div>
+          <h3 class="wk-title">학교폭력 공익광고</h3>
+          <p class="wk-tags">AI 영상 · 공익 캠페인</p>
+        </article>
+        <article class="wk-card" data-cat="video" data-work="dream" tabindex="0" role="button" aria-label="AI의 꿈 자세히 보기">
+          <div class="wk-thumb"><span class="wk-tape" aria-hidden="true">00</span><span class="wk-ver" aria-hidden="true">v1 → v2</span><img src="img/works/work4-thumb.jpg" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="img/works/work4-preview.mp4"></video><span class="wk-badge" aria-hidden="true">▶</span></div>
+          <h3 class="wk-title">AI의 꿈</h3>
+          <p class="wk-tags">AI 영상 · 메시지</p>
+        </article>
+        <article class="wk-card" data-cat="video" data-work="5" tabindex="0" role="button" aria-label="내 딸은 중2 자세히 보기">
+          <div class="wk-thumb"><span class="wk-tape" aria-hidden="true">00</span><img src="img/works/work5-thumb.jpg" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="img/works/work5-preview.mp4"></video><span class="wk-badge" aria-hidden="true">▶</span></div>
+          <h3 class="wk-title">내 딸은 중2</h3>
+          <p class="wk-tags">AI 영상 · 애니메이션</p>
+        </article>
+        <article class="wk-card" data-cat="video" data-work="6" tabindex="0" role="button" aria-label="부부의 대화 자세히 보기">
+          <div class="wk-thumb"><span class="wk-tape" aria-hidden="true">00</span><img src="img/works/work6-thumb.jpg" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="img/works/work6-preview.mp4"></video><span class="wk-badge" aria-hidden="true">▶</span></div>
+          <h3 class="wk-title">부부의 대화</h3>
+          <p class="wk-tags">AI 영상 · 코미디</p>
+        </article>
+        <article class="wk-card" data-cat="video" data-work="7" tabindex="0" role="button" aria-label="랩배틀 자세히 보기">
+          <div class="wk-thumb"><span class="wk-tape" aria-hidden="true">00</span><img src="img/works/work7-thumb.jpg" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="img/works/work7-preview.mp4"></video><span class="wk-badge" aria-hidden="true">▶</span></div>
+          <h3 class="wk-title">랩배틀</h3>
+          <p class="wk-tags">AI 영상 · 숏폼</p>
+        </article>
+        <article class="wk-card" data-cat="book" data-work="book" tabindex="0" role="button" aria-label="그림책 꿈 자세히 보기">
+          <div class="wk-thumb wk-book"><span class="wk-tape" aria-hidden="true">00</span><span class="wk-ver" aria-hidden="true">그림책 · 24p</span><div class="wk-clip" aria-hidden="true"><div class="wk-pages"><img src="img/works/book-p01.webp" alt="" loading="lazy"><img src="img/works/book-p03.webp" alt="" loading="lazy"><img src="img/works/book-p06.webp" alt="" loading="lazy"><img src="img/works/book-p10.webp" alt="" loading="lazy"><img src="img/works/book-p13.webp" alt="" loading="lazy"><img src="img/works/book-p17.webp" alt="" loading="lazy"></div></div></div>
+          <h3 class="wk-title">그림책 〈꿈〉</h3>
+          <p class="wk-tags">그림책 · 일러스트</p>
+        </article>
+        <article class="wk-card" data-cat="promo" data-work="8" tabindex="0" role="button" aria-label="달빛걷기 포스터 자세히 보기">
+          <div class="wk-thumb"><span class="wk-tape" aria-hidden="true">00</span><img src="img/works/work8-thumb.jpg" alt="" loading="lazy"><span class="wk-badge" aria-hidden="true">◎</span></div>
+          <h3 class="wk-title">달빛걷기 포스터</h3>
+          <p class="wk-tags">디자인 · 포스터</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- [수정] 11. CONTACT — 편지 한 장 컨셉 (폼의 id는 그대로라 기존 보내기 기능 유지) -->
+    <section id="contact" class="contact">
+      <div class="resume-head">
+        <h2>CONTACT</h2>
+        <p class="resume-sub">: 같이 일해요</p>
+      </div>
+
+      <div class="ct-wrap">
+        <div class="ct-left" id="ctLeft">
+          <div class="ct-char-wrap">
+            <img src="img/resume/contact.svg" alt="손을 흔드는 에몽씨" class="ct-char">
+            <p class="ct-bubble" aria-hidden="true">잘 받았어요!</p>
+          </div>
+          <p class="ct-hello">좋은 일, 같이 만들어요.<br>편하게 연락 주세요 :)</p>
+          <div class="ct-mail">
+            <a href="mailto:emongc1209@gmail.com">emongc1209@gmail.com</a>
+            <button type="button" class="ct-copy" id="ctCopy">복사하기</button>
+          </div>
+          <p class="ct-copied" id="ctCopied" aria-live="polite"></p>
+        </div>
+
+        <div class="ct-box">
+          <form id="contact-form" novalidate>
+            <div class="form-group">
+              <label for="name">이름</label>
+              <input type="text" id="name" placeholder="이름을 적어 주세요" autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="email">이메일</label>
+              <input type="email" id="email" placeholder="답장 받을 이메일" autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label for="message">하고 싶은 말</label>
+              <textarea id="message" rows="4" placeholder="문의 내용을 10자 이상 적어 주세요"></textarea>
+            </div>
+            <button type="submit" class="submit-btn ct-send">보내기 ✉</button>
+            <p id="form-msg"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13. HISTORY / JOURNEY: 연혁 타임라인 영역 (Experience와 독립된 공간) -->
+    <section id="history" class="history-section">
+
+      <!-- 배경색과 어우러지는 수직 손그림 선 컨테이너 -->
+      <div class="vertical-line-container">
+        <!-- SVG 필터를 적용하여 선 자체의 외곽선을 울퉁불퉁하게 만듭니다 -->
+        <svg class="hand-drawn-vertical-line" preserveAspectRatio="none" viewBox="0 0 20 1000" style="overflow: visible;">
+          <defs>
+            <!-- [수정] 크레파스 질감 필터: 살짝 흔들림 + 종이 결에 걸린 듯 까끌한 빈틈 -->
+            <filter id="rough-line-filter" x="-50%" y="-2%" width="200%" height="104%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="2" result="wobble" />
+              <feDisplacementMap in="SourceGraphic" in2="wobble" scale="3" xChannelSelector="R" yChannelSelector="G" result="line" />
+              <feTurbulence type="fractalNoise" baseFrequency="0.9 0.35" numOctaves="2" seed="5" result="grain" />
+              <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3.5 0 0 0 -1.05" result="grainAlpha" />
+              <feComposite in="line" in2="grainAlpha" operator="in" />
+            </filter>
+          </defs>
+
+          <!-- [수정] 더 굵게(1.5 → 6) + 같은 길을 한 번 더 그어 크레파스로 덧칠한 느낌 -->
+          <path d="M 10 0 Q 3 150 16 300 T 5 600 Q 15 800 10 1000" fill="none" stroke="#2B2B2B"
+            stroke-width="6" stroke-linecap="round" filter="url(#rough-line-filter)" />
+          <path d="M 11 4 Q 4 150 15 300 T 6 600 Q 14 800 10 996" fill="none" stroke="#2B2B2B"
+            stroke-width="3" stroke-linecap="round" opacity="0.7" filter="url(#rough-line-filter)" />
+        </svg>
+
+        <!-- 선 중간중간에 들어가는 감성적인 텍스트 요소 (선택사항) -->
+        <span class="line-text text-top" style="top: 20%;">: You want more?</span>
+        <span class="line-text text-bottom" style="top: 60%;">: Just get my history.</span>
+        <!-- [추가] 선 끝을 타고 내려오는 옷걸이 에몽씨 (스크롤에 따라 움직임, script.js) -->
+        <div class="line-rider" id="lineRider" aria-hidden="true">
+          <div class="rider-swing">
+            <svg class="rider-hanger" viewBox="0 0 60 44">
+              <path d="M30 24 C30 17 37 15 37 9 C37 3.5 32 1.5 28.5 3.5 C26.5 4.7 26 6.5 26.3 8" />
+              <path d="M30 24 L5 39.5 C3.5 40.6 4.2 42.2 6 42.2 L54 42 C55.8 42 56.4 40.4 55 39.4 Z" />
+            </svg>
+            <img class="rider-face" alt="" draggable="false">
+          </div>
+        </div>
+        <!-- [추가] 돋보기 안내 대사 (PC / 폰 문구 다름) -->
+        <span class="line-text text-tmi" style="top: 85%;">
+          <span class="tmi-desktop">: 아래 이미지에 mouse 도 올려보고, click 도 해볼까요?</span>
+          <span class="tmi-touch">: 누르면 TMI 대방출</span>
+        </span>
+      </div>
+
+      <!-- 하단 타임라인 이미지 박스 -->
+      <!-- [수정] 마우스를 올리면 손그림 돋보기, 클릭(또는 Enter)하면 크게 보기 -->
+      <div class="timeline-image-container" id="timelineContainer" role="button" tabindex="0" aria-label="히스토리 크게 보기">
+        <img src="img/timeline-image.png" alt="인생 타임라인 연혁" class="responsive-timeline-img">
+        <!-- [수정] 분필로 그린 듯한 손그림 돋보기 (선이 미세하게 떨리는 3장 교차) -->
+        <div class="loupe" id="timelineLoupe" aria-hidden="true">
+          <div class="loupe-lens" id="loupeLens"></div>
+          <svg class="loupe-sketch" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><g class="boil boil-1"><path d="M29.1 41.7 Q43.2 25.6 62.6 16.5 Q82.3 8.6 103.7 7.6 Q124.4 11.9 144.7 18.4 Q161.0 32.1 176.1 47.0 Q185.0 66.3 190.5 86.6 Q192.4 107.7 189.6 129.1 Q178.4 147.5 165.7 164.4 Q150.0 178.9 131.0 189.4 Q109.6 192.8 88.3 191.9 Q66.8 188.7 49.3 176.0 Q31.1 164.4 20.0 145.9 Q12.1 126.3 8.5 105.5 Q9.0 84.3 13.3 63.2 Q25.9 45.7 39.3 29.1" class="s1"/><path d="M145.8 175.0 Q133.6 181.2 120.8 186.2 Q107.3 190.7 93.3 189.6 Q79.6 187.0 65.9 184.0 Q53.6 177.2 42.7 168.6 Q31.0 160.5 22.8 148.9 Q18.2 135.5 12.1 122.8 Q9.9 108.9 8.0 94.8 Q10.6 80.8 16.7 68.0 Q19.8 53.8 31.1 44.6 Q39.6 33.6 49.8 23.7 Q63.5 19.6 76.0 13.4 Q90.0 12.9 103.8 9.4 Q117.9 10.7 131.2 15.5 Q144.7 20.2 154.9 30.2" class="s2"/><path d="M166.6 166.3 Q186.3 183.9 213.1 213.4" class="s1"/><path d="M171.9 167.5 L204.6 203.6" class="s2"/><path d="M18.5 31.6 L31.0 41.3 M9.6 48.5 L23.5 51.9 M32.9 12.8 L38.6 28.9" class="s2"/></g><g class="boil boil-2"><path d="M18.5 57.1 Q30.1 39.3 44.8 23.5 Q64.8 15.5 84.9 8.4 Q106.2 7.0 127.7 9.8 Q147.4 18.7 164.9 31.6 Q177.1 49.4 187.1 68.1 Q191.8 88.9 193.8 110.4 Q189.2 131.7 177.2 149.6 Q163.8 166.0 147.1 179.0 Q127.8 187.7 107.1 192.7 Q85.7 192.2 65.4 185.4 Q47.3 174.5 30.6 161.5 Q18.5 143.9 10.0 124.3 Q5.4 103.1 8.1 81.6 Q15.4 61.3 26.1 42.8" class="s1"/><path d="M143.5 180.8 Q130.8 187.2 117.0 190.8 Q102.8 190.6 88.9 190.2 Q75.5 186.2 61.6 183.9 Q50.7 174.9 39.8 166.5 Q29.9 157.0 22.2 145.6 Q15.5 133.5 12.8 119.9 Q11.2 106.3 10.8 92.6 Q13.4 79.1 16.7 65.7 Q24.6 54.2 29.7 40.6 Q40.7 31.6 53.4 25.4 Q65.5 18.8 78.6 14.2 Q92.3 12.1 106.1 13.3 Q120.5 12.2 134.3 16.0 Q145.8 24.7 157.1 32.9" class="s2"/><path d="M164.7 164.7 Q185.5 183.2 213.1 210.9" class="s1"/><path d="M170.5 168.4 L206.1 201.9" class="s2"/><path d="M18.1 28.5 L30.1 43.5 M11.2 48.6 L24.2 51.6 M32.9 14.9 L40.1 28.9" class="s2"/></g><g class="boil boil-3"><path d="M29.3 41.1 Q43.3 24.8 61.8 13.3 Q82.7 7.3 104.3 6.0 Q125.7 9.4 145.6 18.0 Q161.9 31.9 176.7 47.3 Q186.2 66.4 190.4 87.2 Q190.9 108.2 187.5 129.0 Q178.5 148.2 166.5 166.0 Q150.2 180.3 129.9 187.9 Q109.2 194.1 87.4 193.9 Q66.3 188.4 48.2 176.6 Q32.4 162.4 19.9 145.3 Q11.8 125.8 8.2 104.9 Q8.0 83.6 13.3 62.6 Q24.3 43.9 40.0 29.0" class="s1"/><path d="M147.4 176.7 Q135.2 184.1 121.4 187.8 Q107.3 189.7 93.2 188.3 Q79.8 184.6 65.6 183.0 Q54.1 174.7 41.4 168.2 Q30.7 158.6 24.6 145.6 Q18.3 133.2 11.4 120.5 Q10.1 106.3 12.7 92.3 Q15.0 78.8 19.0 65.6 Q22.1 51.4 30.7 40.1 Q42.8 32.3 52.0 21.3 Q64.4 14.0 78.3 10.8 Q92.4 9.9 106.4 8.7 Q119.8 12.6 132.8 17.1 Q147.4 19.1 158.2 28.4" class="s2"/><path d="M166.1 167.4 Q185.8 185.2 213.0 211.1" class="s1"/><path d="M171.2 166.3 L205.2 203.3" class="s2"/><path d="M17.2 29.7 L28.8 43.3 M9.5 47.9 L25.3 53.3 M33.7 15.3 L40.0 28.1" class="s2"/></g></svg>
+        </div>
+      </div>
+      <!-- [삭제] 이미지 아래 영어 안내 글자 (위쪽 TMI 대사로 대체) --> <!-- 👈 이미지 컨테이너를 여기서 먼저 닫습니다! -->
+
+      <!-- [수정] 마지막 장면: "Again,"으로 시작해 "Thank you,"로 끝나는 수미상관
+           (예전 THANK YOU! + CONTACT 상자는 위 CONTACT 섹션과 겹쳐서 정리) -->
+      <div class="timeline-footer-text ending" id="ending">
+        <p class="end-thanks" aria-label="Thank you,"><span class="end-letter" style="--i:0">T</span><span class="end-letter" style="--i:1">h</span><span class="end-letter" style="--i:2">a</span><span class="end-letter" style="--i:3">n</span><span class="end-letter" style="--i:4">k</span><span class="end-letter" style="--i:5">&nbsp;</span><span class="end-letter" style="--i:6">y</span><span class="end-letter" style="--i:7">o</span><span class="end-letter" style="--i:8">u</span><span class="end-letter" style="--i:9">,</span></p>
+        <svg class="end-sign" viewBox="0 0 260 90" role="img" aria-label="Emongc 서명">
+          <path pathLength="1" d="M44 24 C 30 14 14 26 26 38 C 30 42 36 42 40 41 C 22 42 12 56 22 66 C 30 74 46 70 54 60 C 57 54 60 46 63 58 C 64 63 64 63 65 58 C 67 47 72 45 74 58 C 75 63 75 63 76 58 C 78 47 84 45 85 60 C 87 53 92 49 97 51 C 103 54 100 64 93 64 C 87 64 87 55 93 53 C 98 52 101 56 104 58 C 106 52 108 47 110 60 C 112 50 118 46 121 60 C 123 54 128 50 133 52 C 138 55 134 63 128 63 C 123 63 123 56 128 54 C 133 53 135 56 136 58 C 136 66 135 76 131 82 C 127 88 117 87 119 80 C 121 73 134 68 146 62" />
+          <path pathLength="1" d="M163 52 C 156 47 147 55 150 62 C 153 67 161 65 167 59" />
+          <path pathLength="1" class="end-sign-line" d="M28 82 C 80 76 150 74 236 64" />
+        </svg>
+        <p class="end-line">끝까지 봐 주셔서 고마워요. 다시, 만나요.</p>
+        <a href="#top" class="end-top" id="endTop">↑ 다시 처음으로</a>
+      </div>
+      </div>
+
+      <!-- [수정] 팝업 모달 → 제자리에서 펼쳐지는 뷰어 -->
+      <div id="imageModal" class="image-modal" role="dialog" aria-modal="true" aria-label="히스토리 크게 보기" aria-hidden="true">
+        <!-- [수정] 닫기 버튼을 이미지 오른쪽 위 바깥에 붙이기 위해 이미지와 함께 묶음 -->
+        <div class="viewer-box">
+          <button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="닫기">닫기 ✕</button>
+          <div class="viewer-stage" id="viewerStage">
+            <img class="modal-content" id="expandedImg" src="img/timeline-image.png" alt="타임라인 확대보기" draggable="false">
+          </div>
+        </div>
+        <p class="viewer-tip" aria-hidden="true">톡 하면 확대 &middot; 쭉 끌어서 이동</p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ==================================================
+     12. FOOTER: 하단 저작권 영역
+     ================================================== -->
+  <!-- [수정] footer: 색 없이 얇은 한 줄 (손글씨 대문자) / 맨 아래에선 떠 있는 TOP 대신 글자 링크 -->
+  <footer class="site-footer" id="siteFooter">
+    <p class="footer-line">&copy; 2026 EMONGC &mdash; HAND-DRAWN &amp; HAND-CODED</p>
+    <a href="#" class="footer-top" id="footerTop" aria-label="페이지 맨 위로 이동">&uarr; TOP</a>
+  </footer>
+
+  <!-- TOP 버튼 -->
+  <button id="top-btn" aria-label="페이지 맨 위로 이동">TOP</button>
+
+  <!-- JavaScript 연결 -->
+  <script src="js/script.js?v=20261105c"></script>
+
+  <!-- [추가] WORKS 뷰어: history 뷰어와 같은 모양 (뒤 흐림 · 닫기 ✕ · Esc) -->
+  <div id="workViewer" class="image-modal work-viewer" role="dialog" aria-modal="true" aria-label="작품 자세히 보기" aria-hidden="true">
+    <div class="viewer-box wv-box">
+      <button type="button" class="modal-close-btn" id="wvClose" aria-label="닫기">닫기 ✕</button>
+      <div class="wv-left">
+        <div class="wv-stage" id="wvStage"></div>
+        <div class="wv-vers" id="wvVers" role="group" aria-label="버전 선택" hidden></div>
+      </div>
+      <div class="wv-info">
+        <p class="wk-no" id="wvNo"></p>
+        <h3 class="wv-title" id="wvTitle"></h3>
+        <dl class="wv-dl">
+          <dt>기획 의도</dt><dd id="wvWhy"></dd>
+          <dt>사용 도구</dt><dd id="wvTools"></dd>
+          <dt>내 역할</dt><dd id="wvRole"></dd>
+        </dl>
+        <div class="wv-change" id="wvChange" hidden>
+          <p class="wv-change-h">v1 → v2, 무엇을 바꿨나</p>
+          <p><b>v1</b> <span id="wvV1"></span></p>
+          <p><b>v2</b> <span id="wvV2"></span></p>
+        </div>
+        <div class="wv-links" id="wvLinks" hidden></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- (예전) 클릭했을 때 나타나는 상세 팝업 창 — 지금은 사용 안 함 -->
+    <div id="workModal" class="work-detail-modal">
+        <button class="close-btn" onclick="closeModal()">✕ 닫기</button>
+        <div id="modalContent">
+            <!-- 여기에 상세 설명이나 아담한 크기의 영상(video, iframe 등)을 넣게 됩니다 -->
+        </div>
+    </div>
+
+</body>
+
+</html>

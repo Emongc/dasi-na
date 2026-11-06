@@ -1,0 +1,172 @@
+/* ==================================================
+   그림책 〈꿈〉 — 가로로 쭉 보기 / 전체보기 (book.html 전용)
+   ================================================== */
+:root {
+    --main-color: #171717;
+    --point-color: #B77BDD;
+    --bg-color: #FAFAFA;
+    --card: min(400px, 76vw, calc(100vh - 300px));
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg-color);
+    color: var(--main-color);
+    font-family: 'Noto Sans KR', sans-serif;
+    overflow-x: hidden;
+}
+
+/* 상단 */
+.bk-top {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 20px 24px 0;
+    font-family: 'Gaegu', cursive;
+}
+.bk-back { color: var(--main-color); text-decoration: none; font-size: 1.15rem; font-weight: 700; padding: 8px 0; }
+.bk-back:hover { color: #7A4FA0; }
+.bk-label { margin: 0; font-size: 1.6rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+.bk-label small { font-size: 1rem; font-weight: 400; color: #6e6e6e; }
+.bk-tape {
+    display: inline-block;
+    padding: 0 10px;
+    font-size: 1rem;
+    background: rgba(217, 164, 65, 0.62);
+    transform: rotate(-3deg);
+    color: #3A2E14;
+}
+
+/* 보기 방식 버튼 (WORKS 탭과 같은 형광펜 밑줄) */
+.bk-views {
+    max-width: 1200px;
+    margin: 18px auto 0;
+    padding: 0 24px;
+    display: flex;
+    gap: 20px;
+    font-family: 'Gaegu', cursive;
+}
+.bk-view {
+    min-height: 44px;
+    padding: 0 2px;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #8a8a8a;
+    cursor: pointer;
+}
+.bk-view:hover { color: var(--main-color); }
+.bk-view.on { color: var(--main-color); background: linear-gradient(transparent 64%, rgba(217, 164, 65, 0.55) 64%); }
+
+/* ---------- 가로로 보기 ---------- */
+.bk-strip-wrap { padding: 22px 0 30px; display: flex; flex-direction: column; align-items: center; }
+.bk-strip {
+    width: 100%;
+    display: flex;
+    gap: 22px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 max(24px, calc((100vw - 1200px) / 2 + 24px));
+    padding: 6px max(24px, calc((100vw - 1200px) / 2 + 24px)) 18px;
+    scrollbar-width: none;
+    cursor: grab;
+    outline: none;
+}
+.bk-strip::-webkit-scrollbar { display: none; }
+.bk-strip.dragging { cursor: grabbing; scroll-snap-type: none; }
+.bk-strip.anim { scroll-snap-type: none; }
+.bk-strip.dragging * { pointer-events: none; }
+.bk-strip > * { flex: 0 0 var(--card); height: var(--card); scroll-snap-align: start; }
+.bk-page { position: relative; margin: 0; background: #fff; border: 1px solid rgba(23, 23, 23, 0.12); }
+.bk-page img { width: 100%; height: 100%; object-fit: cover; display: block; user-select: none; -webkit-user-drag: none; }
+.bk-no {
+    position: absolute;
+    left: 10px;
+    bottom: 8px;
+    font-family: 'Gaegu', cursive;
+    font-size: 0.95rem;
+    color: #8a8a8a;
+}
+
+/* 끝 카드 */
+.bk-end {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    font-family: 'Gaegu', cursive;
+    border: 1.5px dashed #c9c2b8;
+}
+.bk-main > .bk-end { display: none; }   /* js가 제자리로 옮기기 전 */
+.bk-end-title { margin: 0; font-size: 2.6rem; font-weight: 700; }
+.bk-end-text { margin: 0 0 12px; font-size: 1.15rem; color: #555; }
+.bk-end-link {
+    color: var(--main-color);
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 6px 4px;
+    background: linear-gradient(transparent 62%, rgba(183, 123, 221, 0.5) 62%);
+}
+
+/* 아래 조작 */
+.bk-ctrl { display: flex; align-items: center; gap: 22px; margin-top: 8px; font-family: 'Gaegu', cursive; }
+.bk-btn {
+    width: 48px;
+    height: 48px;
+    border: 1.5px solid var(--main-color);
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    background: #fff;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.bk-btn:hover:not(:disabled) { background: rgba(217, 164, 65, 0.3); transform: translateY(-2px); }
+.bk-btn:disabled { opacity: 0.3; cursor: default; }
+.bk-count { margin: 0; min-width: 110px; text-align: center; font-size: 1.3rem; font-weight: 700; }
+.bk-bar { width: min(320px, 70vw); height: 3px; margin: 12px 0 0; background: #e6e2da; }
+.bk-bar span { display: block; height: 100%; width: 0; background: rgba(217, 164, 65, 0.9); }
+.bk-hint { margin: 10px 0 0; font-size: 0.8rem; color: #8a8a8a; }
+
+/* ---------- 전체보기 ---------- */
+.bk-all { max-width: 1200px; margin: 0 auto; padding: 24px 24px 60px; }
+.bk-all[hidden], .bk-strip-wrap[hidden] { display: none; }
+.bk-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 22px;
+}
+.bk-grid li { margin: 0; }
+.bk-grid button {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+}
+.bk-grid .bk-page { aspect-ratio: 1 / 1; transition: transform 0.25s ease; }
+.bk-grid button:hover .bk-page { transform: translateY(-3px); }
+.bk-grid .bk-end { aspect-ratio: 1 / 1; }
+
+.bk-btn:focus-visible, .bk-back:focus-visible, .bk-end-link:focus-visible,
+.bk-view:focus-visible, .bk-grid button:focus-visible, .bk-strip:focus-visible {
+    outline: 1.5px dashed var(--point-color);
+    outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bk-btn, .bk-grid .bk-page { transition: none; }
+}
