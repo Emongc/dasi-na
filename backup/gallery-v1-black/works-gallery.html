@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- ==================================================
+       WORKS 갤러리 뷰 — 메인(손그림)과 다른 "정돈된 갤러리" 버전
+       · 작품 목록은 js/works-data.js 를 그대로 읽어 씀 (작품 추가는 그 파일에서)
+       · 이 페이지 전용 파일: works-gallery.html / css/gallery.css / js/gallery.js
+       ================================================== -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Works — Emongc</title>
+  <meta name="description" content="에몽씨(Emongc)의 작업 모음 — 디자인 · 홍보물 · 영상 · 출판 · 기획">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/gallery.css?v=12">
+</head>
+<body>
+  <!-- 속이 빈 글자용: 글자 모양을 한 덩어리로 보고 바깥선만 그림 -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <filter id="gOutline" x="-5%" y="-5%" width="110%" height="110%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="2" result="fat"/>
+      <feComposite in="fat" in2="SourceAlpha" operator="out" result="ring"/>
+      <feFlood flood-color="#ffffff"/>
+      <feComposite in2="ring" operator="in"/>
+    </filter>
+  </svg>
+  <header class="g-top">
+    <a class="g-brand" href="works-gallery.html">EMONGC<span>/</span>WORKS</a>
+    <a class="g-back" href="index.html#works">← 손그림 버전으로</a>
+  </header>
+
+  <main id="gMain">
+    <!-- 첫 화면: 흑백 영상 위에 큰 글자 -->
+    <section class="g-hero" aria-labelledby="gIntroTitle">
+      <div class="g-hero-media" id="gHeroMedia" aria-hidden="true"></div>
+      <h1 id="gIntroTitle" class="g-intro-title">
+        <span>DESIGN.</span> <span>CONTENT.</span> <span>CAMPAIGN.</span> <span>PLANNING.</span>
+      </h1>
+      <p class="g-intro-sub">디자인 · 홍보물 · 영상 · 출판 · 기획<br>말보다 결과로 보여 드릴게요.</p>
+      <span class="g-hero-down" aria-hidden="true">SELECTED WORKS ↓</span>
+    </section>
+
+    <section class="g-grid" id="gGrid" aria-label="작업 목록"></section>
+
+    <footer class="g-foot">
+      <a class="g-foot-cta" href="index.html#contact">LET'S WORK<br>TOGETHER →</a>
+      <div class="g-foot-row"><p>© Emongc · Hong</p><a href="index.html">손그림 버전 보기</a></div>
+    </footer>
+  </main>
+
+  <!-- 작품 상세: 칸을 누르면 화면 가득 펼쳐짐 -->
+  <article class="g-detail" id="gDetail" hidden aria-modal="true" role="dialog" aria-labelledby="gdTitle" tabindex="-1">
+    <button type="button" class="g-close" id="gClose" aria-label="목록으로 돌아가기"><span></span><span></span></button>
+    <div class="g-detail-body" id="gDetailBody"></div>
+  </article>
+
+  <!-- 맨 아래까지 내려오면 나타나는 위로 가기 -->
+  <button type="button" class="g-totop" id="gTop" aria-label="맨 위로"><span aria-hidden="true">↑</span>TOP</button>
+
+  <!-- 펼쳐지는 효과에 쓰는 임시 그림 -->
+  <div class="g-fly" id="gFly" aria-hidden="true"></div>
+
+  <script src="js/works-data.js"></script>
+  <script src="js/gallery.js?v=10"></script>
+</body>
+</html>
