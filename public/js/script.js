@@ -332,7 +332,7 @@ document.addEventListener("DOMContentLoaded", function () {
     //  - 크레파스 가장자리까지 적용된 이미지 복사본
     //  - 세로선·대사·옷걸이 에몽씨 복사본 (원본과 같은 상태로 계속 맞춰 줌)
     //  → 돋보기에 걸치는 것은 무엇이든 그대로 확대돼 보임
-    let lensWorld = null, lensImg = null, lineClone = null, lineOrig = null;
+    let lensWorld = null, lensImg = null, lineClone = null, lineOrig = null, endClone = null, endOrig = null;
     function buildLensWorld() {
         if (lensWorld || !lens) return;
         lensWorld = document.createElement("div");
@@ -353,6 +353,17 @@ document.addEventListener("DOMContentLoaded", function () {
             const defs = lineClone.querySelector("defs");   // 필터는 원본 것을 같이 씀
             if (defs) defs.remove();
             lensWorld.appendChild(lineClone);
+        }
+        // [추가] 이미지 아래 마지막 장면(Thank you, · 서명 · 다시 처음으로)도 복사 → 아래쪽에 걸쳐도 확대돼 보임
+        endOrig = document.getElementById("ending");
+        if (endOrig) {
+            endClone = endOrig.cloneNode(true);
+            endClone.classList.add("lens-end");
+            endClone.removeAttribute("id");
+            endClone.querySelectorAll("[id]").forEach(function (el) { el.removeAttribute("id"); });
+            endClone.querySelectorAll("defs").forEach(function (d) { d.remove(); });   // 필터는 원본 것을 같이 씀
+            endClone.querySelectorAll("a, button").forEach(function (el) { el.setAttribute("tabindex", "-1"); });
+            lensWorld.appendChild(endClone);
         }
         lens.appendChild(lensWorld);
     }
@@ -399,6 +410,13 @@ document.addEventListener("DOMContentLoaded", function () {
             lineClone.style.width = lr.width + "px";
             lineClone.style.height = lr.height + "px";
             syncLineClone();
+        }
+        if (endClone && endOrig) {
+            const er = endOrig.getBoundingClientRect();
+            endClone.style.left = (er.left - r.left) + "px";
+            endClone.style.top = (er.top - r.top) + "px";
+            endClone.style.width = er.width + "px";
+            if (endClone.className !== endOrig.className + " lens-end") endClone.className = endOrig.className + " lens-end";
         }
         lensWorld.style.transform = "translate(" + (half - x * ZOOM) + "px, " + (half - y * ZOOM) + "px) scale(" + ZOOM + ")";
     }
@@ -852,45 +870,62 @@ document.addEventListener("DOMContentLoaded", function () {
         return L;
     });
 
-    let progress = -1, lastScroll = window.scrollY, angle = 0, landed = false;
+    let progress = -1, maxP = 0, lastScroll = window.scrollY, angle = 0, landed = false;
+    let frame = "down", climbAcc = 0;
+    function setFrame(f) {
+        if (f === frame || !rider) return;
+        rider.classList.remove("f-" + frame);
+        frame = f;
+        rider.classList.add("f-" + frame);
+    }
 
     function update() {
         const r = wrap.getBoundingClientRect();
         const vh = window.innerHeight;
-        // 화면 높이 60% 지점을 "크레파스 끝"으로 보고, 그만큼 그어짐
+        // 화면 높이 60% 지점을 "현재 위치"로 봄
         let p = (vh * 0.6 - r.top) / r.height;
         p = Math.max(0, Math.min(1, p));
 
         if (p !== progress) {
             progress = p;
-            paths.forEach(function (path, i) { path.style.strokeDashoffset = lens[i] * (1 - p); });
-
-            // 대사: 선 끝이 그 높이를 지나면 써지고, 위로 올라가면 다시 지워짐
-            texts.forEach(function (t) {
-                const at = parseFloat(t.style.top) / 100 || 0;
-                t.classList.toggle("written", p >= at - 0.02);
-            });
-
+            // [수정] 선은 한번 그어지면 지우지 않음 (가장 멀리 간 곳까지 유지)
+            if (p > maxP) {
+                maxP = p;
+                paths.forEach(function (path, i) { path.style.strokeDashoffset = lens[i] * (1 - maxP); });
+                texts.forEach(function (t) {
+                    const at = parseFloat(t.style.top) / 100 || 0;
+                    if (maxP >= at - 0.02) t.classList.add("written");
+                });
+            }
             // 착지
             if (p >= 1 && !landed) { landed = true; rider && rider.classList.add("landed"); }
             if (p < 0.97 && landed) { landed = false; rider && rider.classList.remove("landed"); }
         }
 
-        // 옷걸이 위치: 선 끝 좌표 (SVG 좌표 → 화면 px)
+        // 줄 타는 에몽씨: 현재 위치(progress)의 선 위 좌표에 손이 오도록
         if (rider) {
             const sr = svg.getBoundingClientRect();
-            // 캐릭터가 아래 history 이미지를 가리지 않게, 선 끝보다 조금 위(약 65px)에서 멈춤
-            const stop = Math.max(0, 1 - 65 / sr.height);
-            const pt = paths[0].getPointAtLength(lens[0] * Math.min(progress, stop));
+            const pt = paths[0].getPointAtLength(lens[0] * progress);
             const x = (sr.left - r.left) + pt.x * (sr.width / 20);
             const y = pt.y * (sr.height / 1000);
-            rider.style.transform = "translate(" + (x - 30) + "px, " + (y - 3) + "px)";
+            const w = rider.offsetWidth || 64;
+            // 그림 비율 200x320, 손(줄 잡는 곳)은 위에서 약 50% 지점 / 착지하면 발이 선 끝에
+            const hy = landed ? w * 1.6 * 0.97 : w * 1.6 * 0.5;
+            rider.style.transform = "translate(" + (x - w / 2) + "px, " + (y - hy) + "px)";
             rider.classList.toggle("on", progress > 0.005);
 
-            // 스크롤 속도만큼 기울었다가 진자처럼 돌아옴
             const v = window.scrollY - lastScroll;
             lastScroll = window.scrollY;
-            const target = Math.max(-18, Math.min(18, -v * 0.8));
+            if (landed) setFrame("wave");
+            else if (v > 0) { setFrame("down"); climbAcc = 0; }
+            else if (v < 0) {
+                // 위로 스크롤: 손을 번갈아 뻗으며 올라감 (약 26px마다 한 동작)
+                climbAcc += -v;
+                if (frame !== "up1" && frame !== "up2") setFrame("up1");
+                else if (climbAcc > 26) { climbAcc = 0; setFrame(frame === "up1" ? "up2" : "up1"); }
+            }
+            // 스크롤 속도만큼 살짝 흔들렸다가 돌아옴
+            const target = landed ? 0 : Math.max(-8, Math.min(8, -v * 0.4));
             angle += (target - angle) * 0.12;
             if (swing) swing.style.rotate = angle.toFixed(2) + "deg";
         }
@@ -1164,7 +1199,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // ==================================================
 window.drawCrayonFrames = (function () {
     const NS = "http://www.w3.org/2000/svg";
-    let made = false;
+    let made = false, seq = 0;
     function ensureFilter() {
         if (made) return; made = true;
         const s = document.createElementNS(NS, "svg");
@@ -1176,7 +1211,14 @@ window.drawCrayonFrames = (function () {
             '<feDisplacementMap in="SourceGraphic" in2="w" scale="2" xChannelSelector="R" yChannelSelector="G" result="l"/>' +
             '<feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="2" seed="13" result="g"/>' +
             '<feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3 0 0 0 -0.75" result="ga"/>' +
-            '<feComposite in="l" in2="ga" operator="in"/></filter>';
+            '<feComposite in="l" in2="ga" operator="in"/></filter>' +
+            // [추가] 크레파스로 칠한 면: 결(가루)이 보이고 가장자리가 고르지 않게
+            '<filter id="cf-fill" x="-5%" y="-20%" width="110%" height="140%">' +
+            '<feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="2" result="n"/>' +
+            '<feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.9 1.55" result="g"/>' +
+            '<feComposite in="SourceGraphic" in2="g" operator="in" result="t"/>' +
+            '<feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="7" result="w"/>' +
+            '<feDisplacementMap in="t" in2="w" scale="5"/></filter>';
         document.body.appendChild(s);
     }
     function wobbly(x1, y1, x2, y2, amp, seed) {
@@ -1190,9 +1232,11 @@ window.drawCrayonFrames = (function () {
         edge(x1, y1, x2, y1); edge(x2, y1, x2, y2); edge(x2, y2, x1, y2); edge(x1, y2, x1, y1);
         return "M" + pts.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" L") + " Z";
     }
-    function draw(el, i) {
+    function draw(el) {
         ensureFilter();
-        let svg = el.querySelector(":scope > .cf-svg");
+        if (el._cfi == null) el._cfi = seq++;
+        const i = el._cfi;
+        let svg = el.querySelector(":scope > .cf-svg"), bg = el.querySelector(":scope > .cf-bg");
         if (!svg) {
             svg = document.createElementNS(NS, "svg");
             svg.setAttribute("class", "cf-svg");
@@ -1200,13 +1244,31 @@ window.drawCrayonFrames = (function () {
             svg.innerHTML = '<g filter="url(#cf-crayon)"><path class="cf-main"/><path class="cf-over"/></g>';
             el.appendChild(svg);
         }
+        // 칠(머스타드 크레파스) 판: 글자 뒤에 깔림 — 평소엔 .crayon-fill 만 보이고, 버튼은 마우스를 올리면 칠해짐
+        if (!bg) {
+            bg = document.createElementNS(NS, "svg");
+            bg.setAttribute("class", "cf-bg");
+            bg.setAttribute("aria-hidden", "true");
+            bg.innerHTML = '<path class="cf-paint" filter="url(#cf-fill)"/>';
+            el.insertBefore(bg, el.firstChild);
+        }
         const w = el.clientWidth, h = el.clientHeight;
         if (!w || !h) return;
         svg.setAttribute("viewBox", "0 0 " + w + " " + h);
+        bg.setAttribute("viewBox", "0 0 " + w + " " + h);
         svg.querySelector(".cf-main").setAttribute("d", wobbly(1.5, 1.5, w - 1.5, h - 1.5, 2.2, 7 + i * 13));
         svg.querySelector(".cf-over").setAttribute("d", wobbly(3, 2.5, w - 2.5, h - 3, 3, 29 + i * 7));
+        bg.querySelector(".cf-paint").setAttribute("d", wobbly(5, 4.5, w - 5.5, h - 4, 3, 51 + i * 11));
     }
-    function all() { document.querySelectorAll(".crayon-frame").forEach(draw); }
+    // 크기가 바뀌거나(글자 바뀜, 숨김→보임) 새로 생긴 요소도 다시 그림
+    const ro = ("ResizeObserver" in window) ? new ResizeObserver(function (es) { es.forEach(function (e) { draw(e.target); }); }) : null;
+    function all() {
+        document.querySelectorAll(".crayon-frame").forEach(function (el) {
+            if (el.closest(".lens-end")) return;   // 돋보기 속 복사본은 원본에서 그려진 모양 그대로
+            draw(el);
+            if (ro && !el._cfo) { ro.observe(el); el._cfo = true; }
+        });
+    }
     window.addEventListener("resize", all);
     window.addEventListener("load", all);
     document.addEventListener("DOMContentLoaded", all);
@@ -1219,6 +1281,14 @@ window.drawCrayonFrames = (function () {
 // ==================================================
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".ct-box").forEach(function (b) { b.classList.add("crayon-frame"); });
+    // [추가] 버튼·말풍선·스킬 태그도 상단 프레임과 같은 크레파스 테두리로 통일
+    //  · 작은 버튼은 큰 틀(크레파스)보다 가볍게 → 연필 버전(선 한 겹, 가늘고 옅게)
+    //  · RESUME 스킬 태그, CONTACT 복사 버튼·말풍선은 예전 모양 유지
+    document.querySelectorAll(".express-btn, #contact .ct-send, .end-top, .desktop-warning-overlay")
+        .forEach(function (b) { b.classList.add("crayon-frame", "crayon-pencil"); });
+    // 머스타드 크레파스로 칠해 두는 곳 (주요 버튼 · 안내 쪽지)
+    document.querySelectorAll("#contact .ct-send, .desktop-warning-overlay")
+        .forEach(function (b) { b.classList.add("crayon-fill"); });
     if (window.drawCrayonFrames) window.drawCrayonFrames();
 });
 
@@ -1286,3 +1356,112 @@ document.addEventListener("DOMContentLoaded", function () {
     io.observe(end);
 });
 
+// ==================================================
+// [추가] 고정 메뉴의 원래 높이를 재서 본문 위쪽에 같은 만큼 자리를 비워 둠 (--header-h)
+// (메뉴가 작아진 상태나 폰 메뉴가 펼쳐진 상태에서는 재지 않음)
+// ==================================================
+(function () {
+    const header = document.querySelector("header");
+    const nav = document.getElementById("main-nav");
+    if (!header) return;
+    function measure() {
+        if (header.classList.contains("compact")) return;
+        if (nav && nav.classList.contains("open")) return;
+        document.documentElement.style.setProperty("--header-h", header.offsetHeight + "px");
+    }
+    measure();
+    window.addEventListener("load", measure);
+    window.addEventListener("resize", measure);
+    // 작아졌던 메뉴가 원래 크기로 돌아오면(맨 위) 애니메이션이 끝난 뒤 다시 잼
+    new MutationObserver(function () {
+        if (!header.classList.contains("compact")) setTimeout(measure, 400);
+    }).observe(header, { attributes: true, attributeFilter: ["class"] });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+})();
+
+
+
+/* ==================================================
+   [추가] CONTACT 춤 영상: 화면에 보일 때만 재생 (배터리·성능 절약)
+   - 움직임 줄이기 설정이면 재생하지 않고 첫 장면(포스터)만 보여줌
+   ================================================== */
+(function () {
+    const v = document.querySelector(".ct-dance-video");
+    if (!v) return;
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return;
+    if (!("IntersectionObserver" in window)) { v.play().catch(function () {}); return; }
+    new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+            if (e.isIntersecting) v.play().catch(function () {});
+            else v.pause();
+        });
+    }, { threshold: 0.15 }).observe(v);
+})();
+
+
+/* ==================================================
+   [추가] CONTACT 춤추는 에몽씨: 누르면 캐릭터 제작 과정 상세보기 (WORKS 상세창 재사용)
+   ================================================== */
+(function () {
+    const d = document.querySelector(".ct-dancer[role=button]");
+    if (!d) return;
+    function go() { if (window.openWork) window.openWork("emongc-making"); }
+    d.addEventListener("click", go);
+    d.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+})();
+
+
+/* ==================================================
+   [수정] CONTACT 에몽씨 말풍선: 화면에 있는 동안 10초마다 말을 걺
+   - "같이 일해요!" → "메일 기다릴게요 ✉" → "커피 한 잔 어때요? ☕" 차례로 반복
+   - 폼에 글을 쓰는 중에는 조용히, 보내면 "잘 받았어요! 💌"
+   - 문구를 바꾸려면 아래 LINES 만 고치면 됨
+   ================================================== */
+(function () {
+    const LINES = ["같이 일해요!", "메일 기다릴게요 ✉", "커피 한 잔 어때요? ☕"];
+    const EVERY = 10000, SHOW = 3500;
+    const left = document.getElementById("ctLeft");
+    const bub = left ? left.querySelector(".ct-bubble") : null;
+    const form = document.getElementById("contact-form");
+    const formMsg = document.getElementById("form-msg");
+    if (!left || !bub) return;
+    let hideT = 0, loopT = 0, idx = 0, visible = false, lastType = 0;
+    function say(text, ms) {
+        bub.textContent = text;
+        left.classList.add("talk");
+        clearTimeout(hideT);
+        hideT = setTimeout(function () { left.classList.remove("talk"); }, ms || SHOW);
+    }
+    function busy() {
+        return (form && form.contains(document.activeElement)) || Date.now() - lastType < 8000;
+    }
+    function tick() {
+        clearTimeout(loopT);
+        if (!visible || document.hidden) return;
+        if (!busy()) say(LINES[idx++ % LINES.length]);
+        loopT = setTimeout(tick, EVERY);
+    }
+    if ("IntersectionObserver" in window) {
+        new IntersectionObserver(function (es) {
+            visible = es[0].isIntersecting;
+            clearTimeout(loopT);
+            if (visible) loopT = setTimeout(tick, 600);   // 보이자마자 첫 마디
+        }, { threshold: 0.3 }).observe(left);
+    }
+    document.addEventListener("visibilitychange", function () { if (!document.hidden && visible) { clearTimeout(loopT); loopT = setTimeout(tick, 1500); } });
+    if (form) form.addEventListener("input", function () {
+        lastType = Date.now();
+        left.classList.remove("talk");   // 쓰는 중에는 조용히
+    });
+    if (formMsg && "MutationObserver" in window) {
+        new MutationObserver(function () {
+            if (formMsg.className === "success") {
+                lastType = 0;
+                say("잘 받았어요! 💌", 4500);
+                clearTimeout(loopT);
+                loopT = setTimeout(tick, EVERY);
+            }
+        }).observe(formMsg, { attributes: true, attributeFilter: ["class"] });
+    }
+})();

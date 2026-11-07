@@ -554,3 +554,72 @@
 .wkv-cmp s { text-decoration: none; color: #8a8a8a; }
 .wkv-cmp i { font-style: normal; text-align: center; color: #c9a227; }
 .wkv-cmp p > b { font-weight: 700; color: #222; }
+
+
+/* ==================================================
+   [추가] 영상 탭 첫 칸: 춤추는 에몽씨 (작품이 아닌 캐릭터 자리)
+   - 상자·배경 없이 페이지 위에서 노는 느낌 (흰 배경은 multiply로 녹임)
+   - 아래는 일부러 여백, 손글씨 한 줄만
+   ================================================== */
+.wk-card.wk-mascot { cursor: pointer; align-self: start; text-align: center; }
+/* 등장 효과(transform/opacity 애니메이션)가 있으면 multiply가 페이지 배경과 섞이지 못해 흰 상자가 보임 → 이 칸만 제외 */
+.wk-grid.wk-in .wk-card.wk-mascot:not(.out) { animation: none; }
+.wk-mascot-stage { position: relative; width: 82%; margin: 30px auto 0; }
+.wk-mascot-video { display: block; width: 100%; height: auto; aspect-ratio: 480 / 466; mix-blend-mode: multiply; pointer-events: none; }
+.wk-mascot-note {
+    margin: 50px 0 0;   /* ← 위쪽 여백: 캐릭터와 "이 친구가 에몽씨예요" 사이 */
+    font-family: 'Gaegu', cursive;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #4b3f33;
+    letter-spacing: -0.01em;
+}
+.wk-mascot-small { margin: 2px 0 0; font-family: 'Noto Sans KR', sans-serif; font-size: 0.72rem; color: #9a9187; }
+/* 인사 말풍선: 상자 없이 손글씨 + 머스타드 크레파스 밑칠 */
+.wk-mascot-hello {
+    position: absolute;
+    left: 50%;
+    top: -15%;
+    padding: 0 4px;
+    font-family: 'Gaegu', cursive;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #2B2B2B;
+    white-space: nowrap;
+    background: linear-gradient(transparent 55%, rgba(217, 164, 65, 0.55) 55%, rgba(217, 164, 65, 0.55) 92%, transparent 92%);
+    opacity: 0;
+    transform: translate(-50%, 6px) rotate(-4deg);
+    transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.22, 1.4, 0.36, 1);
+    pointer-events: none;
+}
+.wk-mascot:hover .wk-mascot-hello, .wk-mascot.hi .wk-mascot-hello { opacity: 1; transform: translate(-50%, 0) rotate(-4deg); }
+/* 2칸 화면(모바일): 맨 위 한 줄, 작게 */
+.wk-mascot.wide .wk-mascot-stage { width: 46%; max-width: 200px; }
+@media (prefers-reduced-motion: reduce) { .wk-mascot-hello { transition: none; } }
+
+
+/* [수정] 상세창 주요 버튼: 크레파스 테두리 + 머스타드 크레파스 칠 (works.js가 crayon-frame 붙임) */
+.wkv-link.main.crayon-frame { border: 0; border-radius: 0; background: transparent; }
+.wkv-link.main.crayon-frame:hover { background: transparent; color: var(--main-color); }
+
+/* 에몽씨 칸: 누르면 제작 과정 상세보기 — 마우스를 올리면 아래에 힌트 */
+.wk-mascot:focus { outline: none; }
+.wk-mascot:focus-visible { outline: 1.5px dashed var(--point-color); outline-offset: 6px; }
+.wk-mascot-hint {
+    position: absolute;
+    left: 50%;
+    bottom: -15%;
+    padding: 0 4px;
+    font-family: 'Gaegu', cursive;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #2B2B2B;
+    white-space: nowrap;
+    background: linear-gradient(transparent 55%, rgba(183, 123, 221, 0.4) 55%, rgba(183, 123, 221, 0.4) 92%, transparent 92%);
+    opacity: 0;
+    transform: translate(-50%, 4px) rotate(-3deg);
+    transition: opacity 0.25s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+.wk-mascot:hover .wk-mascot-hint, .wk-mascot:focus-visible .wk-mascot-hint { opacity: 1; transform: translate(-50%, 0) rotate(-3deg); }
+@media (hover: none) { .wk-mascot-hint { opacity: 0.85; transform: translate(-50%, 0) rotate(-3deg); } }

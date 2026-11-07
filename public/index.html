@@ -14,8 +14,8 @@
     rel="stylesheet">
 
   <!-- 외부 스타일시트 연결 -->
-  <link rel="stylesheet" href="css/style.css?v=19">
-  <link rel="stylesheet" href="css/works.css?v=19">
+  <link rel="stylesheet" href="css/style.css?v=24">
+  <link rel="stylesheet" href="css/works.css?v=22">
 </head>
 
 <body>
@@ -131,10 +131,11 @@
             aria-label="Hi. I'm Emongc — 빨간 비니를 쓰고 크로스백을 멘 에몽씨의 뒷모습">
             <defs>
               <filter id="about-crayon" x="-5%" y="-5%" width="110%" height="110%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="4" result="wobble" />
-                <feDisplacementMap in="SourceGraphic" in2="wobble" scale="6" xChannelSelector="R" yChannelSelector="G" result="line" />
-                <feTurbulence type="fractalNoise" baseFrequency="0.35 0.12" numOctaves="3" seed="9" result="grain" />
-                <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  2.6 0 0 0 -0.75" result="grainAlpha" />
+                <!-- [수정] 상단 프레임과 같은 크레파스 테두리 (화면에서 같은 굵기·결이 되도록 이 그림 크기에 맞춘 값) -->
+                <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="3" seed="4" result="wobble" />
+                <feDisplacementMap in="SourceGraphic" in2="wobble" scale="4.2" xChannelSelector="R" yChannelSelector="G" result="line" />
+                <feTurbulence type="fractalNoise" baseFrequency="0.34" numOctaves="2" seed="9" result="grain" />
+                <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3 0 0 0 -0.75" result="grainAlpha" />
                 <feComposite in="line" in2="grainAlpha" operator="in" />
               </filter>
               <!-- 크레파스 점: 동그란 점 가장자리를 살짝 거칠게 -->
@@ -163,8 +164,8 @@
               <path class="photo-hand-gray" fill-rule="evenodd" transform="translate(-6 -164)" d="M477.62 566.12 L475.50 566.88 L474.62 567.75 L472.38 571.38 L471.62 574.12 L471.88 577.12 L473.12 579.38 L474.62 580.62 L476.88 581.38 L479.00 581.12 L481.62 580.12 L482.50 579.50 L482.38 578.75 L481.62 578.38 L478.62 579.12 L476.12 579.00 L474.88 578.38 L473.75 577.00 L473.62 575.25 L473.88 574.50 L473.88 573.00 L475.38 569.50 L476.62 568.38 L477.25 568.12 L478.12 568.12 L479.38 568.75 L480.00 568.38 L480.00 567.75 L479.25 566.88Z M464.88 564.50 L463.88 564.62 L462.50 565.25 L461.12 566.50 L459.88 568.25 L458.62 571.62 L458.75 574.12 L459.75 575.62 L461.12 576.88 L463.12 576.88 L464.75 575.62 L465.25 575.62 L465.62 576.12 L465.12 577.88 L464.00 584.75 L463.25 587.00 L461.25 590.00 L460.25 590.88 L459.25 590.88 L458.62 590.50 L456.12 587.75 L455.50 587.62 L455.12 588.00 L455.12 588.88 L455.88 590.38 L457.75 592.12 L459.50 593.00 L460.25 593.00 L462.38 591.88 L463.62 590.50 L465.38 587.25 L466.75 582.50 L466.75 580.62 L467.12 579.38 L467.12 577.12 L467.88 575.00 L467.88 573.25 L468.50 571.00 L468.62 568.50 L468.12 567.38 L466.38 565.12Z M465.00 566.25 L465.50 566.50 L466.25 567.50 L466.25 568.75 L465.62 571.38 L464.75 573.00 L463.25 574.62 L462.25 575.00 L461.62 574.88 L461.00 574.38 L460.75 573.38 L460.75 572.38 L461.50 569.50 L462.00 568.38 L463.38 566.88 L464.50 566.25Z M447.00 563.88 L446.50 564.88 L446.00 570.62 L445.38 573.00 L445.38 576.25 L446.00 576.75 L446.75 576.50 L448.00 571.88 L449.25 569.50 L450.75 567.25 L451.62 566.38 L452.25 566.25 L452.88 567.00 L453.12 569.38 L453.00 572.88 L452.75 573.62 L452.88 576.88 L453.38 577.75 L454.62 577.75 L455.12 576.88 L455.00 574.00 L455.38 571.88 L455.12 568.00 L454.62 566.12 L453.25 564.38 L452.38 564.00 L451.75 564.00 L450.50 564.62 L448.62 566.62 L448.38 566.62 L448.00 566.25 L447.88 564.25 L447.50 563.88Z M439.62 562.38 L437.75 562.25 L436.38 562.75 L434.50 565.50 L433.75 567.75 L433.50 571.25 L434.12 573.62 L434.88 574.75 L436.75 575.62 L438.25 575.62 L439.50 575.12 L441.62 572.62 L442.62 571.12 L443.12 569.88 L443.25 566.88 L442.88 565.25 L441.25 563.12Z M439.50 564.38 L440.38 564.75 L441.12 565.50 L441.38 566.12 L441.50 567.88 L441.00 570.25 L440.62 571.12 L439.25 573.00 L437.88 573.75 L436.75 573.88 L436.00 573.38 L435.12 571.75 L435.38 567.62 L435.88 566.50 L436.00 565.50 L436.75 564.62 L437.75 564.12Z M415.25 560.25 L415.00 564.50 L414.25 568.50 L414.25 571.88 L414.75 572.75 L415.75 572.88 L416.25 572.50 L417.00 568.25 L417.88 566.75 L419.38 562.75 L420.25 562.25 L421.00 563.00 L421.38 564.88 L421.38 567.38 L420.88 570.00 L421.00 571.75 L421.75 572.25 L422.75 571.88 L423.12 571.12 L423.25 569.75 L425.00 564.88 L426.62 562.88 L427.62 562.75 L428.38 563.62 L428.88 565.75 L428.75 569.50 L428.12 571.25 L428.12 573.25 L428.88 573.88 L429.62 573.50 L430.12 572.12 L430.00 566.88 L430.38 565.25 L430.38 563.88 L430.00 562.25 L428.88 561.00 L428.00 560.50 L426.75 560.50 L426.12 560.75 L425.00 561.88 L424.12 563.50 L423.38 564.00 L423.00 563.62 L422.50 561.75 L421.00 560.12 L419.62 560.12 L418.12 562.12 L417.50 562.62 L417.12 562.38 L417.00 561.12 L416.62 560.25 L416.00 559.88Z M401.88 550.25 L401.38 551.12 L401.75 552.38 L401.75 553.88 L401.25 555.62 L401.38 557.50 L400.88 559.38 L400.75 562.00 L400.12 563.75 L400.00 565.62 L399.75 566.25 L400.00 571.00 L401.12 572.00 L403.25 572.25 L407.75 571.88 L410.38 572.12 L411.50 571.88 L411.88 571.25 L411.75 570.62 L410.62 569.88 L402.00 570.25 L401.12 569.62 L401.00 568.50 L401.50 566.88 L402.00 563.38 L402.62 562.38 L404.25 562.12 L410.62 562.75 L411.12 562.25 L411.12 561.50 L409.88 560.75 L406.12 560.50 L405.00 560.12 L403.25 560.12 L402.75 559.75 L402.62 559.00 L403.00 557.12 L403.25 552.25 L403.88 551.75 L407.38 552.00 L409.62 552.62 L411.38 552.75 L411.88 552.25 L411.88 551.38 L411.25 550.88 L409.38 550.38 L406.75 550.25 L406.00 550.00 L403.50 550.00Z M424.12 530.50 L423.75 534.38 L422.88 539.62 L422.88 541.25 L423.25 541.88 L424.12 541.88 L424.75 541.25 L424.88 539.00 L425.50 535.88 L426.12 534.00 L426.88 532.50 L427.62 531.62 L428.62 531.25 L429.25 531.75 L429.50 535.25 L429.38 537.62 L428.88 540.38 L429.25 541.38 L429.88 541.75 L430.50 541.62 L431.00 540.88 L431.75 539.00 L432.12 536.62 L433.50 533.75 L435.12 532.00 L435.88 531.88 L436.50 532.50 L436.75 533.25 L436.75 539.38 L436.38 542.75 L436.50 543.12 L437.25 543.62 L438.12 543.25 L438.50 542.50 L438.88 540.50 L438.75 534.00 L437.75 531.00 L436.50 529.62 L435.38 529.50 L434.75 529.75 L431.88 532.62 L431.50 532.62 L431.12 532.25 L430.75 531.00 L429.38 529.12 L428.12 529.12 L425.62 531.00 L425.25 531.00 L424.50 530.25Z M422.38 519.12 L421.38 519.12 L420.75 519.88 L419.75 523.00 L419.00 524.38 L419.00 525.50 L419.50 525.88 L419.88 525.75 L420.75 524.75 L422.75 520.50 L422.75 519.50Z M408.38 518.25 L407.38 518.88 L407.25 519.50 L407.75 520.12 L409.12 520.38 L409.62 520.88 L409.62 522.25 L409.12 524.75 L409.00 527.62 L408.62 528.75 L408.62 532.25 L408.25 534.50 L408.12 537.75 L407.50 538.75 L405.88 539.00 L405.50 539.25 L405.38 539.75 L405.50 540.12 L406.50 540.88 L409.38 541.25 L411.75 541.25 L412.88 540.75 L412.88 539.88 L411.88 539.25 L410.50 539.25 L409.88 538.50 L410.25 536.88 L410.25 533.50 L411.12 526.75 L411.12 523.62 L412.00 520.62 L412.38 520.38 L414.00 520.38 L414.38 519.50 L413.88 518.88 L412.75 518.50Z" />
             </g>
             <g class="photo-frame" filter="url(#about-crayon)">
-              <path stroke-width="6" d="M30 40 Q200 33 380 37 T560 34 Q557 300 561 520 T558 978 Q400 984 250 979 T32 982 Q27 700 31 480 T30 40" />
-              <path stroke-width="3" opacity="0.55" d="M33 44 Q210 38 385 41 T556 39 Q553 310 557 525 T554 974 Q395 979 245 975 T36 977 Q32 690 35 470 T33 44" />
+              <path stroke-width="2.2" vector-effect="non-scaling-stroke" d="M30 40 Q200 33 380 37 T560 34 Q557 300 561 520 T558 978 Q400 984 250 979 T32 982 Q27 700 31 480 T30 40" />
+              <path stroke-width="1.2" vector-effect="non-scaling-stroke" opacity="0.55" d="M33 44 Q210 38 385 41 T556 39 Q553 310 557 525 T554 974 Q395 979 245 975 T36 977 Q32 690 35 470 T33 44" />
             </g>
             <!-- 손글씨 메모 -->
             <g class="photo-memo">
@@ -185,16 +186,16 @@
             <!-- What's in my bag: 가방에 마우스를 올리거나 누르면 내용물이 와르르 -->
             <g class="bag-items" aria-hidden="true">
               <g class="bag-pouch">
-                <!-- 깔끔한 타원 + 동그란 점이 이어지는 크레파스 점선 테두리 -->
-                <ellipse class="pouch-fill" cx="340" cy="360" rx="190" ry="145" />
-                <ellipse class="pouch-dots" cx="340" cy="360" rx="190" ry="145" />
+                <!-- 살짝 비치는 종이 바탕 + 은은한 점선 (비정형) -->
+                <path class="pouch-fill" d="M170 300 C176 228 256 206 332 212 C414 206 504 230 514 312 C524 392 498 470 420 492 C360 508 300 504 244 490 C180 472 160 380 170 300 Z" />
+                <path class="pouch-line" d="M170 300 C176 228 256 206 332 212 C414 206 504 230 514 312 C524 392 498 470 420 492 C360 508 300 504 244 490 C180 472 160 380 170 300 Z" />
               </g>
-              <g class="bag-item c-purple" style="--x:250px;--y:302px;--r:-3deg;--i:0"><g class="ink" filter="url(#about-pencil)"><rect x="-15" y="-27" width="30" height="52" rx="6"/><path d="M-5 17 H5"/></g><text y="48">폰</text></g>
-              <g class="bag-item c-mustard" style="--x:340px;--y:300px;--r:2deg;--i:1"><g class="ink" filter="url(#about-pencil)"><rect x="-24" y="-16" width="48" height="32" rx="5"/><path d="M-24 -4 H24"/><circle cx="15" cy="-4" r="3.5"/></g><text y="48">지갑</text></g>
-              <g class="bag-item c-red" style="--x:430px;--y:302px;--r:-7deg;--i:2"><g class="ink" filter="url(#about-pencil)"><rect x="-12" y="-30" width="24" height="60" rx="7"/><path d="M-12 -13 H12"/></g><text class="ink-text" x="0" y="0" transform="translate(5 10) rotate(-90)">LIP</text><text y="48">립밤</text></g>
-              <g class="bag-item c-purple" style="--x:262px;--y:408px;--r:4deg;--i:3"><g class="ink" filter="url(#about-pencil)"><rect x="-20" y="-15" width="40" height="30" rx="12"/><path d="M-20 -4 H20"/><circle cx="0" cy="4" r="2"/></g><text y="48">에어팟</text></g>
-              <g class="bag-item c-mustard" style="--x:340px;--y:406px;--r:-2deg;--i:4"><g class="ink" filter="url(#about-pencil)"><path class="ink-line" d="M-10 -8 Q-10 -26 0 -26 Q10 -26 10 -8"/><path d="M-20 -8 L20 -8 L17 28 L-17 28 Z"/></g><text y="48">장바구니</text></g>
-              <g class="bag-item c-red" style="--x:418px;--y:408px;--r:-5deg;--i:5"><g class="ink" filter="url(#about-pencil)"><path d="M-10 -26 L10 -26 L13 16 L-13 16 Z"/><rect x="-6" y="16" width="12" height="9" rx="2"/><path d="M-6 -16 H6"/></g><text y="48">핸드크림</text></g>
+              <g class="bag-item" style="--x:240px;--y:305px;--i:0"><g transform="rotate(-14)"><g class="ink" filter="url(#about-pencil)"><rect class="f-white" x="-16" y="-28" width="32" height="56" rx="7"/><rect class="f-purple" x="-11" y="-21" width="22" height="36" rx="3"/><path d="M-4 21 H4"/></g></g><text class="item-label" y="48">폰</text></g>
+              <g class="bag-item" style="--x:338px;--y:262px;--i:1"><g transform="rotate(7)"><g class="ink" filter="url(#about-pencil)"><rect class="f-mustard" x="-25" y="-16" width="50" height="32" rx="5"/><path d="M-25 -3 H25"/><circle class="f-red" cx="16" cy="-3" r="4"/></g></g><text class="item-label" y="48">지갑</text></g>
+              <g class="bag-item" style="--x:450px;--y:288px;--i:2"><g transform="rotate(16)"><g class="ink" filter="url(#about-pencil)"><rect class="f-white" x="-11" y="-14" width="22" height="44" rx="5"/><rect class="f-red" x="-11" y="-32" width="22" height="20" rx="6"/></g><text class="ink-text" x="0" y="0" transform="translate(5 8) rotate(-90)">LIP</text></g><text class="item-label" y="48">립밤</text></g>
+              <g class="bag-item" style="--x:285px;--y:410px;--i:3"><g transform="rotate(-8)"><g class="ink" filter="url(#about-pencil)"><rect class="f-white" x="-21" y="-16" width="42" height="32" rx="13"/><path d="M-21 -4 H21"/><circle class="f-ink" cx="0" cy="5" r="2"/></g></g><text class="item-label" y="48">에어팟</text></g>
+              <g class="bag-item" style="--x:380px;--y:392px;--i:4"><g transform="rotate(9)"><g class="ink" filter="url(#about-pencil)"><path class="ink-line" d="M-10 -8 Q-10 -27 0 -27 Q10 -27 10 -8"/><path class="f-white" d="M-21 -8 L21 -8 L18 30 L-18 30 Z"/><path class="f-red" d="M0 20 C-9 13 -8 4 -3 5 C-1 5 0 7 0 8 C0 7 1 5 3 5 C8 4 9 13 0 20 Z"/></g></g><text class="item-label" y="48">장바구니</text></g>
+              <g class="bag-item" style="--x:468px;--y:410px;--i:5"><g transform="rotate(-14)"><g class="ink" filter="url(#about-pencil)"><path class="f-purple" d="M-11 -28 L11 -28 L14 14 L-14 14 Z"/><path d="M-11 -22 H11"/><rect class="f-mustard" x="-7" y="14" width="14" height="11" rx="2"/></g></g><text class="item-label" y="48">핸드크림</text></g>
             </g>
             <ellipse class="bag-hit" cx="200" cy="525" rx="112" ry="82" tabindex="0" role="button"
               aria-label="가방 속 물건 보기" aria-expanded="false" />
@@ -357,8 +358,12 @@
       <div class="ct-wrap">
         <div class="ct-left" id="ctLeft">
           <div class="ct-char-wrap">
-            <img src="img/resume/contact.svg" alt="손을 흔드는 에몽씨" class="ct-char">
-            <p class="ct-bubble" aria-hidden="true">잘 받았어요!</p>
+            <!-- [수정] AI로 만든 에몽씨 춤 영상 (소리 없음, 무한 반복, 화면에 보일 때만 재생) -->
+            <div class="ct-dancer">
+              <video class="ct-dance-video" src="img/mini/emongc-dance-red.mp4" poster="img/mini/emongc-dance-red-poster.webp"
+                     muted loop playsinline preload="metadata" aria-hidden="true"></video>
+            </div>
+            <p class="ct-bubble" aria-live="polite">같이 일해요!</p>
           </div>
           <p class="ct-hello">좋은 일, 같이 만들어요.<br>편하게 연락 주세요 :)</p>
           <div class="ct-mail">
@@ -418,13 +423,13 @@
         <span class="line-text text-top" style="top: 20%;">: You want more?</span>
         <span class="line-text text-bottom" style="top: 60%;">: Just get my history.</span>
         <!-- [추가] 선 끝을 타고 내려오는 옷걸이 에몽씨 (스크롤에 따라 움직임, script.js) -->
-        <div class="line-rider" id="lineRider" aria-hidden="true">
+        <div class="line-rider f-down" id="lineRider" aria-hidden="true">
           <div class="rider-swing">
-            <svg class="rider-hanger" viewBox="0 0 60 44">
-              <path d="M30 24 C30 17 37 15 37 9 C37 3.5 32 1.5 28.5 3.5 C26.5 4.7 26 6.5 26.3 8" />
-              <path d="M30 24 L5 39.5 C3.5 40.6 4.2 42.2 6 42.2 L54 42 C55.8 42 56.4 40.4 55 39.4 Z" />
-            </svg>
-            <img class="rider-face" alt="" draggable="false">
+            <!-- [수정] 크레파스 → 줄 타는 미니 에몽씨 (내려갈 때 / 올라갈 때 2컷 / 바닥 도착 인사) -->
+            <img class="rider-fig rf-down" src="img/mini/emongc-mini.svg#down" alt="">
+            <img class="rider-fig rf-up1" src="img/mini/emongc-mini.svg#up1" alt="">
+            <img class="rider-fig rf-up2" src="img/mini/emongc-mini.svg#up2" alt="">
+            <img class="rider-fig rf-wave" src="img/mini/emongc-mini.svg#wave" alt="">
           </div>
         </div>
         <!-- [추가] 돋보기 안내 대사 (PC / 폰 문구 다름) -->
@@ -511,12 +516,13 @@
   </footer>
 
   <!-- TOP 버튼 -->
-  <button id="top-btn" aria-label="페이지 맨 위로 이동">TOP</button>
+  <!-- [수정] TOP 버튼: 첫 화면 "click me"와 같은 머스타드 블록 3개 -->
+  <button id="top-btn" aria-label="페이지 맨 위로 이동"><i style="--n:0">T</i><i style="--n:1">O</i><i style="--n:2">P</i></button>
 
   <!-- JavaScript 연결 -->
-  <script src="js/script.js?v=20261106a"></script>
-  <script src="js/works-data.js?v=20"></script>
-  <script src="js/works.js?v=19"></script>
+  <script src="js/script.js?v=20261109abc"></script>
+  <script src="js/works-data.js?v=24"></script>
+  <script src="js/works.js?v=25"></script>
 
 
 

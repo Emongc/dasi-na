@@ -774,13 +774,14 @@ section p {
 	pointer-events: none;
 	will-change: transform, opacity;
 }
-.bag-pouch .pouch-fill { fill: #FCFAF6; }
-.bag-pouch .pouch-dots {
+.bag-pouch .pouch-fill { fill: rgba(253, 251, 247, 0.9); } /* 살짝 비치는 종이 바탕 */
+.bag-pouch .pouch-line {
 	fill: none;
 	stroke: var(--point-color);
-	stroke-width: 7;
+	stroke-opacity: 0.55;   /* 튀지 않게 은은하게 */
+	stroke-width: 3.5;
 	stroke-linecap: round;
-	stroke-dasharray: 0 15; /* 동그란 점이 이어지는 점선 */
+	stroke-dasharray: 0 10; /* 작은 동그란 점 */
 }
 .bag-open .bag-pouch {
 	opacity: 1;
@@ -803,7 +804,7 @@ section p {
 
 .bag-item {
 	opacity: 0;
-	transform: translate(var(--x), calc(var(--y) + 14px)) rotate(var(--r)) scale(0.7);
+	transform: translate(var(--x), calc(var(--y) + 14px)) scale(0.7);
 	transition: transform 0.12s ease-in, opacity 0.1s ease; /* 닫을 때 먼저 빠르게 사라짐 */
 	pointer-events: none;
 	will-change: transform, opacity;
@@ -826,9 +827,12 @@ section p {
 	font-weight: 700;
 	text-anchor: middle;
 }
-.bag-item.c-purple .ink { fill: #E4CCF4; }
-.bag-item.c-mustard .ink { fill: #EED48F; }
-.bag-item.c-red .ink { fill: #F2A3AC; }
+/* 흰색 바탕 + 부분 포인트 색 (보라·머스타드·빨강을 골고루) */
+.bag-item .f-white { fill: #fff; }
+.bag-item .f-purple { fill: #E4CCF4; }
+.bag-item .f-mustard { fill: #F0D78C; }
+.bag-item .f-red { fill: #EF8E98; }
+.bag-item .f-ink { fill: #3A3A3A; stroke: none; }
 .bag-item .ink-text {
 	fill: #3A3A3A;
 	stroke: none;
@@ -838,14 +842,9 @@ section p {
 	text-anchor: middle;
 	letter-spacing: 1px;
 }
-.bag-item text:not(.ink-text) {
-	transform-box: fill-box;
-	transform-origin: center;
-	transform: rotate(calc(var(--r) * -1)); /* 이름표는 기울지 않게 */
-}
 .bag-open .bag-item {
 	opacity: 1;
-	transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(1.15);
+	transform: translate(var(--x), var(--y)) scale(1.15);
 	/* 원이 다 커진 뒤(0.42초)에 하나씩 톡톡 */
 	transition: transform 0.32s cubic-bezier(.3, 1.5, .5, 1) calc(0.42s + var(--i) * 0.05s),
 		opacity 0.18s ease calc(0.42s + var(--i) * 0.05s);
@@ -3099,3 +3098,275 @@ a:focus-visible,
     .ending.ready .end-sign path { stroke-dasharray: none; stroke-dashoffset: 0; }
     .ending.in .end-letter, .ending.in .end-sign path { animation: none; }
 }
+
+/* ==================================================
+   [수정] 상단 메뉴를 "고정(fixed)"으로 바꾸고, 원래 크기만큼 자리를 비워 둠
+   - 전에는 메뉴가 작아질 때 아래 내용이 통째로 위로 당겨져서,
+     메뉴를 눌러 이동하면 섹션 제목이 메뉴 밑으로 숨어 버렸음
+   - 이제 메뉴 크기가 바뀌어도 아래 내용은 움직이지 않음
+   ================================================== */
+header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+}
+body {
+	padding-top: var(--header-h, 214px); /* script.js가 실제 메뉴 높이를 재서 넣음 */
+}
+
+/* [수정] 메뉴 아래 ~ 첫 화면 그림 사이 간격 줄이기 (100px → 40px) */
+.hero-media {
+	padding-top: 40px;
+}
+@media screen and (max-width: 767px) {
+	.hero-media { padding-top: 24px; }
+}
+
+/* ==================================================
+   [수정] TOP 버튼 → 머스타드 블록 "T · O · P" 세로 쌓기
+   ================================================== */
+#top-btn {
+	width: auto;
+	height: auto;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	background: none;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+}
+#top-btn i {
+	display: grid;
+	place-items: center;
+	width: 26px;
+	height: 26px;
+	border-radius: 5px;
+	background: #D9A441;
+	box-shadow: 0 3px 0 #A97C2B;
+	color: #fff;
+	font-family: 'Noto Sans KR', sans-serif;
+	font-style: normal;
+	font-size: 13px;
+	font-weight: 700;
+	line-height: 1;
+	transform: translateY(8px);
+	opacity: 0;
+	transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease, box-shadow 0.15s ease;
+}
+#top-btn i:nth-child(2) { rotate: 3deg; }
+#top-btn i:nth-child(3) { rotate: -2deg; }
+/* 나타날 때 아래 블록부터 하나씩 톡톡 쌓임 */
+#top-btn.show i {
+	opacity: 1;
+	transform: none;
+	transition-delay: calc((2 - var(--n)) * 0.07s);
+}
+#top-btn:hover {
+	background: none;
+	transform: none;
+}
+#top-btn:hover i:first-child { transform: translateY(-4px) rotate(-6deg); }
+/* 누르면 키보드 키처럼 꾹 */
+#top-btn:active i {
+	transform: translateY(3px);
+	box-shadow: 0 0 0 #A97C2B;
+	transition-delay: 0s;
+}
+
+/* ==================================================
+   [수정] 세로선 끝: 옷걸이 대신 선을 긋는 머스타드 크레파스
+   ================================================== */
+.rider-crayon {
+	display: block;
+	width: 60px;
+	height: 44px;
+	overflow: visible;
+	stroke: #4b3f33;
+	stroke-width: 2;
+	stroke-linejoin: round;
+	stroke-linecap: round;
+	filter: url(#rough-line-filter);
+}
+.rider-crayon .cr-tip { fill: #C8902E; }
+.rider-crayon .cr-body { fill: #D9A441; }
+.rider-crayon .cr-paper { fill: #F4E6C2; }
+.rider-crayon .cr-zig { fill: none; stroke: #A97C2B; stroke-width: 1.5; }
+
+
+/* ==================================================
+   [추가] 줄 타는 미니 에몽씨 (세로선) + CONTACT 춤추는 미니 에몽씨
+   - 그림 8컷은 img/mini/emongc-mini.svg 한 파일 안에 있고, #이름으로 한 컷씩 꺼내 씀 (SVG view)
+   ================================================== */
+.line-rider { width: 76px; }
+.rider-swing { transform-origin: 50% 50%; }
+.rider-fig {
+    display: none;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 200 / 320;
+    user-select: none;
+}
+.line-rider.f-down .rf-down,
+.line-rider.f-up1 .rf-up1,
+.line-rider.f-up2 .rf-up2,
+.line-rider.f-wave .rf-wave { display: block; }
+/* 바닥에 닿으면 손 흔드는 컷이 살랑 */
+.line-rider.f-wave .rf-wave { animation: riderWave 1.2s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes riderWave {
+    0%, 100% { rotate: 0deg; }
+    50% { rotate: -4deg; }
+}
+
+/* CONTACT: 춤추는 에몽씨 영상 — 흰 배경이 페이지에 녹아들도록 multiply */
+.ct-dancer {
+    position: relative;
+    width: 150px;
+    margin: 6px auto 0;
+}
+.ct-dance-video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 480 / 466;
+    mix-blend-mode: multiply;
+    background: transparent;
+    pointer-events: none;
+}
+.ct-dancer ~ .ct-bubble, .ct-char-wrap .ct-bubble { right: -86px; top: 14px; }
+@media screen and (max-width: 767px) {
+    .ct-dancer { width: 112px; }
+    .line-rider { width: 52px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .line-rider.f-wave .rf-wave { animation: none; }
+}
+
+
+/* ==================================================
+   [추가] 버튼 · 말풍선 · 스킬 태그 — 상단 프레임과 같은 크레파스 테두리로 통일
+   - 테두리는 script.js(drawCrayonFrames)가 요소마다 손그림 네모를 그려 넣음
+   - 머스타드는 크레파스 결이 보이게 칠하고(85%), 버튼은 마우스를 올리면 칠해짐
+   ================================================== */
+.crayon-frame { isolation: isolate; }
+.cf-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+.cf-bg .cf-paint { fill: #D9A441; }
+.crayon-fill > .cf-bg { opacity: 0.85; }
+a.crayon-frame:hover > .cf-bg, a.crayon-frame:focus-visible > .cf-bg,
+button.crayon-frame:hover > .cf-bg, button.crayon-frame:focus-visible > .cf-bg { opacity: 0.85; }
+a.crayon-fill:hover > .cf-bg, button.crayon-fill:hover > .cf-bg { opacity: 1; }
+
+/* 예전 매끈한 테두리 · 그림자 · 단색 칠 걷어내기 */
+.express-btn.crayon-frame, #contact .ct-send.crayon-frame, .ct-bubble.crayon-frame, .ct-copy.crayon-frame,
+.end-top.crayon-frame, .sk.crayon-frame, .desktop-warning-overlay.crayon-frame {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+#contact .ct-send.crayon-frame, .ct-copy.crayon-frame, .desktop-warning-overlay.crayon-frame { background: transparent; }
+/* 위치는 원래대로 (공통 규칙의 position: relative 가 덮지 않게) */
+.express-btn.crayon-frame { position: absolute; }
+.ct-bubble.crayon-frame { position: absolute; }
+.desktop-warning-overlay.crayon-frame { position: fixed; }
+/* 마우스 올렸을 때: 단색으로 바뀌던 것 → 머스타드 크레파스가 칠해지고 글자색은 그대로 */
+.express-btn.crayon-frame:hover, .express-btn.crayon-frame:focus-visible,
+.end-top.crayon-frame:hover, .end-top.crayon-frame:focus-visible,
+#contact .ct-send.crayon-frame:hover, .ct-copy.crayon-frame:hover {
+    background: #fff;
+    color: var(--main-color);
+}
+#contact .ct-send.crayon-frame:hover, .ct-copy.crayon-frame:hover { background: transparent; }
+.express-btn.crayon-frame:hover .express-arrow, .express-btn.crayon-frame:focus-visible .express-arrow { color: #8a6420; }
+/* 마스킹테이프: 머스타드 85% + 크레파스 결 */
+.express-btn::before { background: rgba(217, 164, 65, 0.85); filter: url(#cf-fill); }
+/* 스킬 태그: 연습 중(점선이던 것)은 선을 옅게 */
+.sk-try.crayon-frame > .cf-svg { opacity: 0.45; }
+.sk-ai.crayon-frame > .cf-svg { stroke: var(--point-color); }
+/* 스킬 태그의 연보라 바탕도 크레파스 칠로 (네모 단색 대신) */
+.sk-main.crayon-frame, .sk-ai.crayon-frame { background: transparent; }
+.sk-main.crayon-frame > .cf-bg, .sk-ai.crayon-frame > .cf-bg { opacity: 1; }
+.sk-main.crayon-frame .cf-paint, .sk-ai.crayon-frame .cf-paint { fill: #EBD9F7; }
+.ct-bubble.crayon-frame { background: transparent; }
+/* 떠 있는 안내 쪽지는 뒤 글자가 비치지 않게 종이 바탕을 깔고 그 위에 머스타드 크레파스 */
+.desktop-warning-overlay.crayon-frame { background: #FAF7F0; filter: drop-shadow(2px 5px 8px rgba(0, 0, 0, 0.18)); }
+
+/* 연필 버전: 작은 버튼용 — 선 한 겹, 가늘고 옅게 */
+.crayon-pencil > .cf-svg { opacity: 0.72; }
+.crayon-pencil > .cf-svg .cf-main { stroke-width: 1.4; }
+.crayon-pencil > .cf-svg .cf-over { display: none; }
+
+/* "다시 처음으로": 마우스를 올리면 테이프와 같은 보라 크레파스로 칠해짐 */
+.end-top.crayon-frame .cf-paint { fill: #B77BDD; }
+.end-top.crayon-frame:hover > .cf-bg, .end-top.crayon-frame:focus-visible > .cf-bg { opacity: 0.5; }
+
+/* CONTACT 춤추는 에몽씨: 누르면 제작 과정 상세보기 */
+.ct-dancer[role="button"] { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.ct-dancer[role="button"]:focus { outline: none; }
+.ct-dancer[role="button"]:focus-visible { outline: 1.5px dashed var(--point-color); outline-offset: 4px; }
+.ct-dance-hint {
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    padding: 0 4px;
+    font-family: 'Gaegu', cursive;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #2B2B2B;
+    white-space: nowrap;
+    background: linear-gradient(transparent 55%, rgba(183, 123, 221, 0.4) 55%, rgba(183, 123, 221, 0.4) 92%, transparent 92%);
+    opacity: 0;
+    transform: translate(-50%, 4px) rotate(-3deg);
+    transition: opacity 0.25s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+.ct-dancer[role="button"]:hover .ct-dance-hint, .ct-dancer[role="button"]:focus-visible .ct-dance-hint { opacity: 1; transform: translate(-50%, 0) rotate(-3deg); }
+@media (hover: none) { .ct-dance-hint { opacity: 0.85; transform: translate(-50%, 0) rotate(-3deg); } }
+
+/* [추가] 돋보기 속 마지막 장면 복사본 (원본과 같은 자리·크기, 누를 수 없음) */
+.loupe-lens .lens-end { position: absolute; margin: 0; pointer-events: none; box-sizing: border-box; }
+
+/* [수정] CONTACT 말풍선: 상자 대신 크레파스 손글씨 + 보라 밑칠, 상황에 따라 문구가 바뀜 */
+#contact .ct-char-wrap .ct-bubble {
+    left: 58%;
+    right: auto;
+    top: -16px;
+    padding: 0 6px;
+    background: linear-gradient(transparent 52%, rgba(183, 123, 221, 0.42) 52%, rgba(183, 123, 221, 0.42) 92%, transparent 92%);
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    font-family: 'Gaegu', cursive;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2B2B2B;
+    white-space: nowrap;
+    transform-origin: 0 100%;
+    transform: translateY(6px) rotate(-5deg) scale(0.8);
+    pointer-events: none;
+}
+.ct-left.talk .ct-bubble, .ct-left.sent .ct-bubble { opacity: 1; transform: rotate(-5deg); }
+@media screen and (max-width: 767px) { #contact .ct-char-wrap .ct-bubble { font-size: 1rem; left: 55%; } }
+
+/* [수정] 문의 폼: 쓰는 칸 아래 보라 줄 대신, 그 칸의 이름(이름·이메일·하고 싶은 말)이 보라로 바뀜 */
+#contact .ct-box .form-group input:focus,
+#contact .ct-box .form-group input:focus-visible {
+    border-bottom: 1.5px solid #cfc8bf;
+}
+#contact .ct-box .form-group textarea:focus,
+#contact .ct-box .form-group textarea:focus-visible {
+    box-shadow: none;
+}
+#contact .ct-box .form-group label { transition: color 0.2s ease; }
+#contact .ct-box .form-group:focus-within label { color: var(--point-color); }

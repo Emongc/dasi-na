@@ -18,6 +18,31 @@ window.WORK_CATS = [
 window.WORKS = [
     // ---------------- AI 영상 ----------------
     {
+        // 카드로는 안 보이는 상세보기 — CONTACT의 춤추는 에몽씨를 누르면 열림 (works.js 의 openWork)
+        id: "emongc-making", cat: "video", type: "video", hidden: true, no: "MAKING", dir: "video/emongc",
+        show: "thumb.jpg",
+        title: "나를 닮은 캐릭터, 춤추게 하기", sub: "에몽씨 캐릭터 제작기", tags: "AI 영상 · 캐릭터 디자인",
+        thumb: "thumb.jpg", preview: "preview.mp4", src: "video.mp4",
+        why: "이 포트폴리오의 얼굴이 될 캐릭터를 '나답게' 만들고 싶었습니다. 머스타드 비니, 낮게 묶은 머리, 오버핏 티셔츠와 와이드 팬츠, 크로스백까지 제 모습에서 특징을 골라 손그림 얼굴을 먼저 확정했습니다. 그 얼굴을 기준으로 AI에 전신 캐릭터와 춤 영상을 요청하고, 두 영상을 같은 자세의 순간에서 이어 붙여 끊김 없이 반복되는 13초 춤으로 다듬어 이 사이트에 직접 적용했습니다.",
+        tools: "Gemini (캐릭터 시트 · 춤 영상 생성) · 직접 편집 (이어 붙이기 · 크기·바닥선 맞춤 · 배경 정리 · 경량화 0.7MB)",
+        role: "캐릭터 콘셉트 · 프롬프트 설계 · 결과물 선별 · 편집 · 웹 적용",
+        process: { title: "제작 과정", items: [
+            "손그림 얼굴 확정 · 머스타드 비니와 낮은 포니테일",
+            "Gemini 전신 캐릭터 시트 · 춤 포즈 6종",
+            "영상 2개를 같은 자세에서 이어 13초 반복 영상으로",
+            "웹 적용 · CONTACT 섹션에서 춤추는 에몽씨"
+        ] }
+    },
+    {
+        // 작품 카드가 아닌 "내 캐릭터 자리" — 영상 탭 첫 칸, 아래는 일부러 비워 둠 (상세창 없음)
+        id: "emongc", cat: "video", type: "mascot",
+        title: "춤추는 에몽씨",
+        video: "img/mini/emongc-dance.mp4", poster: "img/mini/emongc-dance-poster.webp",
+        hello: "안녕하세요, 에몽씨예요!",
+        note: "이 친구가 에몽씨예요",
+        small: "Gemini로 만들고, 제가 다듬었어요"
+    },
+    {
         id: "school", cat: "video", type: "video", dir: "video/school",
         show: "thumb.jpg",
         title: "학교폭력 공익광고", sub: "SKIP → SPEAK", tags: "AI 영상 · 공익 캠페인", label: "v1 → v2",

@@ -44,6 +44,13 @@
     //  · 음악은 카드 대신 플레이리스트 한 줄
     function cardHTML(w) {
         const desc = esc(w.tags) + (w.type === "video" && w.label ? " · " + esc(w.label) : "");
+        if (w.type === "mascot") {
+            return '<div class="wk-mascot-stage">' +
+                '<video class="wk-mascot-video" src="' + w.video + '" poster="' + w.poster + '" muted loop playsinline preload="metadata" aria-label="' + esc(w.title) + '"></video>' +
+                '<span class="wk-mascot-hello" aria-hidden="true">' + esc(w.hello) + '</span>' +
+                '<span class="wk-mascot-hint" aria-hidden="true">제작 과정 보기 ✎</span></div>' +
+                '<p class="wk-mascot-note">' + esc(w.note) + '</p><p class="wk-mascot-small">' + esc(w.small) + '</p>';
+        }
         if (w.type === "music") {
             return '<div class="wk-rcd"><span class="wk-cd" aria-hidden="true"><img src="' + src(w, w.cover) + '" alt=""></span>' +
                 '<button type="button" class="wk-cplay" aria-label="' + esc(w.title) + ' 바로 듣기">' + ICON.play + "</button></div>" +
@@ -64,13 +71,15 @@
     const used = CATS.filter(function (c) { return WORKS.some(function (w) { return w.cat === c.key; }); });
     const cards = [];
     used.forEach(function (c) {
-        WORKS.filter(function (w) { return w.cat === c.key; }).forEach(function (w, i) {
-            w.no = nn(i + 1);
-            const a = el("article", "wk-card wk-t-" + w.type + (w.type === "music" ? " wk-row" : ""));
+        let no = 0;
+        WORKS.filter(function (w) { return w.cat === c.key && !w.hidden; }).forEach(function (w) {
+            const mascot = w.type === "mascot";
+            if (!mascot) w.no = nn(++no);
+            const a = el("article", "wk-card wk-t-" + w.type + (w.type === "music" ? " wk-row" : "") + (mascot ? " wk-mascot" : ""));
             a.dataset.cat = w.cat;
             a.dataset.work = w.id;
-            a.innerHTML = cardHTML(w) +
-                '<a class="wk-open" href="?work=' + encodeURIComponent(w.id) + '#works" aria-label="' + esc(w.title) + ' 자세히 보기"></a>';
+            a.innerHTML = cardHTML(w) + (mascot ? "" :
+                '<a class="wk-open" href="?work=' + encodeURIComponent(w.id) + '#works" aria-label="' + esc(w.title) + ' 자세히 보기"></a>');
             grid.appendChild(a);
             cards.push(a);
         });
@@ -94,8 +103,11 @@
         let n = 0;
         cards.forEach(function (c) { const on = c.dataset.cat === key; c.classList.toggle("out", !on); if (on) n++; });
         // 배치: 음악 = 목록 / 5개 = 첫 작품을 크게(2×2) + 나머지 4개 / 그 밖 = 4칸 격자
+        const m = cards.filter(function (c) { return c.dataset.cat === key && c.classList.contains("wk-mascot"); }).length;
         grid.classList.toggle("is-list", key === "music");
-        grid.classList.toggle("is-feature", key === "video" && n === 5);
+        grid.classList.toggle("is-feature", key === "video" && n - m === 5 && !m);
+        grid.classList.toggle("has-mascot", m > 0);
+        placeMascot();
         grid.classList.toggle("is-video", key === "video");
         grid.classList.toggle("is-just", key !== "video" && key !== "music");
         layoutJust(true);
@@ -175,10 +187,35 @@
             c.addEventListener("mouseleave", function () { restoreRow(c); });
         });
     }
+    // 캐릭터 칸: 첫 번째 세로 줄을 통째로 차지 (아래는 여백) / 2칸 화면에서는 맨 위 한 줄
+    function placeMascot() {
+        const mc = cards.filter(function (c) { return c.classList.contains("wk-mascot") && !c.classList.contains("out"); })[0];
+        if (!mc) return;
+        const cols = getComputedStyle(grid).gridTemplateColumns.split(" ").length;
+        const others = cards.filter(function (c) { return !c.classList.contains("out") && c !== mc; }).length;
+        if (cols <= 2) { mc.style.gridColumn = "1 / -1"; mc.style.gridRow = ""; mc.classList.add("wide"); }
+        else { mc.style.gridColumn = "1"; mc.style.gridRow = "1 / span " + Math.max(1, Math.ceil(others / (cols - 1))); mc.classList.remove("wide"); }
+    }
     let rsz = 0;
-    window.addEventListener("resize", function () { cancelAnimationFrame(rsz); rsz = requestAnimationFrame(function () { layoutJust(true); }); });
+    window.addEventListener("resize", function () { cancelAnimationFrame(rsz); rsz = requestAnimationFrame(function () { layoutJust(true); placeMascot(); }); });
 
     if (tabs.length) showCat(tabs[0].dataset.filter);
+
+    // 춤추는 에몽씨: 화면에 보일 때만 재생 (움직임 줄이기 설정이면 첫 장면만) / 누르면 인사 말풍선
+    cards.forEach(function (c) {
+        if (!c.classList.contains("wk-mascot")) return;
+        const v = c.querySelector("video");
+        // 누르면 캐릭터 제작 과정 상세보기 (CONTACT 에몽씨와 같은 상세창)
+        c.setAttribute("role", "button");
+        c.tabIndex = 0;
+        c.setAttribute("aria-label", "춤추는 에몽씨 — 캐릭터 제작 과정 보기");
+        c.addEventListener("click", function () { open("emongc-making"); });
+        c.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open("emongc-making"); } });
+        if (reduce || !("IntersectionObserver" in window)) return;
+        new IntersectionObserver(function (es) {
+            es.forEach(function (e) { if (e.isIntersecting && !c.classList.contains("out")) v.play().catch(function () {}); else v.pause(); });
+        }, { threshold: 0.1 }).observe(c);
+    });
 
     // 스티커 카드: 마우스를 움직이면 스티커가 한 장씩, 시차를 두고 마우스 자리 근처에 "착" 붙음
     //  · 4장이 다 붙으면 가장 먼저 붙은 것부터 떼어져 새 자리로 / 마우스가 나가면 차례로 떨어짐
@@ -218,7 +255,7 @@
     if (fine && !reduce) {
         cards.forEach(function (c) {
             const v = c.querySelector("video");
-            if (!v) return;
+            if (!v || c.classList.contains("wk-mascot")) return;
             c.addEventListener("mouseenter", function () {
                 if (!v.src) v.src = v.dataset.src;
                 const p = v.play();
@@ -500,7 +537,11 @@
         links.innerHTML = "";
         (w.links || []).forEach(function (l) {
             let a;
-            if (l.href) { a = el("a"); a.href = l.href; }
+            if (l.href) {
+                a = el("a"); a.href = l.href;
+                // 페이지 안 링크(#contact 등)는 상세창을 닫고 그 위치로 이동
+                if (l.href.charAt(0) === "#") a.addEventListener("click", function () { close(); });
+            }
             else {
                 a = el("button"); a.type = "button";
                 a.addEventListener("click", function () { const t = byId[l.work]; if (t) { showCat(t.cat); open(t.id); } });
@@ -510,6 +551,9 @@
             links.appendChild(a);
         });
         links.hidden = !links.children.length;
+        // 주요 링크 버튼: 크레파스 테두리 + 머스타드 칠
+        links.querySelectorAll(".wkv-link.main").forEach(function (b) { b.classList.add("crayon-frame", "crayon-fill", "crayon-pencil"); });
+        if (window.drawCrayonFrames) requestAnimationFrame(function () { window.drawCrayonFrames(); });
         q(".wkv-note").textContent = w.note ? "※ " + w.note : "";
         q(".wkv-note").hidden = !w.note;
     }
@@ -678,6 +722,8 @@
             setTimeout(function () { procSec.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }); }, 350);
         }
     }
+    // 다른 섹션에서 상세창 열기 (예: CONTACT 춤추는 에몽씨 → 제작 과정)
+    window.openWork = function (id, opts) { open(id, opts); };
     function close() {
         if (!viewer.classList.contains("open")) return;
         viewer.classList.remove("open");
@@ -707,7 +753,7 @@
     });
 
     cards.forEach(function (c) {
-        c.querySelector(".wk-open").addEventListener("click", function (e) { e.preventDefault(); open(c.dataset.work); });
+        const op = c.querySelector(".wk-open"); if (op) op.addEventListener("click", function (e) { e.preventDefault(); open(c.dataset.work); });
     });
 
     // ?work=작품id (&process=1) 로 들어오면 바로 열기
