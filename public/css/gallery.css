@@ -175,13 +175,14 @@ body.g-lock .g-top { transform: translateY(-101%); }
 .g-end { align-self: end; }
 .g-k { display: block; font-family: var(--g-en); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
 .g-m, .g-dot, .g-n, .g-rn, .g-tn { color: var(--mus); }
-.g-big { margin: 0; font-family: var(--g-en); font-weight: 800; font-size: clamp(3rem, 10vw, 11.5rem); line-height: 0.86; letter-spacing: -0.055em; text-transform: uppercase; color: var(--ghost); }
+.g-big { margin: 0; font-family: var(--g-en); font-weight: 800; font-size: clamp(3rem, 10vw, 11.5rem); line-height: 0.9; letter-spacing: 0.005em; text-transform: uppercase; color: var(--ghost); }
+.g-sp-campaign .g-big { font-size: clamp(2.6rem, 7.2vw, 8.2rem); line-height: 0.95; }
 /* [수정] 한글 중심 글자 체계: 진한 한글이 이름, 연한 영문은 그래픽 */
 .g-ko-t { margin: 0 0 clamp(8px, 1vw, 14px); font-family: var(--g-ko); font-weight: 800; font-size: clamp(1.7rem, 3.2vw, 3rem); line-height: 1.15; letter-spacing: -0.035em; color: var(--ink); }
 .g-en-s { margin: 6px 0 0; font-family: var(--g-en); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.02em; text-transform: uppercase; color: var(--mute); }
 .g-rt em { display: block; margin-top: 6px; font-style: normal; font-size: 0.72rem; font-weight: 700; color: var(--mute); }
 .g-link:hover .g-rt em { color: var(--ink); }
-.g-big-s { font-size: clamp(2.6rem, 8vw, 8.4rem); margin-top: 14px; }
+.g-big-s { font-size: clamp(1.7rem, 3.6vw, 3.4rem); line-height: 1; letter-spacing: -0.02em; margin-top: 14px; }
 .g-mid { margin: 0; font-family: var(--g-ko); font-weight: 800; font-size: clamp(1.25rem, 1.9vw, 1.8rem); line-height: 1.2; letter-spacing: -0.03em; }
 .g-lead { margin: 0; font-size: 0.92rem; line-height: 1.85; color: #3C3C39; }
 .g-sm { margin: 4px 0 0; font-size: 0.82rem; color: var(--mute); }
@@ -202,7 +203,7 @@ body.g-lock .g-top { transform: translateY(-101%); }
 .g-cap .g-f { grid-column: 2; margin-top: 3px; font-size: 0.76rem; color: var(--mute); }
 
 /* 목차 */
-.g-toc-t { font-size: clamp(3rem, 10vw, 10rem); margin-bottom: 36px; }
+.g-toc-t { font-size: clamp(3rem, 10vw, 11.5rem); margin-bottom: 36px; }
 .g-toc-list { grid-column: 7 / 13; margin: 0; padding: 0; list-style: none; border-bottom: 1px solid var(--rule); align-self: start; }
 .g-toc-list a { display: grid; grid-template-columns: 1fr 3fr 3fr 1fr; align-items: baseline; padding: 14px 0; border-top: 1px solid var(--rule); text-decoration: none; font-size: 0.86rem; }
 .g-tn { font-family: var(--g-en); font-weight: 800; font-size: clamp(1.4rem, 2.2vw, 2.1rem); letter-spacing: -0.04em; }
@@ -260,7 +261,7 @@ body.g-lock .g-top { transform: translateY(-101%); }
 
 /* 출판: BOOKS. + 춤추는 에몽씨 (발끝 = 글자 아랫선) */
 .g-bookhead { position: relative; margin-bottom: clamp(40px, 5vw, 72px); }
-.g-huge { font-size: clamp(3.4rem, 19.5vw, 18rem); display: flex; align-items: flex-end; line-height: 0.78; }
+.g-huge { font-size: clamp(3rem, 10vw, 11.5rem); display: flex; align-items: flex-end; line-height: 0.78; }
 .g-huge .g-dot { color: var(--mus); }
 .g-dancer { display: block; flex: none; width: 0.62em; aspect-ratio: 480 / 466; margin-left: 0.04em; margin-bottom: -0.02em; }
 .g-dancer video { display: block; width: 100%; height: 100%; mix-blend-mode: multiply; }
@@ -340,8 +341,7 @@ body.g-lock .g-top { transform: translateY(-101%); }
 .g-mail { margin-top: clamp(40px, 5vw, 72px); }
 .g-mail-label { margin: 0 0 12px; font-size: clamp(1rem, 1.4vw, 1.2rem); font-weight: 700; }
 .g-mail-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
-.g-mail-addr { font-family: var(--g-en); font-weight: 700; font-size: clamp(1.4rem, 3vw, 2.6rem); letter-spacing: -0.02em; text-decoration: none; border-bottom: 3px solid var(--mus); line-height: 1.2; }
-.g-mail-addr:hover { color: var(--mus); }
+.g-mail-addr { font-family: var(--g-en); font-weight: 700; font-size: clamp(1.4rem, 3vw, 2.6rem); letter-spacing: -0.02em; text-decoration: none; border-bottom: 0; line-height: 1.2; color: var(--ink); cursor: text; user-select: text; }
 .g-copy { padding: 10px 16px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); font-family: var(--g-ko); font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: background 0.2s, color 0.2s; }
 .g-copy:hover { background: transparent; color: var(--ink); }
 .g-copy.ok { background: var(--mus); border-color: var(--mus); color: var(--ink); }
@@ -350,13 +350,18 @@ body.g-lock .g-top { transform: translateY(-101%); }
     display: inline-block;
     font-family: var(--g-en);
     font-weight: 800;
-    font-size: clamp(3rem, 11vw, 12rem);
+    --fs: clamp(3rem, 11vw, 12rem);
+    font-size: var(--fs);
     line-height: 0.86;
     letter-spacing: -0.05em;
     text-decoration: none;
     transition: opacity 0.3s;
 }
-.g-foot-cta:hover { opacity: 0.55; }
+.g-arr { position: relative; display: inline-block; }
+.g-arr::after { content: "✉ 메일 쓰러 가기 · 새 창으로 열려요"; position: absolute; left: calc(100% + 14px); top: 50%; margin-top: calc(var(--fs) * 0.19 - 17px); padding: 8px 14px; background: var(--ink); color: #fff; font-family: var(--g-ko); font-size: 0.9rem; font-weight: 700; letter-spacing: 0; line-height: 1.2; white-space: nowrap; opacity: 0; transform: translateX(-8px); transition: opacity 0.25s, transform 0.25s; pointer-events: none; }
+.g-foot-cta:hover .g-arr::after, .g-foot-cta:focus-visible .g-arr::after { opacity: 1; transform: none; }
+.g-arr { transition: transform 0.3s cubic-bezier(.2,.7,.2,1); }
+.g-foot-cta:hover .g-arr, .g-foot-cta:focus-visible .g-arr { transform: translateX(0.12em); }
 .g-foot-row { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: clamp(48px, 8vw, 120px); padding: 20px 84px 0 0; border-top: 1px solid var(--hair); font-size: 0.82rem; color: var(--mute); }
 .g-foot-row p { margin: 0; }
 .g-foot-row a { text-decoration: none; }
@@ -621,3 +626,11 @@ body.g-lock .g-top { transform: translateY(-101%); }
 .g-sit { position: absolute; z-index: 4; pointer-events: none; }
 .g-sit img { display: block; width: 100%; height: 100%; will-change: transform; user-select: none; }
 @media (prefers-reduced-motion: reduce), (max-width: 700px) { .g-sit { display: none; } }
+
+/* [수정] AI 음악: 듣기 버튼을 제목 오른쪽으로 */
+.g-mrow { display: flex; align-items: center; margin: 8px 0; justify-content: flex-start; flex-wrap: wrap; gap: 4px 16px; align-self: stretch; }
+.g-mrow .g-mid { min-height: 0 !important; margin: 0 !important; line-height: 1.2; }
+.g-mrow .g-play { align-self: center; }
+.g-mrow > .g-link { flex: 0 1 auto; min-width: 0; }
+.g-mrow .g-play { margin: 0 !important; flex: none; white-space: nowrap; padding: 6px 11px; }
+@media (max-width: 900px) { .g-arr::after { left: auto; right: 0; top: 100%; margin-top: 10px; } }

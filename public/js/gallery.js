@@ -192,9 +192,9 @@
             return bigT(esc(sp.big), sp.ko) + '<div class="g-12 g-al">' + sp.works.map(function (w, i) {
                 const span = 12 / Math.min(sp.works.length, 3);
                 return '<div class="g-track" style="grid-column:span ' + span + '">' + link(w, cd(i + 1, w.title), "g-cd-link") +
-                    '<div class="g-trk"><span class="g-k g-m">Track ' + nn(i + 1) + "</span>" + link(w, '<h3 class="g-mid">' + esc(w.title) + "</h3>") +
-                    '<p class="g-en-s">' + esc(head(w)) + "</p><p>" + esc(w.sub || "") + "</p>" +
-                    (w.audio ? '<button type="button" class="g-play" data-audio="' + esc(src(w, w.audio)) + '" aria-pressed="false">▶ 듣기</button>' : "") + "</div></div>";
+                    '<div class="g-trk"><span class="g-k g-m">Track ' + nn(i + 1) + "</span>" + '<div class="g-mrow">' + link(w, '<h3 class="g-mid">' + esc(w.title) + "</h3>") +
+                    (w.audio ? '<button type="button" class="g-play" data-audio="' + esc(src(w, w.audio)) + '" aria-pressed="false">▶ 듣기</button>' : "") + "</div>" +
+                    '<p class="g-en-s">' + esc(head(w)) + "</p><p>" + esc(w.sub || "") + "</p></div></div>";
             }).join("") + "</div>";
         },
         book: function (sp) {
@@ -920,8 +920,8 @@
         if (addr) {
             const mail = addr.dataset.u + "@" + addr.dataset.d;
             const href = "mailto:" + mail + "?subject=" + encodeURIComponent("[포트폴리오 보고 연락드립니다]");
-            addr.textContent = mail; addr.href = href;
-            if (cta) cta.href = href;
+            addr.textContent = mail; addr.removeAttribute("href");
+            if (cta) { cta.href = href; cta.target = "_blank"; cta.rel = "noopener"; }
             if (copyBtn) copyBtn.addEventListener("click", function () {
                 const done = function () {
                     copied.textContent = "복사됐어요 ✓"; copyBtn.classList.add("ok");
