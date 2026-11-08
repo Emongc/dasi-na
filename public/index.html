@@ -14,9 +14,12 @@
     rel="stylesheet">
 
   <!-- 외부 스타일시트 연결 -->
-  <link rel="stylesheet" href="css/style.css?v=74">
+  <!-- [수정] 새로고침 때 맨 위가 번쩍 보였다가 보던 자리로 가는 현상: 자리를 되돌릴 때까지 화면을 잠깐 숨김 (최대 1.5초) -->
+  <style>html.restoring body { visibility: hidden; }</style>
+  <script>try{var _s=JSON.parse(sessionStorage.getItem('scrollSpot')||'null');if(_s&&_s.y>0&&!location.hash){document.documentElement.classList.add('restoring');setTimeout(function(){document.documentElement.classList.remove('restoring')},1500)}}catch(e){}</script>
+  <link rel="stylesheet" href="css/style.css?v=79">
   <link rel="stylesheet" href="css/works.css?v=73">
-  <link rel="stylesheet" href="css/cswitch.css?v=72">
+  <link rel="stylesheet" href="css/cswitch.css?v=75">
 </head>
 
 <body>
@@ -336,7 +339,6 @@
         </div>
       </div>
 
-      <a href="#works" class="resume-next">↓ 다음은 WORKS</a>
     </section>
 
     <!-- [수정] 10. WORKS — 필름 밀착 인화지 컨셉 (썸네일 + 마우스 올리면 미리보기 + 클릭하면 뷰어)
@@ -417,14 +419,18 @@
           </defs>
 
           <!-- [수정] 크레파스 질감 없이: 얇고 연한 손그림 선 (같은 길을 한 번 더 그어 손으로 겹쳐 그은 느낌만) -->
-          <filter id="soft-line-filter" x="-50%" y="-2%" width="200%" height="104%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="2" result="wobble" />
-            <feDisplacementMap in="SourceGraphic" in2="wobble" scale="2.5" xChannelSelector="R" yChannelSelector="G" />
+          <!-- [수정] 밧줄: History 프레임과 같은 선 (회색 · 연하게 · 크레파스 결) -->
+          <filter id="rope-crayon" x="-60%" y="-1%" width="220%" height="102%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="8" result="w" />
+            <feDisplacementMap in="SourceGraphic" in2="w" scale="2" xChannelSelector="R" yChannelSelector="G" result="l" />
+            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="2" seed="13" result="g" />
+            <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3 0 0 0 -0.75" result="ga" />
+            <feComposite in="l" in2="ga" operator="in" />
           </filter>
-          <path d="M 10 0 Q 3 150 16 300 T 5 600 Q 15 800 10 1000" fill="none" stroke="#8C857A"
-            stroke-width="2.2" stroke-linecap="round" filter="url(#soft-line-filter)" />
-          <path d="M 11 4 Q 4 150 15 300 T 6 600 Q 14 800 10 996" fill="none" stroke="#8C857A"
-            stroke-width="1.2" stroke-linecap="round" opacity="0.6" filter="url(#soft-line-filter)" />
+          <path class="rope-main" d="M 10 0 Q 3 150 16 300 T 5 600 Q 15 800 10 1000" fill="none" stroke="#8C857A"
+            stroke-width="2.6" stroke-linecap="round" opacity="0.5" vector-effect="non-scaling-stroke" filter="url(#rope-crayon)" />
+          <path class="rope-over" d="M 11 4 Q 4 150 15 300 T 6 600 Q 14 800 10 996" fill="none" stroke="#8C857A"
+            stroke-width="1.4" stroke-linecap="round" opacity="0.25" vector-effect="non-scaling-stroke" filter="url(#rope-crayon)" />
         </svg>
 
         <!-- 선 중간중간에 들어가는 감성적인 텍스트 요소 (선택사항) -->
@@ -448,7 +454,7 @@
       <!-- 하단 타임라인 이미지 박스 -->
       <!-- [수정] 마우스를 올리면 손그림 돋보기, 클릭(또는 Enter)하면 크게 보기 -->
       <div class="timeline-image-container crayon-frame crayon-soft" id="timelineContainer" role="button" tabindex="0" aria-label="히스토리 크게 보기">
-        <img src="img/timeline-image-light.png" alt="인생 타임라인 연혁" class="responsive-timeline-img">
+        <img src="img/timeline-image-light.png?v=2" alt="인생 타임라인 연혁" class="responsive-timeline-img">
         <!-- [수정] 분필로 그린 듯한 손그림 돋보기 (선이 미세하게 떨리는 3장 교차) -->
         <div class="loupe" id="timelineLoupe" aria-hidden="true">
           <div class="loupe-lens" id="loupeLens"></div>
@@ -462,36 +468,11 @@
       <div class="timeline-footer-text ending" id="ending">
         <!-- [수정] PC: 왼쪽(인사+서명) / 오른쪽(한마디+버튼) 좌우 배치, 태블릿·폰: 세로로 쌓임 -->
         <div class="end-left">
-          <p class="end-thanks" aria-label="Thank you,"><span class="end-letter" style="--i:0">T</span><span class="end-letter" style="--i:1">h</span><span class="end-letter" style="--i:2">a</span><span class="end-letter" style="--i:3">n</span><span class="end-letter" style="--i:4">k</span><span class="end-letter" style="--i:5">&nbsp;</span><span class="end-letter" style="--i:6">y</span><span class="end-letter" style="--i:7">o</span><span class="end-letter" style="--i:8">u</span><span class="end-letter" style="--i:9">,</span></p>
-          <!-- [수정] 사인: 굵게 + 크레파스 질감 + 밑줄을 휘갈겨 길게 꼬리 빼기 -->
-          <svg class="end-sign" viewBox="0 0 320 96" role="img" aria-label="Emongc 서명">
-            <defs>
-              <filter id="sign-crayon" x="-5%" y="-10%" width="110%" height="120%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="6" result="wobble" />
-                <feDisplacementMap in="SourceGraphic" in2="wobble" scale="2.4" xChannelSelector="R" yChannelSelector="G" result="line" />
-                <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="11" result="grain" />
-                <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3.2 0 0 0 -0.35" result="grainAlpha" /> <!-- 크레파스 진하기: 마지막 숫자(-0.35)가 0에 가까울수록 진하고 꽉 참, -0.7처럼 작을수록 희미하고 거칠어짐 -->
-                <feComposite in="line" in2="grainAlpha" operator="in" />
-              </filter>
-            </defs>
-            <g filter="url(#sign-crayon)">
-              <path pathLength="1" d="M44 24 C 30 14 14 26 26 38 C 30 42 36 42 40 41 C 22 42 12 56 22 66 C 30 74 46 70 54 60 C 57 54 60 46 63 58 C 64 63 64 63 65 58 C 67 47 72 45 74 58 C 75 63 75 63 76 58 C 78 47 84 45 85 60 C 87 53 92 49 97 51 C 103 54 100 64 93 64 C 87 64 87 55 93 53 C 98 52 101 56 104 58 C 106 52 108 47 110 60 C 112 50 118 46 121 60 C 123 54 128 50 133 52 C 138 55 134 63 128 63 C 123 63 123 56 128 54 C 133 53 135 56 136 58 C 136 66 135 76 131 82 C 127 88 117 87 119 80 C 121 73 134 68 146 62" />
-              <path pathLength="1" d="M163 52 C 156 47 147 55 150 62 C 153 67 161 65 167 59" />
-              <path pathLength="1" class="end-sign-line" d="M24 86 C 90 82 170 76 236 67" />
-              <!-- 꼬리: 8토막으로 나눠 굵기를 조금씩 줄여 매끄럽게 가늘어지게 -->
-              <path pathLength="1" class="end-sign-tail" style="--k:0" d="M236.0 67.0 C 239.8 66.5 243.4 66.0 247.1 65.5" />
-              <path pathLength="1" class="end-sign-tail" style="--k:1" d="M247.1 65.5 C 250.7 64.9 254.3 64.4 257.8 63.8" />
-              <path pathLength="1" class="end-sign-tail" style="--k:2" d="M257.8 63.8 C 261.3 63.2 264.8 62.6 268.3 62.0" />
-              <path pathLength="1" class="end-sign-tail" style="--k:3" d="M268.3 62.0 C 271.7 61.4 275.1 60.8 278.5 60.1" />
-              <path pathLength="1" class="end-sign-tail" style="--k:4" d="M278.5 60.1 C 281.9 59.5 285.2 58.8 288.5 58.1" />
-              <path pathLength="1" class="end-sign-tail" style="--k:5" d="M288.5 58.1 C 291.9 57.4 295.2 56.6 298.4 55.9" />
-              <path pathLength="1" class="end-sign-tail" style="--k:6" d="M298.4 55.9 C 301.7 55.1 305.0 54.3 308.2 53.5" />
-              <path pathLength="1" class="end-sign-tail" style="--k:7" d="M308.2 53.5 C 311.5 52.7 314.8 51.9 318.0 51.0" />
-            </g>
-          </svg>
+          <p class="end-thanks" aria-label="Thank you"><span class="end-letter" style="--i:0">T</span><span class="end-letter" style="--i:1">h</span><span class="end-letter" style="--i:2">a</span><span class="end-letter" style="--i:3">n</span><span class="end-letter" style="--i:4">k</span><span class="end-letter" style="--i:5">&nbsp;</span><span class="end-letter" style="--i:6">y</span><span class="end-letter" style="--i:7">o</span><span class="end-letter" style="--i:8">u</span></p>
         </div>
         <div class="end-right">
-          <p class="end-line">&nbsp;&nbsp;&nbsp;끝까지 봐 주셔서 감사합니다.</p>
+          <p class="end-line">끝까지 봐 주셔서 감사합니다.</p>
+          <a class="end-mail" href="mailto:emongc1209@gmail.com">emongc1209@gmail.com</a>
           <a href="#top" class="end-top" id="endTop">↑ 다시 처음으로</a>
         </div>
       </div>
@@ -503,7 +484,7 @@
         <div class="viewer-box">
           <button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.4 5.9c2.7 2.5 5.6 5.7 8.3 8.7 1.5 1.6 3 3.2 4.6 4.6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" fill="none"/><path d="M18.4 5.2c-2.6 2.4-5.4 5.6-8 8.6-1.6 1.9-3.2 3.6-4.8 5.3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" fill="none"/></svg></button>
           <div class="viewer-stage" id="viewerStage">
-            <img class="modal-content" id="expandedImg" src="img/timeline-image-light.png" alt="타임라인 확대보기" draggable="false">
+            <img class="modal-content" id="expandedImg" src="img/timeline-image-light.png?v=2" alt="타임라인 확대보기" draggable="false">
           </div>
         </div>
         <p class="viewer-tip" aria-hidden="true">톡 하면 확대 &middot; 쭉 끌어서 이동</p>
@@ -526,7 +507,7 @@
   <button id="top-btn" aria-label="페이지 맨 위로 이동"><i style="--n:0">T</i><i style="--n:1">O</i><i style="--n:2">P</i></button>
 
   <!-- JavaScript 연결 -->
-  <script src="js/script.js?v=74d"></script>
+  <script src="js/script.js?v=79"></script>
   <script src="js/concept-switch.js?v=3"></script>
   <script src="js/works-data.js?v=24"></script>
   <script src="js/works.js?v=25"></script>

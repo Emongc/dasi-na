@@ -30,8 +30,8 @@ if ('scrollRestoration' in history) {
   });
   let spot = null;
   try { spot = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) {}
-  if (location.hash) return; // 주소에 #works 같은 목적지가 있으면 그쪽이 우선 (아래에서 처리)
-  if (!spot || !spot.y) return;
+  if (location.hash) { document.documentElement.classList.remove('restoring'); return; } // 주소에 #works 같은 목적지가 있으면 그쪽이 우선 (아래에서 처리)
+  if (!spot || !spot.y) { document.documentElement.classList.remove('restoring'); return; }
   let userMoved = false;
   ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (ev) {
     window.addEventListener(ev, function () { userMoved = true; }, { once: true, passive: true });
@@ -46,9 +46,10 @@ if ('scrollRestoration' in history) {
     window.scrollTo(0, Math.max(0, top));
     html.style.scrollBehavior = prev;
   }
+  function reveal() { document.documentElement.classList.remove('restoring'); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', restore); else restore();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(restore);
-  window.addEventListener('load', restore);
+  window.addEventListener('load', function () { restore(); reveal(); });
 })();
 // [수정] 다른 페이지(예: book.html)에서 index.html#works 로 오면 그 섹션으로 이동한 뒤 주소의 #만 지움
 if (location.hash) {
@@ -320,7 +321,7 @@ document.addEventListener("DOMContentLoaded", function () {
     //  - 크레파스 가장자리까지 적용된 이미지 복사본
     //  - 세로선·대사·옷걸이 에몽씨 복사본 (원본과 같은 상태로 계속 맞춰 줌)
     //  → 돋보기에 걸치는 것은 무엇이든 그대로 확대돼 보임
-    let lensWorld = null, lensImg = null, lineClone = null, lineOrig = null, endClone = null, endOrig = null;
+    let lensWorld = null, lensImg = null, lineClone = null, lineOrig = null, endClone = null, endOrig = null, frameClone = null, frameOrig = null;
     function buildLensWorld() {
         if (lensWorld || !lens) return;
         lensWorld = document.createElement("div");
@@ -343,7 +344,7 @@ document.addEventListener("DOMContentLoaded", function () {
             lensWorld.appendChild(lineClone);
         }
         // [추가] 이미지 아래 마지막 장면(Thank you, · 서명 · 다시 처음으로)도 복사 → 아래쪽에 걸쳐도 확대돼 보임
-        endOrig = document.getElementById("ending");
+        endOrig = null;   // [수정] 돋보기는 History 프레임 안쪽까지만 → 아래 마지막 장면은 복사하지 않음
         if (endOrig) {
             endClone = endOrig.cloneNode(true);
             endClone.classList.add("lens-end");
@@ -352,6 +353,13 @@ document.addEventListener("DOMContentLoaded", function () {
             endClone.querySelectorAll("defs").forEach(function (d) { d.remove(); });   // 필터는 원본 것을 같이 씀
             endClone.querySelectorAll("a, button").forEach(function (el) { el.setAttribute("tabindex", "-1"); });
             lensWorld.appendChild(endClone);
+        }
+        // [추가] History 테두리(JS로 그린 손그림 선)도 복사 → 돋보기가 테두리에 걸쳐도 같이 확대돼 보임
+        frameOrig = box.querySelector(":scope > .cf-svg");
+        if (frameOrig) {
+            frameClone = frameOrig.cloneNode(true);
+            frameClone.classList.add("lens-frame");
+            lensWorld.insertBefore(frameClone, lensImg.nextSibling);   // 이미지 바로 위, 세로선·캐릭터 아래
         }
         lens.appendChild(lensWorld);
     }
@@ -377,63 +385,125 @@ document.addEventListener("DOMContentLoaded", function () {
             if (os && cs) cs.style.rotate = os.style.rotate;
             const of = orid.querySelector(".rider-face"), cf = crid.querySelector(".rider-face");
             if (of && cf && of.src && cf.src !== of.src) cf.src = of.src;
+            // [수정] 줄 타는 캐릭터 컷(스프라이트 칸)도 원본과 똑같이 → 겹쳐 보이는 현상 해결
+            const osh = orid.querySelector(".rider-sheet"), csh = crid.querySelector(".rider-sheet");
+            if (osh && csh) csh.style.backgroundPosition = osh.style.backgroundPosition;
         }
+        const osv = lineOrig.querySelector(".hand-drawn-vertical-line"), csv = lineClone.querySelector(".hand-drawn-vertical-line");
+        if (osv && csv) { csv.style.webkitMaskImage = osv.style.webkitMaskImage; csv.style.maskImage = osv.style.maskImage; }
     }
 
     // 이미지 기준 (x, y) 지점에 돋보기를 놓는 함수 (이미지 바깥 가장자리 근처도 가능)
-    function placeLoupe(x, y) {
+    // [수정] 읽기(위치 재기)를 먼저 몰아서 하고 쓰기를 나중에 → 움직일 때 끊기지 않게. 위치는 transform 으로
+    let lastX = 0, lastY = 0;
+    function syncLoupe(x, y, pres) {
         buildLensWorld();
         const r = thumb.getBoundingClientRect();   // 이미지 기준 (확대 위치 계산)
         const b = box.getBoundingClientRect();     // 상자 기준 (돋보기 위치)
         const half = lens.offsetWidth / 2;
-        loupe.style.left = (r.left - b.left + x) + "px";
-        loupe.style.top = (r.top - b.top + y) + "px";
-
-        // 작은 세상 안 배치 (이미지 왼쪽 위 = 0,0)
+        const lr = lineOrig ? lineOrig.getBoundingClientRect() : null;
+        const er = endOrig ? endOrig.getBoundingClientRect() : null;
+        const fr = frameOrig ? box.getBoundingClientRect() : null;
+        // ---- 여기부터 쓰기 ----
+        if (frameClone && fr) {
+            frameClone.style.cssText = "position:absolute;inset:auto;margin:0;max-width:none;left:" + (fr.left - r.left) + "px;top:" + (fr.top - r.top) + "px;width:" + fr.width + "px;height:" + fr.height + "px";
+            const vb = frameOrig.getAttribute("viewBox");
+            if (vb && frameClone.getAttribute("viewBox") !== vb) frameClone.setAttribute("viewBox", vb);
+            const od = frameOrig.querySelectorAll("path"), cd = frameClone.querySelectorAll("path");
+            for (let i = 0; i < od.length && i < cd.length; i++) { const d = od[i].getAttribute("d"); if (cd[i].getAttribute("d") !== d) cd[i].setAttribute("d", d); }
+        }
+        const px = r.left - b.left + x, py = r.top - b.top + y;
+        cache = { px: px - x, py: py - y, half: half };
         lensImg.style.width = r.width + "px";
-        if (lineClone && lineOrig) {
-            const lr = lineOrig.getBoundingClientRect();
+        if (lineClone && lr) {
             lineClone.style.left = (lr.left - r.left) + "px";
             lineClone.style.top = (lr.top - r.top) + "px";
             lineClone.style.width = lr.width + "px";
             lineClone.style.height = lr.height + "px";
             syncLineClone();
         }
-        if (endClone && endOrig) {
-            const er = endOrig.getBoundingClientRect();
+        if (endClone && er) {
             endClone.style.left = (er.left - r.left) + "px";
             endClone.style.top = (er.top - r.top) + "px";
             endClone.style.width = er.width + "px";
             if (endClone.className !== endOrig.className + " lens-end") endClone.className = endOrig.className + " lens-end";
         }
-        lensWorld.style.transform = "translate(" + (half - x * ZOOM) + "px, " + (half - y * ZOOM) + "px) scale(" + ZOOM + ")";
+        if (fr) {   // 렌즈 속은 프레임 안쪽만 보임 (바깥은 빈 종이색)
+            const L = fr.left - r.left - 2, T = fr.top - r.top - 2, R = L + fr.width + 4, B = T + fr.height + 4;
+            const cp = "polygon(" + L + "px " + T + "px," + R + "px " + T + "px," + R + "px " + B + "px," + L + "px " + B + "px)";
+            if (lensWorld._cp !== cp) { lensWorld._cp = cp; lensWorld.style.clipPath = cp; }
+        }
+    }
+    // [수정] 가볍게: 마우스가 움직일 때마다 하는 일은 위치(transform) 두 줄뿐. 복사본 맞추기(무거운 일)는 0.15초에 한 번만
+    let cache = null, syncT = 0;
+    function placeLoupe(x, y, pres) {
+        lastX = x; lastY = y;
+        const nowT = performance.now();
+        if (!cache || nowT - syncT > 150) { syncT = nowT; syncLoupe(x, y, pres); }
+        const sc = pres === undefined ? 1 : (0.78 + 0.22 * pres);
+        loupe.style.transform = "translate(" + (cache.px + x).toFixed(1) + "px, " + (cache.py + y).toFixed(1) + "px) translate(-50%, -50%) scale(" + sc.toFixed(3) + ")";
+        if (pres !== undefined) loupe.style.opacity = pres.toFixed(3);
+        lensWorld.style.transform = "translate(" + (cache.half - x * ZOOM) + "px, " + (cache.half - y * ZOOM) + "px) scale(" + ZOOM + ")";
+    }
+
+    // [수정] 돋보기 부드럽게: 마우스를 바로 따라붙지 않고 살짝 늦게 미끄러지듯 따라오며,
+    //        이미지 가장자리 바깥으로 나가면 갑자기 사라지지 않고 서서히 작아지며 투명해짐
+    let tgtX = 0, tgtY = 0, curX = 0, curY = 0, pres = 0, presT = 0, loupeRaf = 0, loupeT = 0;
+    const EDGE = 26;   // [수정] 프레임 바깥으로는 이만큼만 (그 안에서 서서히 사라짐)
+    function loupeTick(ts) {
+        const dt = Math.min(64, ts - (loupeT || ts)); loupeT = ts;
+        const kp = 1 - Math.exp(-dt / 14), kv = 1 - Math.exp(-dt / 90);
+        curX += (tgtX - curX) * kp; curY += (tgtY - curY) * kp;
+        pres += (presT - pres) * kv;
+        if (pres > 0.02) {
+            placeLoupe(curX, curY, pres);
+            box.classList.add("peeking", "revealed");
+            document.documentElement.classList.add("loupe-up");
+            if (pres > 0.35) document.documentElement.classList.add("loupe-on");
+        }
+        const moving = Math.abs(tgtX - curX) > 0.15 || Math.abs(tgtY - curY) > 0.15 || Math.abs(presT - pres) > 0.01;
+        if (presT === 0 && pres <= 0.02) {
+            pres = 0;
+            loupe.style.opacity = "0";
+            box.classList.remove("peeking");
+            document.documentElement.classList.remove("loupe-on", "loupe-up");
+            loupeRaf = 0; loupeT = 0;
+            return;
+        }
+        loupeRaf = moving ? requestAnimationFrame(loupeTick) : 0;
+        if (!moving) loupeT = 0;
+    }
+    function kickLoupe() { if (!loupeRaf) loupeRaf = requestAnimationFrame(loupeTick); }
+    function hideLoupeNow() {      // 크게 보기를 열 때 등: 즉시 끔
+        presT = 0; pres = 0;
+        if (loupe) loupe.style.opacity = "0";
+        box.classList.remove("peeking");
+        document.documentElement.classList.remove("loupe-on", "loupe-up");
     }
 
     if (loupe && lens && finePointer) {
-        const EDGE = 90; // 이미지 바깥으로 90px까지 돋보기 유지 (가장자리·캐릭터까지 보기용)
         document.addEventListener("pointermove", function (e) {
             if (e.pointerType !== "mouse" || modal.classList.contains("open")) return;
             const r = thumb.getBoundingClientRect();
             const x = e.clientX - r.left;
             const y = e.clientY - r.top;
-            // [수정] 마우스가 상단 메뉴 위(또는 메뉴 높이 안)에 있으면 돋보기를 끔
-            //        → 메뉴 위에서 커서가 사라지거나 돋보기가 끼어들지 않게
+            // 마우스가 상단 메뉴 위(또는 메뉴 높이 안)에 있으면 돋보기를 끔
             const hdr = document.querySelector("header");
             const overHeader = (e.target && e.target.closest && e.target.closest("header")) ||
                                (hdr && e.clientY < hdr.getBoundingClientRect().bottom);
-            const near = !overHeader && x > -EDGE && y > -EDGE && x < r.width + EDGE && y < r.height + EDGE;
-            if (!near) {
-                if (box.classList.contains("peeking") && userPeeked) {
-                    box.classList.remove("peeking");
-                    document.documentElement.classList.remove("loupe-on");
-                }
+            const d = Math.max(0, -x, -y, x - r.width, y - r.height);   // 이미지 바깥으로 얼마나 벗어났나
+            if (overHeader || d >= EDGE) {
+                if (presT !== 0) { presT = 0; kickLoupe(); }
                 return;
             }
+            const t = Math.min(1, Math.max(0, (d - EDGE * 0.3) / (EDGE * 0.7)));
+            presT = 1 - t * t * (3 - 2 * t);                // 가장자리에서 서서히 사라짐(smoothstep)
             userPeeked = true;
-            placeLoupe(x, y);
-            box.classList.add("peeking", "revealed"); // 안전장치: 돋보기를 쓰면 무조건 보이게
-            document.documentElement.classList.add("loupe-on"); // 가장자리 바깥에서도 커서 숨김
+            if (pres < 0.02) { curX = x; curY = y; placeLoupe(x, y, 0.001); }   // 새로 나타날 땐 마우스 자리에 먼저 놓고 시작
+            tgtX = x; tgtY = y;
+            kickLoupe();
         }, { passive: true });
+        document.documentElement.addEventListener("mouseleave", function () { if (presT !== 0) { presT = 0; kickLoupe(); } });
     }
 
     // [추가] 돋보기 시범: 이미지가 펼쳐진 뒤 한 번만, 왼쪽→오른쪽으로 스윽 지나감 (PC만)
@@ -539,8 +609,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let openedByKeyboard = false; // 키보드로 열었을 때만 닫은 뒤 선택을 되돌림
 
     function openViewer() {
-        box.classList.remove("peeking");
-        document.documentElement.classList.remove("loupe-on");
+        hideLoupeNow();
         resetZoom();
         modal.classList.add("open");
         modal.setAttribute("aria-hidden", "false");
@@ -555,21 +624,26 @@ document.addEventListener("DOMContentLoaded", function () {
     function closeViewer() {
         if (!modal.classList.contains("open")) return;
         let done = false;
+        // [수정] 닫기 시작과 동시에 배경이 사라지고, 이미지는 제자리로 날아가는 동안 끝 모양을 유지 → 멈칫 없이 한 번에
+        big.style.transition = "none";
+        resetZoom();
         const finish = function () {
             if (done) return;
             done = true;
-            modal.classList.remove("open");
+            modal.classList.remove("closing");
             modal.setAttribute("aria-hidden", "true");
             document.documentElement.style.overflow = "";
-            resetZoom();
+            big.style.transition = "";
+            stage.getAnimations().forEach(function (a) { a.cancel(); });
             if (openedByKeyboard) box.focus({ preventScroll: true });
             else if (document.activeElement) document.activeElement.blur();
         };
+        modal.classList.remove("open");
         if (!reduceMotion && stage.animate) {
-            resetZoom();
-            const anim = stage.animate([{ transform: "none" }, { transform: flipFrom() }], { duration: 380, easing: ease });
+            modal.classList.add("closing");
+            const anim = stage.animate([{ transform: "none", opacity: 1 }, { transform: flipFrom(), opacity: 0.0 }], { duration: 340, easing: ease, fill: "forwards" });
             anim.onfinish = finish;
-            setTimeout(finish, 450); // 애니메이션이 멈춰 있는 환경 대비 안전장치
+            setTimeout(finish, 420); // 애니메이션이 멈춰 있는 환경 대비 안전장치
         } else {
             finish();
         }
@@ -881,7 +955,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return L;
     });
 
-    let progress = -1, maxP = 0, lastScroll = window.scrollY, angle = 0, landed = false;
+    let progress = -1, maxP = 0, lastScroll = window.scrollY, angle = 0, landed = false, cutKey = "";
     // [수정] 줄 타는 장면: 스프라이트 컷 번호(fi)를 스크롤만큼 앞뒤로 (위로 = 오르기, 아래로 = 거꾸로 내려오기)
     const sheet = rider ? rider.querySelector(".rider-sheet") : null;
     const NF = sheet ? +sheet.dataset.frames : 0, NC = sheet ? +sheet.dataset.cols : 1, NR = Math.ceil(NF / NC);
@@ -925,9 +999,17 @@ document.addEventListener("DOMContentLoaded", function () {
             const y = pt.y * (sr.height / 1000);
             const w = rider.offsetWidth || 64, h = w * 1.5;
             // 컷 안의 줄은 가로 46% 지점, 맨 위가 선 끝에 이어짐 / 착지하면 발이 선 끝에
-            const hy = landed ? h * 0.95 : h * 0.02;
+            const hy = h * 0.02;   // [수정] 착지해도 위로 튀어 오르지 않고, 내려온 자리에 그대로 멈춤
             rider.style.transform = "translate(" + (x - w * 0.46) + "px, " + (y - hy) + "px)";
             rider.classList.toggle("on", progress > 0.005);
+            // [추가] 캐릭터 몸에 그려진 밧줄과 겹치는 구간은 연필선을 비워 줌 (두 줄이 겹쳐 지저분해 보이던 것)
+            const cutA = Math.round(y - hy + 4), cutB = Math.round(y - hy + h * 0.97);
+            const key = cutA + "," + cutB;
+            if (key !== cutKey) {
+                cutKey = key;
+                const g = "linear-gradient(to bottom, #000 0, #000 " + cutA + "px, transparent " + cutA + "px, transparent " + cutB + "px, #000 " + cutB + "px)";
+                svg.style.webkitMaskImage = g; svg.style.maskImage = g;
+            }
 
             const v = window.scrollY - lastScroll;
             lastScroll = window.scrollY;
@@ -1305,6 +1387,39 @@ window.drawCrayonFrames = (function () {
     window.addEventListener("resize", all);
     window.addEventListener("load", all);
     document.addEventListener("DOMContentLoaded", all);
+    return all;
+})();
+
+// ==================================================
+// [추가] WORKS 탭 위·아래 선: History 프레임과 같은 손그림 선 (회색 · 연하게 · 크레파스 결)
+// ==================================================
+window.drawTabLines = (function () {
+    const NS = "http://www.w3.org/2000/svg";
+    function line(w, y, seed, amp) {
+        let r = seed; const rnd = function () { r = (r * 9301 + 49297) % 233280; return r / 233280 - 0.5; };
+        const n = Math.max(3, Math.round(w / 60)); let d = "";
+        for (let i = 0; i <= n; i++) d += (i ? " L" : "M") + (i / n * w).toFixed(1) + " " + (y + rnd() * amp).toFixed(1);
+        return d;
+    }
+    function draw(box) {
+        let svg = box.querySelector(":scope > .wk-lines");
+        if (!svg) {
+            svg = document.createElementNS(NS, "svg");
+            svg.setAttribute("class", "cf-svg wk-lines"); svg.setAttribute("aria-hidden", "true");
+            svg.innerHTML = '<g filter="url(#cf-crayon)"><path class="cf-main t"/><path class="cf-over t"/><path class="cf-main b"/><path class="cf-over b"/></g>';
+            box.insertBefore(svg, box.firstChild);
+        }
+        const w = box.clientWidth, h = box.clientHeight; if (!w || !h) return;
+        svg.setAttribute("viewBox", "0 0 " + w + " " + h);
+        const q = function (c) { return svg.querySelector(c); };
+        q(".cf-main.t").setAttribute("d", line(w, 1.5, 11, 2.2)); q(".cf-over.t").setAttribute("d", line(w, 3, 41, 3));
+        q(".cf-main.b").setAttribute("d", line(w, h - 1.5, 23, 2.2)); q(".cf-over.b").setAttribute("d", line(w, h - 3, 59, 3));
+    }
+    function all() { document.querySelectorAll(".wk-tabs").forEach(draw); }
+    const ro = ("ResizeObserver" in window) ? new ResizeObserver(function (es) { es.forEach(function (e) { draw(e.target); }); }) : null;
+    function init() { all(); if (ro) document.querySelectorAll(".wk-tabs").forEach(function (b) { ro.observe(b); }); }
+    window.addEventListener("load", init); window.addEventListener("resize", all);
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(init, 0); });
     return all;
 })();
 

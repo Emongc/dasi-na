@@ -66,6 +66,8 @@ header .tg { --tg-fg: #171717; --tg-bg: #FAFAFA; }
     header nav { order: 2; width: auto; margin: 0 auto; }
     header .tg { order: 3; }
 }
+/* [수정] 토글 위치: 갤러리 페이지와 같은 자리 (화면 맨 위 오른쪽 모서리, 같은 오른쪽 여백) — 크기는 그대로 */
+@media screen and (min-width: 768px) { header:not(.g-top) .tg { position: absolute; top: 18px; right: clamp(16px, 4vw, 64px); margin: 0; } }
 /* 폰: 로고 · 토글 · ☰ */
 @media screen and (max-width: 767px) {
     .header-inner { gap: 8px; }

@@ -241,8 +241,8 @@ main {
 }
 
 section {
-	padding: 44px 0;
-	border-bottom: 2px dotted #cac9c8;
+	padding: 64px 0;
+	border-bottom: 0;
 	scroll-margin-top: 200px;
 }
 
@@ -1818,9 +1818,7 @@ html.loupe-on * {
     gap: 14px;
     padding: 70px 4vw 40px;
     box-sizing: border-box;
-    background-color: rgba(250, 250, 250, 0.6);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);  /* 뒤 화면을 뿌옇게 */
+    background-color: rgba(250, 250, 250, 0.96);   /* [수정] 흐림 효과 제거 → 열고 닫을 때 끊김 없이 */
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.35s ease, visibility 0.35s ease;
@@ -1836,10 +1834,10 @@ html.loupe-on * {
     position: relative;
     max-width: min(1100px, 92vw);
     overflow: hidden;
-    background: #fff;
-    border: 1.5px solid var(--main-color);
-    border-radius: 14px 6px 12px 5px / 6px 12px 5px 14px;
-    box-shadow: 4px 6px 0 rgba(23, 23, 23, 0.12), 0 30px 60px rgba(0, 0, 0, 0.15);
+    background: var(--bg-color);   /* [수정] 프레임·그림자 없음 */
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
     cursor: zoom-in;
     touch-action: none;
 }
@@ -1875,7 +1873,7 @@ html.loupe-on * {
     width: 42px;
     height: 42px;
     padding: 0;
-    background: rgba(255, 255, 255, 0.9);
+    background: transparent;
     border-radius: 50%;
     color: var(--main-color);
     border: 0;
@@ -3455,12 +3453,6 @@ header h1, header h1 .first-letter { color: var(--main-color); }
    [수정] WORKS 탭: 위·아래에 손으로 그은 선 + 선택된 탭은 글자를 덮는 머스타드 칠
    ================================================== */
 .wk-tabs { position: relative; gap: 2px 10px; padding: 16px 4px; margin: 0 0 30px; }
-.wk-tabs::before, .wk-tabs::after {
-	content: ""; position: absolute; left: 0; right: 0; height: 8px; pointer-events: none;
-	background-repeat: no-repeat; background-position: 0 50%; background-size: 100% 100%;
-}
-.wk-tabs::before { top: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 8' preserveAspectRatio='none'%3E%3Cg fill='none' stroke='%238C857A' stroke-linecap='round'%3E%3Cpath d='M0 4 C40 2 70 6 120 3.5 S200 5.2 260 3 S350 5 400 3.8' stroke-width='1.8' vector-effect='non-scaling-stroke'/%3E%3Cpath d='M0 5.2 C50 3.4 90 6.2 150 4.4 S240 3.8 300 5.2 S370 3.4 400 4.8' stroke-width='1' opacity='.5' vector-effect='non-scaling-stroke'/%3E%3C/g%3E%3C/svg%3E"); }
-.wk-tabs::after  { bottom: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 8' preserveAspectRatio='none'%3E%3Cg fill='none' stroke='%238C857A' stroke-linecap='round'%3E%3Cpath d='M0 3.6 C60 5.4 110 2.6 170 4.4 S290 3 340 4.6 S385 3.4 400 4.2' stroke-width='1.8' vector-effect='non-scaling-stroke'/%3E%3Cpath d='M0 4.8 C40 3.2 100 5.8 160 3.8 S270 5.4 330 3.8 S390 5 400 4' stroke-width='1' opacity='.5' vector-effect='non-scaling-stroke'/%3E%3C/g%3E%3C/svg%3E"); }
 .wk-tabs .wk-tab { padding: 6px 12px; color: #857F74; }
 .wk-tabs .wk-tab:hover { color: #2B2B2B; }
 .wk-tabs .wk-tab.on { color: #171717; }
@@ -3471,3 +3463,51 @@ header h1, header h1 .first-letter { color: var(--main-color); }
 /* [수정] History 이미지: 연한 손그림 테두리 (선택한 칠·진한 선 없이) */
 .timeline-image-container.crayon-soft > .cf-svg { opacity: 0.5; }
 .timeline-image-container.crayon-soft > .cf-bg { display: none; }
+
+/* [수정] 돋보기가 줄 타는 에몽씨 위에 겹쳐 보이던 오류: 이미지 상자를 캐릭터보다 위 층에 둠 */
+.timeline-image-container.crayon-soft { isolation: auto; z-index: auto; }
+.loupe { will-change: transform, opacity; }
+
+/* ==================================================
+   [수정] WORKS 탭 선 · 밧줄 · 돋보기 속 테두리 — History 프레임과 같은 결의 선
+   ================================================== */
+.wk-tabs > .cf-svg.wk-lines { opacity: 0.5; z-index: 0; }
+.wk-tabs .wk-lines .cf-main { stroke-width: 2.6; }
+.wk-tabs .wk-lines .cf-over { stroke-width: 1.4; opacity: 0.5; }
+.wk-tabs .wk-tab { position: relative; z-index: 1; }
+.loupe-lens .lens-frame { opacity: 0.5; overflow: visible; pointer-events: none; }
+/* 메뉴 간격 */
+@media screen and (min-width: 768px) { header nav ul { gap: 16px clamp(24px, 2.2vw, 36px); } }
+
+/* ==================================================
+   [수정] 하단 정리 · 캐릭터는 프레임보다 앞 (돋보기가 켜진 동안만 뒤로)
+   ================================================== */
+.line-rider { z-index: 4; }
+.ending { margin-top: 90px; padding-bottom: 8px; }
+.ending .end-line { color: #6F685D; margin: 0; }
+.end-mail { margin-top: 10px; font-family: 'Gaegu', cursive; font-size: 1.05rem; color: #6F685D; text-decoration: none; background: var(--nib, none) no-repeat 0 100% / 0 7px; padding-bottom: 3px; transition: background-size .3s ease, color .2s; }
+.end-mail:hover, .end-mail:focus-visible { color: #171717; background-size: 100% 7px; }
+.site-footer { padding: 28px 24px 36px; }
+.footer-line { color: #8C857A; font-size: .95rem; }
+.ending, .site-footer { --nib: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 8' preserveAspectRatio='none'%3E%3Cpath d='M2 5 C18 2 30 7 48 4 S84 6 100 3 L118 4.5' fill='none' stroke='%23F5B82E' stroke-width='3.2' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E"); }
+.line-rider { mix-blend-mode: normal; }   /* 스프라이트가 이미 투명이라 곱하기 불필요 → 프레임 선이 얼굴 위로 비치지 않음 */
+
+/* [수정] 돋보기: 이동에 지연(transition)이 걸려 있던 것이 무거움의 원인 → 위치는 즉시, 모양(투명도)은 JS가 부드럽게 */
+.loupe { transition: none !important; }
+/* [수정] 겹침 순서 고정: 프레임 < 캐릭터 < 돋보기 (캐릭터를 뒤로 보내지 않음) */
+.timeline-image-container.crayon-soft > .cf-svg { z-index: 1; }
+/* [수정] 하단: 한 줄 인사 + 연락처 + 처음으로 (가운데 정렬) */
+.ending { flex-direction: column !important; align-items: center !important; justify-content: center; text-align: center; margin-top: 90px; }
+.end-left { flex-direction: row !important; align-items: flex-end !important; justify-content: center; flex-wrap: wrap; gap: 6px 14px; }
+.end-right { align-items: center !important; text-align: center !important; padding-bottom: 0 !important; margin-top: 18px; }
+.end-sign { margin-left: 0 !important; width: 150px; }
+.ending .end-thanks { transform-origin: center bottom !important; }
+.end-from { font-family: 'Gaegu', cursive; font-size: 1.15rem; color: #8C857A; padding-bottom: 20px; transition: opacity .6s ease 1.2s; }
+.ending.ready .end-from { opacity: 0; } .ending.in .end-from { opacity: 1; }
+.end-top { margin-top: 26px; }
+@media screen and (max-width: 767px) { .end-sign { width: 120px; } }
+
+/* [수정] 하단: Thank you → 감사 문구(연하게) → 이메일 → 다시 처음으로 */
+.ending .end-line { color: #A8A298; font-size: 1.05rem; margin: 14px 0 0; transition: opacity .6s ease 1s; }
+.end-right { margin-top: 0; }
+.end-mail { margin-top: 18px; }

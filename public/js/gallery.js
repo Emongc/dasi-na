@@ -180,7 +180,7 @@
     const KIND = {
         film: function (sp) {
             const c = sp.works[0], rest = sp.works.slice(1);
-            return '<div class="g-12 g-film-head"><div class="g-c8"><span class="g-k g-m">대표작 · Cover Story</span><p class="g-ko-t">' + esc(c.title) + '</p><h2 class="g-big g-big-s">' + lines(head(c)) + '</h2></div>' +
+            return bigT("Films", sp.ko) + '<div class="g-12 g-film-head"><div class="g-c8"><span class="g-k g-m">대표작 · Cover Story</span><p class="g-ko-t">' + esc(c.title) + '</p><h2 class="g-big g-big-s">' + lines(head(c)) + '</h2></div>' +
                 (rest.length ? '<div class="g-c4 g-end"><span class="g-k">다른 영상 · More Films</span></div>' : "") + "</div>" +
                 '<div class="g-12 g-al"><div class="g-c8">' + link(c, '<span class="g-pic g-vid">' + img(tileImg(c)) +
                 '<video muted loop playsinline preload="none" data-src="' + esc(gVid(c)) + '"></video><span class="g-badge">▶ 영상</span></span>') + cap(c, shortRole(c)) + "</div>" +
@@ -404,12 +404,12 @@
                         const o = document.createElement("span"); o.className = "g-ch";
                         const i = document.createElement("span"); i.className = "g-chi"; i.textContent = c;
                         o.appendChild(i); f.appendChild(o); units.push(o);
-                        rise.push({ n: i, d: li * 80 + ci * 18 }); ci++;
+                        rise.push({ n: i, d: li * 50 + ci * 10 }); ci++;
                     });
                     line.replaceChild(f, n);
                 } else if (n.nodeType === 1) {
                     if (n.classList.contains("g-hl") || n.classList.contains("g-olm")) { units.push(wrap(n)); drop.push(n); ci++; }
-                    else { units.push(wrap(n)); rise.push({ n: n, d: li * 80 + ci * 18 }); ci += n.textContent.length; }
+                    else { units.push(wrap(n)); rise.push({ n: n, d: li * 50 + ci * 10 }); ci += n.textContent.length; }
                 }
             });
         });
@@ -433,21 +433,73 @@
         }
 
         const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";   // 빠르게 튀어나와 부드럽게 멈춤
-        const KS = 720, KG = 140;                        // 첫 머스타드 글자 시작 · 글자 사이 간격(ms)
+        const KS = 430, KG = 85;                        // 첫 머스타드 글자 시작 · 글자 사이 간격(ms)
         function start() {
             place();
             if (reduce || !("animate" in Element.prototype)) { title.classList.remove("g-pre"); return; }
-            const anims = [];
+            const anims = [], sit = mkSit();
             function A(node, kf, delay, dur, ease) { anims.push(node.animate(kf, { duration: dur, delay: delay, easing: ease, fill: "both" })); }
-            rise.forEach(function (r) { A(r.n, [{ transform: "translateY(115%)" }, { transform: "translateY(0)" }], r.d, 650, EASE); });
-            Array.prototype.forEach.call(drop, function (k, i) { A(k, [{ transform: "translateY(-125%)" }, { transform: "translateY(0)" }], KS + i * KG, 620, EASE); });
-            A(stampT, [{ transform: "translateY(115%)" }, { transform: "translateY(0)" }], KS + (drop.length - 1) * KG + 380, 600, EASE);
-            [sub, down].forEach(function (e) { if (e) A(e, [{ opacity: 0 }, { opacity: 1 }], 350, 700, "ease-out"); });
+            rise.forEach(function (r) { A(r.n, [{ transform: "translateY(115%)" }, { transform: "translateY(0)" }], r.d, 420, EASE); });
+            Array.prototype.forEach.call(drop, function (k, i) { A(k, [{ transform: "translateY(-125%)" }, { transform: "translateY(0)" }], KS + i * KG, 400, EASE); });
+            if (sit) {   // E 와 함께 떨어져 내려옴 (E 가 보이기 전에는 숨어 있다가 같이 나타남)
+                const ca = sit.w.animate([{ transform: "translateY(-" + sit.fall + "px)", opacity: 0 }, { transform: "translateY(-" + sit.fall * 0.5 + "px)", opacity: 0, offset: 0.4 }, { transform: "translateY(0)", opacity: 1 }], { duration: 400, delay: KS, easing: EASE, fill: "both" });
+                anims.push(ca); ca.finished.then(sit.play, function () {});
+            }
+            A(stampT, [{ transform: "translateY(115%)" }, { transform: "translateY(0)" }], KS + (drop.length - 1) * KG + 260, 420, EASE);
+            [sub, down].forEach(function (e) { if (e) A(e, [{ opacity: 0 }, { opacity: 1 }], 250, 450, "ease-out"); });
             title.classList.remove("g-pre");   // 첫 모습(글자 숨김)이 정해진 뒤에 보이게
             Promise.all(anims.map(function (a) { return a.finished; })).then(function () {
                 anims.forEach(function (a) { a.cancel(); });   // 끝 모습 = 원래 모습이므로 연출 흔적 제거
                 hero.classList.add("g-intro-done");
+                afterIntro();
             }, function () {});
+        }
+        // [추가] 끝난 뒤의 맛: ① 컷 편집처럼 EMONG 글자가 깜빡 ② 스크롤하면 줄마다 다른 속도로 좌우로 밀려남 ③ 머스타드 글자에 마우스를 올리면 톡 튐
+        // [추가] 손그림 버전의 에몽씨가 DESIGN. 의 E 윗면에 걸터앉아 손을 흔듦
+        //  · E 가 위에서 떨어질 때 같이 붙어서 내려옴(떨어지는 동안은 정지 컷) → 자리에 앉으면 손 흔들기(애니메이션 webp)가 시작
+        let sitter = null;
+        const CAP = 0.72;   // 큰 글자 높이(글자 크기 대비)
+        function mkSit() {
+            if (reduce || window.matchMedia("(max-width: 700px)").matches || !drop[0]) return null;
+            const hr = hero.getBoundingClientRect(), er = drop[0].getBoundingClientRect();
+            const fs = parseFloat(getComputedStyle(title).fontSize), capH = fs * CAP;
+            const capTop = er.top - hr.top + (er.height - capH) / 2;
+            const Hc = capH * 0.82, Wc = Hc * 0.747;
+            const w = el("div", "g-sit"), im = new Image(), anim = new Image();
+            w.setAttribute("aria-hidden", "true");
+            w.style.cssText = "left:" + (er.right - hr.left - Wc * 1.12) + "px;top:" + (capTop + 3 - Hc * 0.54) + "px;width:" + Wc + "px;height:" + Hc + "px";
+            im.alt = ""; im.draggable = false; im.src = "img/mini/emongc-sit-still.webp";
+            anim.src = "img/mini/emongc-sit.webp";   // 미리 받아 둠
+            w.appendChild(im); hero.appendChild(w); sitter = w;
+            return { w: w, fall: er.height * 1.25, play: function () { im.src = anim.src; } };
+        }
+        let sy = 0;
+        function updSit() { if (sitter) sitter.style.transform = "translate3d(" + (sy * -0.3).toFixed(1) + "px,0,0)"; }
+        let slid = false;
+        function afterIntro() {
+            if (reduce || slid || !("animate" in Element.prototype)) return;
+            slid = true;
+            Array.prototype.forEach.call(drop, function (k, i) {
+                k.animate([{ opacity: 1 }, { opacity: 0, offset: 0.2 }, { opacity: 1, offset: 0.4 }, { opacity: 0, offset: 0.6 }, { opacity: 1 }], { duration: 360, delay: i * 70, easing: "steps(1, end)" });
+                k.addEventListener("pointerenter", function () {
+                    if (i === 0 && sitter && sitter.firstChild) {   // E 가 톡 튈 때 위에 앉은 에몽씨도 같이 튐
+                        const up = parseFloat(getComputedStyle(title).fontSize) * 0.12;
+                        sitter.firstChild.animate([{ transform: "none" }, { transform: "translateY(-" + up + "px) rotate(-4deg)" }, { transform: "none" }], { duration: 320, easing: "cubic-bezier(0.3, 1.6, 0.5, 1)" });
+                    }
+                    k.animate([{ transform: "none" }, { transform: "translateY(-0.12em) rotate(-5deg) scale(1.08)" }, { transform: "none" }], { duration: 320, easing: "cubic-bezier(0.3, 1.6, 0.5, 1)" });
+                });
+            });
+            if (window.matchMedia("(max-width: 700px)").matches) return;   // 폰에서는 슬라이드·방문 생략
+            const sp = [-0.3, 0.5, -0.4, 0.7];
+            let pend = false;
+            function upd() {
+                pend = false;
+                const y = Math.min(window.scrollY, hero.offsetHeight * 1.2);
+                sy = y; updSit();
+                lines.forEach(function (l, i) { l.style.transform = "translate3d(" + (sp[i] * y).toFixed(1) + "px,0,0)"; });
+                stamp.style.transform = "translate3d(" + (sp[3] * y).toFixed(1) + "px,0,0)";
+            }
+            window.addEventListener("scroll", function () { if (!pend) { pend = true; requestAnimationFrame(upd); } }, { passive: true });
         }
         let ready = false;
         function go() { if (ready) return; ready = true; start(); }
