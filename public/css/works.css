@@ -77,7 +77,7 @@
 
 /* 아래 작은 제목 · 설명 */
 #works .wk-name { margin: 12px 0 0; font-family: 'Noto Sans KR', sans-serif; font-size: 0.95rem; font-weight: 600; line-height: 1.4; color: var(--main-color); }
-#works .wk-desc { margin: 3px 0 0; font-family: 'Noto Sans KR', sans-serif; font-size: 0.8rem; line-height: 1.5; color: #8a8a8a; }
+#works .wk-desc { margin: 3px 0 0; font-family: 'Noto Sans KR', sans-serif; font-size: 0.8rem; line-height: 1.5; color: #6F685D; }
 
 /* ---------- 음악: 플레이리스트 ---------- */
 .wk-grid.is-list { display: block; max-width: 760px; }
@@ -95,7 +95,7 @@
 .wk-row:hover { background-color: rgba(23, 23, 23, 0.025); }
 .wk-row .wk-name { margin: 0; }
 .wk-row .wk-desc { margin: 2px 0 0; }
-.wk-rtime { font-family: 'Noto Sans KR', sans-serif; font-size: 0.8rem; color: #8a8a8a; font-variant-numeric: tabular-nums; }
+.wk-rtime { font-family: 'Noto Sans KR', sans-serif; font-size: 0.8rem; color: #6F685D; font-variant-numeric: tabular-nums; }
 .wk-rbar { position: absolute; left: 0; bottom: -1px; height: 1px; width: var(--p, 0%); background: var(--main-color); transition: width 0.25s linear; }
 
 /* 흰빛 은색 CD (가운데 앨범 그림 고리 + 흰 구멍) */
@@ -255,11 +255,11 @@
     font-family: 'Gaegu', cursive;
     font-size: 1.12rem;
     font-weight: 700;
-    color: #8a8a8a;
+    color: #6F685D;
     cursor: pointer;
 }
 .wkv-ver:hover { color: var(--main-color); }
-.wkv-ver[aria-pressed="true"] { color: var(--main-color); background: rgba(183, 123, 221, 0.3); }
+.wkv-ver[aria-pressed="true"] { color: var(--main-color); background: rgba(245, 184, 46, 0.3); }
 .wkv-nav { display: flex; align-items: center; gap: 12px; margin-left: auto; font-family: 'Gaegu', cursive; }
 .wkv-arrow, .wkv-lb-arrow {
     width: 40px;
@@ -272,7 +272,7 @@
     cursor: pointer;
     transition: border-color 0.2s ease, color 0.2s ease;
 }
-.wkv-arrow:hover:not(:disabled), .wkv-lb-arrow:hover:not(:disabled) { border-color: var(--point-color); color: #7A4FA0; }
+.wkv-arrow:hover:not(:disabled), .wkv-lb-arrow:hover:not(:disabled) { border-color: var(--point-color); color: #6F685D; }
 .wkv-arrow:disabled, .wkv-lb-arrow:disabled { opacity: 0.3; cursor: default; }
 .wkv-count { min-width: 52px; text-align: center; font-size: 1.15rem; font-weight: 700; }
 .wkv-cap { margin: 0; min-height: 1.3em; font-size: 0.88rem; color: #6e6e6e; }
@@ -377,7 +377,7 @@
 }
 .wkv-seek::-webkit-slider-thumb { -webkit-appearance: none; width: 11px; height: 11px; border-radius: 50%; background: var(--main-color); }
 .wkv-seek::-moz-range-thumb { width: 11px; height: 11px; border: 0; border-radius: 50%; background: var(--main-color); }
-.wkv-time { flex: none; font-size: 0.8rem; color: #8a8a8a; font-variant-numeric: tabular-nums; }
+.wkv-time { flex: none; font-size: 0.8rem; color: #6F685D; font-variant-numeric: tabular-nums; }
 .wkv-lyr-btn {
     flex: none;
     min-height: 34px;
@@ -394,11 +394,11 @@
 
 /* 오른쪽: 설명 */
 .wkv-info { min-width: 0; padding-top: 4px; }
-.wkv-meta { margin: 0; font-size: 0.8rem; letter-spacing: 0.03em; color: #8a8a8a; }
+.wkv-meta { margin: 0; font-size: 0.8rem; letter-spacing: 0.03em; color: #6F685D; }
 .wkv-title { margin: 6px 0 0; font-family: 'Gaegu', cursive; font-size: 2rem; line-height: 1.15; color: var(--main-color); }
 .wkv-sub { margin: 4px 0 0; font-size: 0.92rem; color: #6e6e6e; }
 .wkv-dl { margin: 18px 0 0; }
-.wkv-dl dt { margin-top: 14px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; color: #8a8a8a; }
+.wkv-dl dt { margin-top: 14px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; color: #6F685D; }
 .wkv-dl dt:first-child { margin-top: 0; }
 .wkv-dl dd { margin: 4px 0 0; font-size: 0.95rem; line-height: 1.75; color: #333; }
 .wkv-box2 { margin-top: 18px; padding: 14px 16px; background: #F6F2EA; }
@@ -420,21 +420,21 @@
     text-decoration: none;
     cursor: pointer;
 }
-.wkv-link:hover { color: #7A4FA0; }
+.wkv-link:hover { color: #6F685D; }
 .wkv-link.main {
     padding: 8px 22px;
     border: 1.5px solid var(--main-color);
     border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-    background: rgba(217, 164, 65, 0.45);
+    background: rgba(245, 184, 46, 0.45);
     font-size: 1.25rem;
 }
-.wkv-link.main:hover { background: rgba(217, 164, 65, 0.7); color: var(--main-color); }
-.wkv-note { margin: 18px 0 0; font-size: 0.78rem; color: #8a8a8a; }
+.wkv-link.main:hover { background: rgba(245, 184, 46, 0.7); color: var(--main-color); }
+.wkv-note { margin: 18px 0 0; font-size: 0.78rem; color: #6F685D; }
 
 /* 아래: 만든 과정 */
 .wkv-process { grid-column: 1 / -1; padding-top: 22px; border-top: 1.5px dashed #ddd6ca; scroll-margin-top: 10px; }
 .wkv-proc-title { margin: 0 0 14px; font-family: 'Gaegu', cursive; font-size: 1.45rem; color: var(--main-color); }
-.wkv-proc-title span { font-family: 'Noto Sans KR', sans-serif; font-size: 0.8rem; font-weight: 400; color: #8a8a8a; vertical-align: middle; }
+.wkv-proc-title span { font-family: 'Noto Sans KR', sans-serif; font-size: 0.8rem; font-weight: 400; color: #6F685D; vertical-align: middle; }
 .wkv-proc-list {
     list-style: none;
     margin: 0;
@@ -461,7 +461,7 @@
 .wkv-proc-list button:hover .wkv-proc-img img { transform: scale(1.05); }
 .wkv-proc-list button:focus-visible .wkv-proc-img { outline: 1.5px dashed var(--point-color); outline-offset: 3px; }
 .wkv-proc-cap { display: block; margin-top: 7px; font-size: 0.8rem; line-height: 1.5; color: #555; }
-.wkv-proc-cap b { font-family: 'Gaegu', cursive; font-size: 1rem; color: #7A4FA0; }
+.wkv-proc-cap b { font-family: 'Gaegu', cursive; font-size: 1rem; color: #6F685D; }
 
 /* 크게 보기 */
 .wkv-lb {
@@ -544,14 +544,14 @@
 .wkv-motto { margin: 2px 0 12px; font-family: 'Gaegu', cursive; font-size: 1.25rem; line-height: 1.35; color: #222; }
 .wkv-bv { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
 .wkv-bv li { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 10px 4px 9px; background: #fff; border: 1px solid rgba(23, 23, 23, 0.08); border-radius: 4px; text-align: center; }
-.wkv-bv b { font-family: "Gaegu", cursive; font-size: 1.9rem; line-height: 1; font-weight: 700; color: var(--point-color); }
-.wkv-bv span { font-size: 0.68rem; letter-spacing: 0.04em; color: #8a8a8a; }
+.wkv-bv b { font-family: "Gaegu", cursive; font-size: 1.9rem; line-height: 1; font-weight: 700; color: var(--point-ink); }
+.wkv-bv span { font-size: 0.68rem; letter-spacing: 0.04em; color: #6F685D; }
 .wkv-bv em { margin-top: 3px; font-style: normal; font-size: 0.84rem; font-weight: 600; color: #333; }
 .wkv-cmp { margin-top: 14px; }
 .wkv-cmp p { display: grid; grid-template-columns: 1fr 22px 1fr; align-items: center; margin: 0; padding: 7px 0; border-top: 1px dashed rgba(23, 23, 23, 0.16); font-size: 0.88rem; color: #333; }
 .wkv-cmp p:first-child { border-top: 0; padding-top: 0; }
-.wkv-cmp .wkv-cmp-h { font-size: 0.72rem; color: #8a8a8a; letter-spacing: 0.03em; }
-.wkv-cmp s { text-decoration: none; color: #8a8a8a; }
+.wkv-cmp .wkv-cmp-h { font-size: 0.72rem; color: #6F685D; letter-spacing: 0.03em; }
+.wkv-cmp s { text-decoration: none; color: #6F685D; }
 .wkv-cmp i { font-style: normal; text-align: center; color: #c9a227; }
 .wkv-cmp p > b { font-weight: 700; color: #222; }
 
@@ -586,7 +586,7 @@
     font-weight: 700;
     color: #2B2B2B;
     white-space: nowrap;
-    background: linear-gradient(transparent 55%, rgba(217, 164, 65, 0.55) 55%, rgba(217, 164, 65, 0.55) 92%, transparent 92%);
+    background: linear-gradient(transparent 55%, rgba(245, 184, 46, 0.55) 55%, rgba(245, 184, 46, 0.55) 92%, transparent 92%);
     opacity: 0;
     transform: translate(-50%, 6px) rotate(-4deg);
     transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.22, 1.4, 0.36, 1);
@@ -615,7 +615,7 @@
     font-weight: 700;
     color: #2B2B2B;
     white-space: nowrap;
-    background: linear-gradient(transparent 55%, rgba(183, 123, 221, 0.4) 55%, rgba(183, 123, 221, 0.4) 92%, transparent 92%);
+    background: linear-gradient(transparent 55%, rgba(245, 184, 46, 0.4) 55%, rgba(245, 184, 46, 0.4) 92%, transparent 92%);
     opacity: 0;
     transform: translate(-50%, 4px) rotate(-3deg);
     transition: opacity 0.25s ease, transform 0.3s ease;

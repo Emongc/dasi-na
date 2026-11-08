@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- ==================================================
+       WORKS 갤러리 뷰 — 메인(손그림)과 다른 "정돈된 갤러리" 버전
+       · 작품 목록은 js/works-data.js 를 그대로 읽어 씀 (작품 추가는 그 파일에서)
+       · 이 페이지 전용 파일: works-gallery.html / css/gallery.css / js/gallery.js
+       ================================================== -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Works — Emongc</title>
+  <meta name="description" content="에몽씨(Emongc)의 작업 모음 — 디자인 · 홍보물 · 영상 · 출판 · 기획">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/gallery.css?v=53">
+</head>
+<body>
+  <!-- 속이 빈 글자용: 글자 모양을 한 덩어리로 보고 바깥선만 그림 -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <filter id="gOutline" x="-5%" y="-5%" width="110%" height="110%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="2" result="fat"/>
+      <!-- 부풀린 가장자리의 계단 현상을 살짝 흐렸다가 다시 또렷하게 → 매끈한 곡선 -->
+      <feGaussianBlur in="fat" stdDeviation="0.9" result="fatBlur"/>
+      <feComponentTransfer in="fatBlur" result="fatSmooth"><feFuncA type="linear" slope="2.4" intercept="-0.7"/></feComponentTransfer>
+      <feComposite in="fatSmooth" in2="SourceAlpha" operator="out" result="ring"/>
+      <feFlood flood-color="#ffffff"/>
+      <feComposite in2="ring" operator="in"/>
+    </filter>
+    <!-- 같은 외곽선, 머스타드 (CAMPAIGN 의 M) -->
+    <filter id="gOutlineM" x="-5%" y="-5%" width="110%" height="110%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="2" result="fat"/>
+      <feGaussianBlur in="fat" stdDeviation="0.9" result="fatBlur"/>
+      <feComponentTransfer in="fatBlur" result="fatSmooth"><feFuncA type="linear" slope="2.4" intercept="-0.7"/></feComponentTransfer>
+      <feComposite in="fatSmooth" in2="SourceAlpha" operator="out" result="ring"/>
+      <feFlood flood-color="#D9A441"/>
+      <feComposite in2="ring" operator="in"/>
+    </filter>
+  </svg>
+  <header class="g-top">
+    <a class="g-brand" href="works-gallery.html">EMONGC<span>/</span>WORKS</a>
+    <span class="g-now" id="gNow" aria-live="polite"></span>
+    <a class="g-back" href="index.html#works">← 손그림 버전으로</a>
+  </header>
+
+  <main id="gMain">
+    <!-- 첫 화면: 흑백 영상 위에 큰 글자. g-stage 는 스크롤로 진행되는 연출을 위한 긴 무대 (첫 화면은 그 안에 고정) -->
+    <div class="g-stage" id="gStage">
+    <section class="g-hero" aria-labelledby="gIntroTitle">
+      <div class="g-hero-media" id="gHeroMedia" aria-hidden="true"></div>
+      <h1 id="gIntroTitle" class="g-intro-title">
+        <!-- 한 줄에 한 글자씩 머스타드 → 위에서부터 읽으면 E · M · O · NG = EMONG -->
+        <span>D<b class="g-hl">E</b>SIGN.</span>
+        <span><i class="g-ol">CA</i><i class="g-ol g-olm">M</i><i class="g-ol">PAIGN.</i></span>
+        <span>C<b class="g-hl">O</b>NTENT.</span>
+        <span>PLANNI<b class="g-hl">NG</b>.</span>
+      </h1>
+      <p class="g-intro-sub">디자인 · 홍보물 · 영상 · 출판 · 기획<br>말보다 결과로 보여 드릴게요.</p>
+      <span class="g-hero-down" aria-hidden="true">SCROLL ↓</span>
+    </section>
+    </div>
+
+    <!-- 목차 + 분야별 펼침면 (gallery.js 가 채움) -->
+    <section class="g-list" id="gGrid" aria-label="작업 목록"></section>
+
+    <footer class="g-foot">
+      <a class="g-foot-cta" href="index.html#contact">LET'S WORK<br>TOGETHER →</a>
+      <div class="g-foot-row"><p>© Emongc · Hong</p><a href="index.html">손그림 버전 보기</a></div>
+    </footer>
+  </main>
+
+  <!-- 작품 상세: 누르면 바로 열림 -->
+  <article class="g-detail" id="gDetail" hidden aria-modal="true" role="dialog" aria-labelledby="gdTitle" tabindex="-1">
+    <div class="gd-bar">
+      <button type="button" class="gd-back" id="gClose" aria-label="목록으로 돌아가기">← INDEX</button>
+      <span class="gd-count" id="gdCount"></span>
+      <span class="gd-brand">EMONGC/WORKS</span>
+    </div>
+    <div class="g-detail-body" id="gDetailBody"></div>
+  </article>
+
+  <!-- 맨 아래까지 내려오면 나타나는 위로 가기 -->
+  <button type="button" class="g-totop" id="gTop" aria-label="맨 위로"><span aria-hidden="true">↑</span>TOP</button>
+
+  <script src="js/works-data.js"></script>
+  <script src="js/gallery.js?v=53"></script>
+</body>
+</html>

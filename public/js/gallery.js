@@ -61,17 +61,18 @@
         "today": ["cover.webp", 1], "notbad": ["cover.webp", 1], "teacher": ["cover.webp", 1],
         "dream-book": ["img/book/p01.webp", 1], "jamong": ["gallery/01.webp", 0.667], "diary": ["gallery/01f.webp", 0.792],
         "sticker": ["gallery/01.webp", 1.03], "moon": ["gallery/01.webp", 0.708], "seminar": ["gallery/01.webp", 0.708],
-        "starbucks": ["gallery/01.webp", 1.778], "costa": ["gallery/01b.webp", 0.642], "fashion": ["gallery/01.webp", 0.5625],
+        "starbucks": ["gallery/00.webp", 1.778], "costa": ["gallery/01b.webp", 0.642], "fashion": ["gallery/01.webp", 0.5625],
         "cosme": ["gallery/01.webp", 1.406], "battery": ["gallery/01.webp", 1.778], "talk": ["gallery/01.webp", 1.778],
         "youthcamp": ["gallery/02.webp", 1.5], "goods": ["gallery/08.webp", 1.771]
     };
     // 작품별로 상세에서 보여줄 것 조정 (스타벅스: 폰 화면 대신 토끼·말 캐릭터 광고 위주)
     const OVR = {
-        "starbucks": { hero: "gallery/02.webp", shots: ["gallery/02.webp", "gallery/03.webp"], noBA: true },
+        "starbucks": { hero: "gallery/00.webp", shots: ["gallery/00.webp", "gallery/10.webp", "gallery/11.webp", "gallery/12.webp", "gallery/13.webp", "gallery/02.webp", "gallery/03.webp"], noBA: true },
         // 목록 썸네일을 고친 그림은 상세에서도 같은 그림을 씀
         "costa": { hero: "gallery/01b.webp", shots: [] },   // 한 장뿐이라 대표 그림으로만
-        "sticker": { hero: "img/works/book/diary/gallery/s01c.webp" },
+        "sticker": { hero: "img/works/book/covers/sticker.webp" },
         "goods": { hero: "gallery/08.webp" },
+        "dream-book": { hero: "img/works/book/covers/dream.webp", shots: ["img/book/p09.webp", "img/book/p03.webp", "img/book/p17.webp", "img/book/p22.webp"] },   // 첫 장은 거의 빈 종이라 장면이 있는 쪽으로
         // 다이어리: 검은 배경 스티커 그림은 흰 배경으로 정리한 파일(…w.webp)로, 어두운 배경 시트는 뺌
         "diary": {
             hero: "gallery/01c.webp",
@@ -116,7 +117,9 @@
           lead: "공간 · 캠페인 · 굿즈.<br>아이디어를 실제로 쓰이는 모양으로 기획했습니다." }
     ];
     // 책 카드 그림 (빈 첫 장 대신 장면이 있는 쪽)
-    const BOOKCOVER = { "dream-book": "img/book/p09.webp", "diary": "img/works/book/diary/gallery/01c.webp", "sticker": "img/works/book/diary/gallery/s01c.webp" };   // 배경을 지우고 다이어리만   // 01c: 흰 배경을 지운 다이어리
+    // [수정] 책 4권: 같은 3:4 "제목이 보이는 표지" (img/works/book/covers/)
+    const BOOKCOVER = { "dream-book": "img/works/book/covers/dream.webp", "jamong": "img/works/book/covers/jamong.webp",
+        "diary": "img/works/book/covers/diary.webp", "sticker": "img/works/book/covers/sticker.webp" };
     const DANCER = "img/mini/emongc-dance.mp4";
 
     const grid = document.getElementById("gGrid");
@@ -169,33 +172,34 @@
     function bar(sp, i) {
         return '<div class="g-bar"><b><u>' + nn(i + 1) + " — " + esc(sp.no) + "</u></b><span>" + esc(sp.ko) + "</span><span>" + sp.works.length + " " + esc(sp.unit) + "</span></div>";
     }
-    function bigT(t) { return '<h2 class="g-big">' + t + '<span class="g-dot">.</span></h2>'; }
+    // [수정] 한글 중심: 진한 한글 섹션 이름 + 크게 깔리는 연한 영문 (영문은 그래픽 역할)
+    function bigT(t, ko) { return (ko ? '<p class="g-ko-t">' + esc(ko) + '</p>' : '') + '<h2 class="g-big">' + t + '<span class="g-dot">.</span></h2>'; }
     function shortRole(w) { const r = clean(w.role).split("·").map(function (x) { return x.trim(); }).filter(Boolean); return r.slice(0, 3).join(" · "); }
 
     // ---- 펼침면 모양별 ----
     const KIND = {
         film: function (sp) {
             const c = sp.works[0], rest = sp.works.slice(1);
-            return '<div class="g-12 g-film-head"><div class="g-c8"><span class="g-k g-m">Cover Story</span><h2 class="g-big g-big-s">' + lines(head(c)) + '</h2></div>' +
-                (rest.length ? '<div class="g-c4 g-end"><span class="g-k">More Films</span></div>' : "") + "</div>" +
+            return '<div class="g-12 g-film-head"><div class="g-c8"><span class="g-k g-m">대표작 · Cover Story</span><p class="g-ko-t">' + esc(c.title) + '</p><h2 class="g-big g-big-s">' + lines(head(c)) + '</h2></div>' +
+                (rest.length ? '<div class="g-c4 g-end"><span class="g-k">다른 영상 · More Films</span></div>' : "") + "</div>" +
                 '<div class="g-12 g-al"><div class="g-c8">' + link(c, '<span class="g-pic g-vid">' + img(tileImg(c)) +
-                '<video muted loop playsinline preload="none" data-src="' + esc(gVid(c)) + '"></video><span class="g-badge">▶ FILM</span></span>') + cap(c, shortRole(c)) + "</div>" +
+                '<video muted loop playsinline preload="none" data-src="' + esc(gVid(c)) + '"></video><span class="g-badge">▶ 영상</span></span>') + cap(c, shortRole(c)) + "</div>" +
                 (rest.length ? '<ol class="g-c4 g-rank">' + rest.map(function (w) {
-                    return "<li>" + link(w, '<span class="g-rn">' + w._no + '</span><span class="g-pic g-hov">' + img(tileImg(w)) + '<video muted loop playsinline preload="none" data-src="' + esc(gVid(w)) + '"></video></span><span class="g-rt"><b>' + lines(head(w)) + "</b><small>" + esc(w.title) + "</small></span>") + "</li>";
+                    return "<li>" + link(w, '<span class="g-rn">' + w._no + '</span><span class="g-pic g-hov">' + img(tileImg(w)) + '<video muted loop playsinline preload="none" data-src="' + esc(gVid(w)) + '"></video></span><span class="g-rt"><b>' + esc(w.title) + "</b><small>" + esc(head(w)) + "</small><em>▶ 영상 보기</em></span>") + "</li>";
                 }).join("") + "</ol>" : "") + "</div>";
         },
         music: function (sp) {
-            return bigT(esc(sp.big)) + '<div class="g-12 g-al">' + sp.works.map(function (w, i) {
+            return bigT(esc(sp.big), sp.ko) + '<div class="g-12 g-al">' + sp.works.map(function (w, i) {
                 const span = 12 / Math.min(sp.works.length, 3);
                 return '<div class="g-track" style="grid-column:span ' + span + '">' + link(w, cd(i + 1, w.title), "g-cd-link") +
-                    '<div class="g-trk"><span class="g-k g-m">Track ' + nn(i + 1) + "</span>" + link(w, '<h3 class="g-mid">' + lines(head(w)) + "</h3>") +
-                    "<b>" + esc(w.title) + "</b><p>" + esc(w.sub || "") + "</p>" +
-                    (w.audio ? '<button type="button" class="g-play" data-audio="' + esc(src(w, w.audio)) + '" aria-pressed="false">▶ PLAY</button>' : "") + "</div></div>";
+                    '<div class="g-trk"><span class="g-k g-m">Track ' + nn(i + 1) + "</span>" + link(w, '<h3 class="g-mid">' + esc(w.title) + "</h3>") +
+                    '<p class="g-en-s">' + esc(head(w)) + "</p><p>" + esc(w.sub || "") + "</p>" +
+                    (w.audio ? '<button type="button" class="g-play" data-audio="' + esc(src(w, w.audio)) + '" aria-pressed="false">▶ 듣기</button>' : "") + "</div></div>";
             }).join("") + "</div>";
         },
         book: function (sp) {
             const n = sp.works.length, span = n >= 4 ? 3 : 12 / n;
-            return '<div class="g-bookhead"><h2 class="g-big g-huge">' + esc(sp.big) + '<span class="g-dot">.</span>' +
+            return '<div class="g-bookhead"><p class="g-ko-t">' + esc(sp.ko) + '</p><h2 class="g-big g-huge">' + esc(sp.big) + '<span class="g-dot">.</span>' +
                 '<span class="g-dancer" aria-hidden="true"><video muted loop playsinline preload="none" poster="img/mini/emongc-dance-poster.webp" data-src="' + DANCER + '"></video></span></h2>' +
                 '<p class="g-lead">' + sp.lead + "</p></div>" +
                 '<div class="g-12 g-al">' + sp.works.map(function (w) {
@@ -204,7 +208,7 @@
                 }).join("") + "</div>";
         },
         campaign: function (sp) {
-            return '<div class="g-12 g-headrow"><div class="g-c8">' + bigT(sp.big) + '</div><p class="g-c4 g-lead g-end">' + sp.lead + "</p></div>" +
+            return '<div class="g-12 g-headrow"><div class="g-c8">' + bigT(sp.big, sp.ko) + '</div><p class="g-c4 g-lead g-end">' + sp.lead + "</p></div>" +
                 sp.rowList.map(function (r, i) {
                     return '<span class="g-k g-rowlab' + (i ? " g-rule" : "") + '">' + esc(r.label) + '</span><div class="g-jrow" data-row>' + r.works.map(function (w) {
                         return '<figure style="--r:' + ratio(w) + '">' + link(w, '<span class="g-pic">' + img(tileImg(w)) + "</span>") + cap(w, BRAND[w.id] ? "Concept" : (catLabel[w.cat] || "")) + "</figure>";
@@ -212,45 +216,49 @@
                 }).join("");
         },
         lecture: function (sp) {
-            return '<div class="g-12 g-headrow"><div class="g-c8">' + bigT(esc(sp.big)) + '</div><p class="g-c4 g-lead g-end">' + sp.lead + "</p></div>" +
+            return '<div class="g-12 g-headrow"><div class="g-c8">' + bigT(esc(sp.big), sp.ko) + '</div><p class="g-c4 g-lead g-end">' + sp.lead + "</p></div>" +
                 sp.works.map(function (w, i) {
                     const sl = files(w).slice(0, 4);
                     return '<div class="g-12 g-al g-lec' + (i ? " g-rule" : "") + '"><div class="g-c4">' + '<span class="g-n g-n-big">' + w._no + "</span>" +
-                        link(w, '<h3 class="g-mid">' + lines(head(w)) + "</h3>") + "<b>" + esc(w.title) + '</b><p class="g-sm">' + esc(w.sub || "") + "</p></div>" +
+                        link(w, '<h3 class="g-mid">' + esc(w.title) + "</h3>") + '<p class="g-en-s">' + esc(head(w)) + '</p><p class="g-sm">' + esc(w.sub || "") + "</p></div>" +
                         '<div class="g-c8">' + link(w, '<span class="g-slides">' + sl.map(function (f) { return '<span class="g-pic">' + img(src(w, f)) + "</span>"; }).join("") + "</span>") + "</div></div>";
                 }).join("");
         },
         row: function (sp) {
-            return '<div class="g-12 g-headrow"><div class="g-c8">' + bigT(esc(sp.big)) + "</div>" + (sp.lead ? '<p class="g-c4 g-lead g-end">' + sp.lead + "</p>" : "") + "</div>" +
+            return '<div class="g-12 g-headrow"><div class="g-c8">' + bigT(esc(sp.big), sp.ko) + "</div>" + (sp.lead ? '<p class="g-c4 g-lead g-end">' + sp.lead + "</p>" : "") + "</div>" +
                 '<div class="g-jrow" data-row>' + sp.works.map(function (w) {
                     return '<figure style="--r:' + ratio(w) + '">' + link(w, '<span class="g-pic">' + img(tileImg(w)) + "</span>") + cap(w, shortRole(w)) +
-                        link(w, '<h3 class="g-mid g-under">' + lines(head(w)) + "</h3>") + "</figure>";
+                        '<p class="g-en-s g-under">' + esc(head(w)) + "</p>" + "</figure>";
                 }).join("") + "</div>";
         }
     };
 
     // 휴대폰: 한 줄(같은 높이) 묶음은 최대 2개씩으로 나눔
     const mq = window.matchMedia("(max-width: 767px)");
+    // 휴대폰: 같은 높이 줄이 너무 납작해지면(비율 합이 크면) 첫 그림을 따로 크게, 나머지를 한 줄로
     function splitRows() {
+        if (!mq.matches) return;
         grid.querySelectorAll("[data-row]").forEach(function (row) {
-            const figs = Array.prototype.slice.call(row.children);
-            if (!mq.matches || figs.length <= 2) return;
             let after = row;
-            for (let k = 2; k < figs.length; k += 2) {
+            (function cut(r) {
+                const figs = Array.prototype.slice.call(r.children);
+                const sum = figs.reduce(function (t, f) { return t + parseFloat(f.style.getPropertyValue("--r") || 1); }, 0);
+                if (figs.length < 2 || sum <= 2.6) return;
                 const nr = el("div", "g-jrow");
-                figs.slice(k, k + 2).forEach(function (f) { nr.appendChild(f); });
+                figs.slice(1).forEach(function (f) { nr.appendChild(f); });
                 after.parentNode.insertBefore(nr, after.nextSibling);
                 after = nr;
-            }
+                cut(nr);
+            })(row);
         });
     }
     let io = null;
     function render() {
         let h = '<section class="g-sp g-toc" id="sp-contents"><div class="g-bar"><b><u>Contents</u></b><span>Vol.01 — Emongc Works</span><span>' + order.length + ' Works</span></div>' +
-            '<div class="g-12"><div class="g-c5"><h2 class="g-big g-toc-t">Con<br>tents<span class="g-dot">.</span></h2>' +
+            '<div class="g-12"><div class="g-c5"><p class="g-ko-t">목차</p><h2 class="g-big g-toc-t">Con<br>tents<span class="g-dot">.</span></h2>' +
             '<p class="g-lead">기획부터 완성까지 직접 만든 작업을<br>분야별로 묶었습니다.</p></div><ol class="g-toc-list">' +
             spreads.map(function (sp, i) {
-                return '<li><a href="#sp-' + sp.id + '"><span class="g-tn">' + nn(i + 1) + '</span><span class="g-tt">' + esc(sp.no) + "</span><span>" + esc(sp.ko) + " · " + sp.works.length + '</span><span class="g-ta">→</span></a></li>';
+                return '<li><a href="#sp-' + sp.id + '"><span class="g-tn">' + nn(i + 1) + '</span><span class="g-tt">' + esc(sp.ko) + "</span><span>" + esc(sp.no) + " · " + sp.works.length + '</span><span class="g-ta">→</span></a></li>';
             }).join("") + "</ol></div></section>";
         spreads.forEach(function (sp, i) {
             h += '<section class="g-sp g-sp-' + sp.kind + '" id="sp-' + sp.id + '">' + bar(sp, i) + (KIND[sp.kind] || KIND.row)(sp) + "</section>";
@@ -265,6 +273,7 @@
             });
         });
         wirePlay();
+        wireCdReturn();
         watchVideos();
         // 순위표 영상: 마우스를 올렸을 때만 불러와 재생 (처음엔 영상을 받지 않아 가벼움)
         if (!reduce) grid.querySelectorAll(".g-hov").forEach(function (b) {
@@ -278,11 +287,31 @@
         });
     }
 
+    // CD: 마우스를 떼면 멈춘 각도에서 가장 가까운 바른 각도로 부드럽게 돌아옴
+    function wireCdReturn() {
+        grid.querySelectorAll(".g-track").forEach(function (t) {
+            const c = t.querySelector(".g-cd");
+            if (!c) return;
+            t.addEventListener("mouseleave", function () {
+                if (t.classList.contains("spin")) return;
+                const m = new DOMMatrixReadOnly(getComputedStyle(c).transform);
+                const ang = Math.atan2(m.b, m.a) * 180 / Math.PI;   // 지금 각도 (-180 ~ 180)
+                c.classList.remove("back");
+                c.style.animation = "none";
+                c.style.transform = "rotate(" + ang + "deg)";
+                void c.offsetWidth;
+                c.classList.add("back");
+                c.style.transform = "rotate(0deg)";
+                setTimeout(function () { c.classList.remove("back"); c.style.animation = ""; c.style.transform = ""; }, 950);
+            });
+            t.addEventListener("mouseenter", function () { c.classList.remove("back"); c.style.animation = ""; c.style.transform = ""; });
+        });
+    }
     // 플레이리스트: 목록에서 바로 듣기 (한 번에 한 곡, 재생 중엔 CD 가 돎)
     let curAudio = null, curBtn = null;
     function stopAudio() {
         if (curAudio) curAudio.pause();
-        if (curBtn) { curBtn.setAttribute("aria-pressed", "false"); curBtn.textContent = "▶ PLAY"; curBtn.closest(".g-track").classList.remove("spin"); }
+        if (curBtn) { curBtn.setAttribute("aria-pressed", "false"); curBtn.textContent = "▶ 듣기"; curBtn.closest(".g-track").classList.remove("spin"); }
         curBtn = null;
     }
     function wirePlay() {
@@ -296,7 +325,7 @@
                 curAudio.play().catch(function () {});
                 curBtn = b;
                 b.setAttribute("aria-pressed", "true");
-                b.textContent = "❚❚ PAUSE";
+                b.textContent = "❚❚ 멈춤";
                 b.closest(".g-track").classList.add("spin");
             });
         });
@@ -321,113 +350,115 @@
     render();
     if (mq.addEventListener) mq.addEventListener("change", render); else mq.addListener(render);
 
-    // ---------- 첫 화면 연출: 안개처럼 비우기 → EMONG → 서명 ----------
-    // 1) 흰 글자가 왼쪽부터 한 글자씩 떠오르며 번지듯 사라짐  2) 머스타드 E · M · O · NG 가 엇갈려 미끄러져 와 "착" 내려앉음
-    // 3) 한 번 숨 쉬듯 벌어졌다 모임 + 아래로 가는 선이 그어지고 소개 문구가 스며듦 (배경은 살짝 어두워짐)
-    // 4) 거꾸로: 문구 → 선 → 글자 복귀 → 흰 글자가 한 글자씩 또렷하게 피어남
-    // 처음 한 번 자동, 이후엔 머스타드 글자에 마우스를 올리면 다시. 위치·투명도 위주라 영상 위에서도 매끄러움
+    // 상세창을 닫거나 다른 페이지에 다녀온 뒤, 화면에 보이는 영상이 멈춰 있으면 다시 재생
+    function resumeVideos() {
+        if (reduce || document.hidden || !detail.hidden) return;
+        grid.querySelectorAll(".g-vid, .g-dancer").forEach(function (b) {
+            const v = b.querySelector("video"), r = b.getBoundingClientRect();
+            const seen = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0);
+            if (v && v.src && v.paused && r.width > 0 && seen > r.height * 0.3) v.play().catch(function () {});
+        });
+    }
+    window.addEventListener("pageshow", resumeVideos);
+    document.addEventListener("visibilitychange", resumeVideos);
+
+    // ---------- 첫 화면 연출: 글자가 차례로 올라오고, E · M · O · NG 가 빈자리에 떨어져 EMONG ----------
+    // ① 흰 글자가 한 글자씩 아래에서 올라옴 (E·M·O·NG 자리는 비어 있음)  ② E → M → O → NG 가 위에서 하나씩 빈자리에 떨어짐
+    // ③ 맨 아래 줄 옆에 "= EMONG" 이 올라오고 그대로 멈춤.  약 2.1초, 한 번만. (스크롤·마우스와 무관, 되감기 없음)
+    // 움직임은 위치(transform)만 사용 → 그래픽 칩이 처리. 끝나면 모든 연출 흔적(가리개·will-change)을 걷어냄.
     (function () {
         const hero = document.querySelector(".g-hero"), title = document.getElementById("gIntroTitle");
-        if (!hero || !title || reduce || !("animate" in Element.prototype)) return;
-        const keys = Array.prototype.slice.call(title.querySelectorAll(".g-hl, .g-olm"));   // E, M, O, NG
-        if (keys.length < 4) return;
-        const SIG = "DESIGNER · CONTENT CREATOR — HONG";
-        // 흰 글자를 한 글자씩 나눔 (머스타드 글자는 그대로)
-        (function split(node) {
-            Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (!hero || !title) return;
+        const lines = Array.prototype.slice.call(title.querySelectorAll(":scope > span"));
+        const keys = title.querySelectorAll(".g-hl, .g-olm");   // E, M, O, NG
+        if (lines.length < 4 || keys.length < 4) { title.classList.remove("g-pre"); return; }
+        const sub = hero.querySelector(".g-intro-sub"), down = hero.querySelector(".g-hero-down");
+        const stamp = el("div", "g-stamp", '<span class="g-stamp-t">= EMONG</span>');
+        stamp.setAttribute("aria-hidden", "true");
+        hero.appendChild(stamp);
+        const stampT = stamp.firstChild;
+
+        // 글자를 칸(가리개) + 글자로 나눔. 속이 빈 글자(CA, PAIGN.)는 덩어리째, E·M·O·NG 는 따로 모음.
+        // 글자를 나누면 글자 사이 간격(커닝)이 풀리므로, 나누기 전 위치를 재 두었다가 끝 모습이 원래와 똑같도록 em 단위로 맞춤.
+        const rise = [], drop = [], units = [], orig = [];
+        const rg0 = document.createRange();
+        lines.forEach(function (line) {
+            Array.prototype.slice.call(line.childNodes).forEach(function (n) {
+                if (n.nodeType === 3) {
+                    for (let k = 0; k < n.textContent.length; k++) {
+                        if (n.textContent.charAt(k).trim() === "") continue;
+                        rg0.setStart(n, k); rg0.setEnd(n, k + 1);
+                        orig.push(rg0.getBoundingClientRect().left);
+                    }
+                } else if (n.nodeType === 1) orig.push(n.getBoundingClientRect().left);
+            });
+        });
+        function wrap(node) { const w = document.createElement("span"); w.className = "g-ch"; node.parentNode.insertBefore(w, node); w.appendChild(node); return w; }
+        lines.forEach(function (line, li) {
+            let ci = 0;
+            Array.prototype.slice.call(line.childNodes).forEach(function (n) {
                 if (n.nodeType === 3) {
                     const f = document.createDocumentFragment();
                     n.textContent.split("").forEach(function (c) {
                         if (c.trim() === "") { f.appendChild(document.createTextNode(c)); return; }
-                        const sp = document.createElement("span"); sp.className = "g-ch"; sp.textContent = c; f.appendChild(sp);
+                        const o = document.createElement("span"); o.className = "g-ch";
+                        const i = document.createElement("span"); i.className = "g-chi"; i.textContent = c;
+                        o.appendChild(i); f.appendChild(o); units.push(o);
+                        rise.push({ n: i, d: li * 80 + ci * 18 }); ci++;
                     });
-                    node.replaceChild(f, n);
-                } else if (n.nodeType === 1 && n.classList.contains("g-ol") && !n.classList.contains("g-olm")) {
-                    n.classList.add("g-ch");   // 외곽선 조각은 통째로 (안을 나누면 외곽선 효과를 매 프레임 다시 그려 끊김)
-                } else if (n.nodeType === 1 && !n.classList.contains("g-hl") && !n.classList.contains("g-olm")) split(n);
+                    line.replaceChild(f, n);
+                } else if (n.nodeType === 1) {
+                    if (n.classList.contains("g-hl") || n.classList.contains("g-olm")) { units.push(wrap(n)); drop.push(n); ci++; }
+                    else { units.push(wrap(n)); rise.push({ n: n, d: li * 80 + ci * 18 }); ci += n.textContent.length; }
+                }
             });
-        })(title);
-        const chars = Array.prototype.slice.call(title.querySelectorAll(".g-ch"));
-        const dim = el("div", "g-dim"); hero.insertBefore(dim, title);
-        let busy = false;
-        const wait = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
-        const all = function (as) { return Promise.all(as.map(function (x) { return x.finished; })); };
-        const SETTLE = "cubic-bezier(0.16, 1, 0.3, 1)", INOUT = "cubic-bezier(0.65, 0, 0.35, 1)";
-        function play() {
-            if (busy || window.scrollY > hero.offsetHeight * 0.6) return;
-            busy = true;
-            document.body.classList.add("g-anim");
-            const H = hero.getBoundingClientRect(), T = title.getBoundingClientRect();
-            const rs = keys.map(function (k) { return k.getBoundingClientRect(); });
-            const fs = parseFloat(getComputedStyle(keys[0]).fontSize), gap = fs * 0.06;
-            const top = T.top + T.height / 2 - rs[0].height * 0.62;
-            let x = T.left;
-            const mv = rs.map(function (r) { const m = { dx: x - r.left, dy: top - r.top }; x += r.width + gap; return m; });
-            const wordW = x - gap - T.left;
-            const tr = function (i, extra) { return "translate(" + (mv[i].dx + (extra || 0)).toFixed(1) + "px," + mv[i].dy.toFixed(1) + "px)"; };
-            // 안개: 글자 위치(왼→오, 위→아래) 순으로 흩어짐
-            const order = chars.map(function (c) { const r = c.getBoundingClientRect(); return { c: c, t: (r.left - T.left) / T.width * 520 + (r.top - T.top) / T.height * 160 }; });
-            const fogOut = order.map(function (o) {
-                return o.c.animate([
-                    { opacity: 1, transform: "translateY(0)" },
-                    { opacity: 0, transform: "translateY(" + (-fs * 0.16).toFixed(1) + "px)" }
-                ], { duration: 950, delay: o.t, easing: "cubic-bezier(0.4, 0, 0.6, 1)", fill: "forwards" });
+        });
+        (function fixKerning() {
+            const fs = parseFloat(getComputedStyle(title).fontSize);
+            units.forEach(function (u, i) {
+                const d = (orig[i] - u.getBoundingClientRect().left) / fs;
+                if (Math.abs(d) > 0.0005) { u.style.position = "relative"; u.style.left = d.toFixed(4) + "em"; }
             });
-            const dimIn = dim.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 1400, delay: 300, easing: "ease", fill: "forwards" });
-            // 머스타드 글자: 엇갈려 출발 → 끝에서 아주 천천히 내려앉음
-            const go = keys.map(function (k, i) {
-                return k.animate([{ transform: "translate(0,0)" }, { transform: tr(i) }], { duration: 1900, delay: 520 + i * 130, easing: SETTLE, fill: "forwards" });
-            });
-            // 서명: 선 + 소개 문구
-            const sig = el("div", "g-sig", '<i></i><span>' + esc(SIG) + "</span>");
-            Object.assign(sig.style, { left: (T.left - H.left) + "px", top: (top - H.top + rs[0].height * 0.98) + "px", width: wordW + "px" });
-            hero.appendChild(sig);
-            const line = sig.querySelector("i"), cap = sig.querySelector("span");
-            let breath, lineIn, capIn;
-            all(go).then(function () {
-                // 숨 한 번: 가운데를 기준으로 살짝 벌어졌다 모임
-                breath = keys.map(function (k, i) {
-                    const off = (i - 1.5) * fs * 0.035;
-                    return k.animate([{ transform: tr(i) }, { transform: tr(i, off) }, { transform: tr(i) }], { duration: 1000, easing: INOUT, fill: "forwards" });
-                });
-                return all(breath);
-            }).then(function () {
-                lineIn = line.animate([{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: 1100, easing: INOUT, fill: "forwards" });
-                return lineIn.finished;
-            }).then(function () {
-                capIn = cap.animate([{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "translateY(0)" }],
-                    { duration: 900, delay: 120, easing: SETTLE, fill: "forwards" });
-                return capIn.finished;
-            }).then(function () { return wait(1900); }).then(function () {
-                // 거꾸로
-                const capOut = cap.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 450, easing: "ease", fill: "forwards" });
-                const lineOut = line.animate([{ transform: "scaleX(1)", transformOrigin: "right" }, { transform: "scaleX(0)", transformOrigin: "right" }], { duration: 650, delay: 150, easing: INOUT, fill: "forwards" });
-                return all([capOut, lineOut]);
-            }).then(function () {
-                const back = keys.map(function (k, i) {
-                    return k.animate([{ transform: tr(i) }, { transform: "translate(0,0)" }], { duration: 1700, delay: (keys.length - 1 - i) * 110, easing: SETTLE, fill: "forwards" });
-                });
-                dim.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 1400, delay: 300, easing: "ease", fill: "forwards" });
-                const fogIn = order.map(function (o) {
-                    return o.c.animate([
-                        { opacity: 0, transform: "translateY(" + (fs * 0.12).toFixed(1) + "px)" },
-                        { opacity: 1, transform: "translateY(0)" }
-                    ], { duration: 1000, delay: 650 + o.t, easing: SETTLE, fill: "forwards" });
-                });
-                return all(back.concat(fogIn)).then(function () {
-                    [].concat(fogOut, go, breath || [], back, fogIn).forEach(function (a) { a.cancel(); });
-                    dimIn.cancel(); dim.getAnimations().forEach(function (a) { a.cancel(); });
-                });
-            }).then(function () { sig.remove(); document.body.classList.remove("g-anim"); return wait(800); }).then(function () { busy = false; })
-              .catch(function () { sig.remove(); document.body.classList.remove("g-anim"); busy = false; });
+        })();
+
+        // "= EMONG": 마지막 줄(마침표 끝) 오른쪽 / 자리가 모자라면(폰) 그 줄 아래
+        function place() {
+            const H = hero.getBoundingClientRect(), L = lines[3].getBoundingClientRect();
+            const rg = document.createRange(); rg.selectNodeContents(lines[3]);
+            const R = rg.getBoundingClientRect();
+            const fs = parseFloat(getComputedStyle(title).fontSize), sw = stamp.offsetWidth, sh = stamp.offsetHeight;
+            let left = R.right - H.left + fs * 0.14, top = L.bottom - H.top - sh - fs * 0.1;
+            if (left + sw > H.width - 16) { left = L.left - H.left + fs * 0.04; top = L.bottom - H.top + 6; }
+            stamp.style.left = left + "px"; stamp.style.top = top + "px";
         }
-        (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () { return wait(1500); }).then(play);
-        keys.forEach(function (k) { k.addEventListener("mouseenter", play); });
+
+        const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";   // 빠르게 튀어나와 부드럽게 멈춤
+        const KS = 720, KG = 140;                        // 첫 머스타드 글자 시작 · 글자 사이 간격(ms)
+        function start() {
+            place();
+            if (reduce || !("animate" in Element.prototype)) { title.classList.remove("g-pre"); return; }
+            const anims = [];
+            function A(node, kf, delay, dur, ease) { anims.push(node.animate(kf, { duration: dur, delay: delay, easing: ease, fill: "both" })); }
+            rise.forEach(function (r) { A(r.n, [{ transform: "translateY(115%)" }, { transform: "translateY(0)" }], r.d, 650, EASE); });
+            Array.prototype.forEach.call(drop, function (k, i) { A(k, [{ transform: "translateY(-125%)" }, { transform: "translateY(0)" }], KS + i * KG, 620, EASE); });
+            A(stampT, [{ transform: "translateY(115%)" }, { transform: "translateY(0)" }], KS + (drop.length - 1) * KG + 380, 600, EASE);
+            [sub, down].forEach(function (e) { if (e) A(e, [{ opacity: 0 }, { opacity: 1 }], 350, 700, "ease-out"); });
+            title.classList.remove("g-pre");   // 첫 모습(글자 숨김)이 정해진 뒤에 보이게
+            Promise.all(anims.map(function (a) { return a.finished; })).then(function () {
+                anims.forEach(function (a) { a.cancel(); });   // 끝 모습 = 원래 모습이므로 연출 흔적 제거
+                hero.classList.add("g-intro-done");
+            }, function () {});
+        }
+        let ready = false;
+        function go() { if (ready) return; ready = true; start(); }
+        if (document.fonts && document.fonts.ready) { document.fonts.ready.then(go); setTimeout(go, 1800); } else go();
+        let rt = null;
+        window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { if (ready) place(); }, 150); });
     })();
 
     // ---------- 위쪽 띠: 내려가면 숨고, 위로 올리면 나타남 + 지금 보는 분야 표시 ----------
     (function () {
-        const top = document.querySelector(".g-top"), now = document.getElementById("gNow"), hero = document.querySelector(".g-hero");
+        const top = document.querySelector(".g-top"), now = document.getElementById("gNow"), hero = document.getElementById("gStage") || document.querySelector(".g-hero");
         if (!top) return;
         let lastY = window.scrollY, ticking = false;
         function update() {
@@ -464,7 +495,10 @@
     (function restore() {
         let a = null;
         try { a = JSON.parse(sessionStorage.getItem(SKEY) || "null"); } catch (e) {}
-        if (!a || new URLSearchParams(location.search).get("w") || location.hash) return;
+        if (!a || new URLSearchParams(location.search).get("w") || location.hash) {
+            if (!new URLSearchParams(location.search).get("w")) document.documentElement.classList.remove("g-restoring");
+            return;
+        }
         let userMoved = false;
         const stop = function () { userMoved = true; };
         ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (ev) { window.addEventListener(ev, stop, { once: true, passive: true }); });
@@ -475,6 +509,7 @@
             window.scrollTo({ top: y, behavior: "instant" });
         };
         go();
+        requestAnimationFrame(function () { go(); document.documentElement.classList.remove("g-restoring"); });
         // 그림이 들어오며 높이가 바뀌는 동안(약 2.5초) 자리를 다시 맞춤
         if ("ResizeObserver" in window) {
             const ro = new ResizeObserver(go);
@@ -554,13 +589,14 @@
         let h = "";
         // 1) 머리: 번호 · 분야 → 거대한 제목 → 한글 이름 + 정보 3단
         h += '<header class="gd-head-wrap"><p class="gd-kicker"><b>' + w._no + "</b> — " + kick(w) + "</p>" +
-            '<h2 class="gd-head" id="gdTitle">' + lines(head(w)) + "</h2>" +
-            '<div class="gd-sub"><div class="gd-name"><b>' + esc(w.title) + "</b>" + (w.sub ? "<span>" + esc(w.sub) + "</span>" : "") + "</div>" +
-            '<dl class="gd-info"><div><dt>1. Role</dt><dd>' + esc(clean(w.role) || "—") + "</dd></div>" +
-            "<div><dt>2. Tools</dt><dd>" + esc(clean(w.tools) || "—") + "</dd></div>" +
-            "<div><dt>3. Field</dt><dd>" + esc(w.tags || catLabel[w.cat] || "") + "</dd></div></dl></div></header>";
+            '<h2 class="gd-ktitle" id="gdTitle">' + esc(w.title) + "</h2>" + (w.sub ? '<p class="gd-ksub">' + esc(w.sub) + "</p>" : "") +
+            '<p class="gd-head" aria-hidden="true">' + lines(head(w)) + "</p>" +
+            '<div class="gd-sub"><div class="gd-name"></div>' +
+            '<dl class="gd-info"><div><dt>역할</dt><dd>' + esc(clean(w.role) || "—") + "</dd></div>" +
+            "<div><dt>사용 도구</dt><dd>" + esc(clean(w.tools) || "—") + "</dd></div>" +
+            "<div><dt>분야</dt><dd>" + esc(w.tags || catLabel[w.cat] || "") + "</dd></div></dl></div></header>";
         // 2) 대표: 영상은 플레이어, 음악은 CD + 재생, 나머지는 대표 그림 — 옆에 why.
-        const why = w.why ? '<div class="gd-why"><span class="gd-big">why.</span><p>' + esc(w.why) + "</p>" + (w.note ? '<p class="gd-note">※ ' + esc(w.note) + "</p>" : "") + "</div>" : "";
+        const why = w.why ? '<div class="gd-why"><span class="gd-big">기획 의도</span><p>' + esc(w.why) + "</p>" + (w.note ? '<p class="gd-note">※ ' + esc(w.note) + "</p>" : "") + "</div>" : "";
         let gf = files(w).slice();
         if (w.type === "video") {
             const vers = w.versions || [];
@@ -570,9 +606,9 @@
             h += '<div class="gd-lead gd-lead-film"><div class="gd-lead-media">' + v + "</div>" + why + "</div>";
         } else if (w.type === "music") {
             h += '<div class="gd-lead gd-lead-music"><div class="gd-lead-media"><div class="gd-disc-wrap"><span class="gd-disc">' + cd(order.filter(function (x) { return x.type === "music"; }).indexOf(w) + 1, w.title) + "</span></div></div>" +
-                '<div class="gd-why"><span class="gd-big">listen.</span>' + (w.why ? "<p>" + esc(w.why) + "</p>" : "") +
+                '<div class="gd-why"><span class="gd-big">듣기</span>' + (w.why ? "<p>" + esc(w.why) + "</p>" : "") +
                 '<audio src="' + esc(src(w, w.audio)) + '" controls preload="metadata"></audio></div></div>';
-            if (w.lyrics) h += part("lyrics.", '<pre class="gd-lyrics">' + esc(w.lyrics) + "</pre>");
+            if (w.lyrics) h += part("가사", '<pre class="gd-lyrics">' + esc(w.lyrics) + "</pre>");
         } else {
             const hf = o.hero ? o.hero : (gf[0] || null);
             const hsrc = hf ? src(w, hf) : heroImg(w);
@@ -581,16 +617,16 @@
         }
         // 3) 결과물
         if (w.type === "ba" && !o.noBA && w.before && w.after) {
-            h += part("before / after.", '<div class="gd-ba"><figure><b>BEFORE</b><img src="' + esc(src(w, w.before)) + '" alt="' + esc(w.title) + ' 이전" loading="lazy"></figure>' +
+            h += part("전과 후", '<div class="gd-ba"><figure><b>BEFORE</b><img src="' + esc(src(w, w.before)) + '" alt="' + esc(w.title) + ' 이전" loading="lazy"></figure>' +
                 '<figure><b>AFTER</b><img src="' + esc(src(w, w.after)) + '" alt="' + esc(w.title) + ' 이후" loading="lazy"></figure></div>');
         }
         if (gf.length && w.type !== "music") {
             const caps = o.shots ? (o.caps || null) : (w.gallery && w.gallery.caps);
             const capsF = caps ? gf.map(function (f) { const i = files(w).indexOf(f); return caps[i]; }) : null;
-            h += part("works.", shots(w, gf, capsF, o.rows));
+            h += part("작업물", shots(w, gf, capsF, o.rows));
         }
         if (w.change) {
-            h += part("change.", '<div class="gd-change"><div><span class="gd-mini">FIRST</span><p>' + esc(w.change.v1) + "</p></div>" +
+            h += part("바꾼 점", '<div class="gd-change"><div><span class="gd-mini">FIRST</span><p>' + esc(w.change.v1) + "</p></div>" +
                 '<div><span class="gd-mini">AND THEN</span><p>' + esc(w.change.v2) + "</p></div></div>");
         }
         if (w.brand) {
@@ -601,15 +637,15 @@
                 inner += '<table class="gd-compare"><thead><tr><th>' + esc(b.compare.from) + "</th><th>" + esc(b.compare.to) + "</th></tr></thead><tbody>" +
                     b.compare.rows.map(function (r) { return "<tr><td>" + esc(r[0]) + "</td><td>" + esc(r[1]) + "</td></tr>"; }).join("") + "</tbody></table>";
             }
-            h += part("brand.", inner);
+            h += part("브랜드", inner);
         }
         if (w.plan) {
-            h += part("plan.", (w.plan.title ? '<p class="gd-mini">' + esc(w.plan.title) + "</p>" : "") + (w.plan.lead ? '<p class="gd-text">' + esc(w.plan.lead) + "</p>" : "") +
+            h += part("기획안", (w.plan.title ? '<p class="gd-mini">' + esc(w.plan.title) + "</p>" : "") + (w.plan.lead ? '<p class="gd-text">' + esc(w.plan.lead) + "</p>" : "") +
                 '<ol class="gd-list">' + (w.plan.items || []).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ol>");
         }
         // 4) 과정
         if (w.process && w.process.items && w.process.items.length) {
-            h += part("process.", (w.process.title ? '<p class="gd-mini">' + esc(w.process.title) + "</p>" : "") + '<div class="gd-proc">' + w.process.items.map(function (cap, i) {
+            h += part("제작 과정", (w.process.title ? '<p class="gd-mini">' + esc(w.process.title) + "</p>" : "") + '<div class="gd-proc">' + w.process.items.map(function (cap, i) {
                 const f = src(w, "process/" + nn(i + 1) + ".webp");
                 return '<figure><button type="button" data-zoom="' + esc(f) + '" aria-label="' + esc(cap) + ' 크게 보기"><img src="' + esc(f) + '" alt="" loading="lazy"></button>' +
                     "<figcaption><b>" + nn(i + 1) + "</b>" + esc(cap) + "</figcaption></figure>";
@@ -621,11 +657,11 @@
             if (l.work && byId[l.work]) return '<a href="?w=' + encodeURIComponent(l.work) + '" data-go="' + esc(l.work) + '">' + esc(l.label) + " →</a>";
             return "";
         }).join("");
-        if (links) h += part("more.", '<div class="gd-links">' + links + "</div>");
+        if (links) h += part("더 보기", '<div class="gd-links">' + links + "</div>");
         // 6) 다음 작품
         if (next && next !== w) {
             h += '<a class="gd-next" href="?w=' + encodeURIComponent(next.id) + '" data-go="' + esc(next.id) + '">' +
-                "<small>NEXT — " + next._no + " · " + esc(next.title) + "</small><strong>" + lines(head(next)) + ' <em aria-hidden="true">→</em></strong></a>';
+                "<small>다음 작품 — " + next._no + "</small><strong>" + esc(next.title) + ' <em aria-hidden="true">→</em></strong><span class="gd-next-en">' + esc(head(next)) + "</span></a>";
         }
         return h;
     }
@@ -756,6 +792,7 @@
         body.innerHTML = "";
         document.body.classList.remove("g-lock");
         document.title = "Works — Emongc";
+        setTimeout(resumeVideos, 60);
         // 마지막으로 본 작품 칸이 화면 가운데 오도록
         const t = curId && grid.querySelector('[data-open="' + curId + '"]');
         if (t) {
@@ -788,20 +825,119 @@
         document.body.appendChild(z);
     }
 
-    // 맨 아래(끝 문구)가 보이면 위로 가기 버튼 등장
-    const topBtn = document.getElementById("gTop"), foot = document.querySelector(".g-foot");
-    if (topBtn && foot) {
-        if ("IntersectionObserver" in window) {
-            new IntersectionObserver(function (e) { topBtn.classList.toggle("show", e[0].isIntersecting); }, { threshold: 0.15 }).observe(foot);
-        } else { topBtn.classList.add("show"); }
-        topBtn.addEventListener("click", function () {
-            window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
-            document.getElementById("gIntroTitle").setAttribute("tabindex", "-1");
-            document.getElementById("gIntroTitle").focus({ preventScroll: true });
+    // ---------- 위로 가기 · 목차로 ----------
+    // TOP 버튼: 첫 화면을 조금만 지나도 늘 오른쪽 아래에 보임 (상세 화면에서도 → 상세 맨 위로)
+    // 위쪽 띠: 로고 = 맨 위로, 가운데 분야 이름 = 목차로
+    (function () {
+        const btn = document.getElementById("gTop");
+        if (!btn) return;
+        const smooth = reduce ? "auto" : "smooth";
+        function sync() {
+            const inDetail = !detail.hidden;
+            const y = inDetail ? detail.scrollTop : window.scrollY;
+            btn.classList.toggle("show", y > window.innerHeight * 0.6);
+            btn.setAttribute("aria-label", inDetail ? "이 작품 맨 위로" : "맨 위로");
+        }
+        window.addEventListener("scroll", sync, { passive: true });
+        detail.addEventListener("scroll", sync, { passive: true });
+        new MutationObserver(sync).observe(detail, { attributes: true, attributeFilter: ["hidden"] });
+        btn.addEventListener("click", function () {
+            if (!detail.hidden) { detail.scrollTo({ top: 0, behavior: smooth }); detail.focus({ preventScroll: true }); return; }
+            window.scrollTo({ top: 0, behavior: smooth });
         });
-    }
+        const brand = document.querySelector(".g-brand");
+        if (brand) brand.addEventListener("click", function (e) {
+            if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: smooth });
+        });
+        const now = document.getElementById("gNow");
+        if (now) {
+            now.setAttribute("role", "link"); now.setAttribute("tabindex", "0"); now.title = "목차로";
+            const toc = function () { const t = document.getElementById("sp-contents"); if (t) window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 10, behavior: smooth }); };
+            now.addEventListener("click", toc);
+            now.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toc(); } });
+        }
+        sync();
+    })();
+
+    // ---------- 끝: 메일 주소 (조립 · 복사) + 스크롤하면 EMONG 이 모임 ----------
+    (function () {
+        const addr = document.getElementById("gMailAddr"), cta = document.getElementById("gMailCta");
+        const copyBtn = document.getElementById("gCopy"), copied = document.getElementById("gCopied");
+        if (addr) {
+            const mail = addr.dataset.u + "@" + addr.dataset.d;
+            const href = "mailto:" + mail + "?subject=" + encodeURIComponent("[포트폴리오 보고 연락드립니다]");
+            addr.textContent = mail; addr.href = href;
+            if (cta) cta.href = href;
+            if (copyBtn) copyBtn.addEventListener("click", function () {
+                const done = function () {
+                    copied.textContent = "복사됐어요 ✓"; copyBtn.classList.add("ok");
+                    setTimeout(function () { copied.textContent = ""; copyBtn.classList.remove("ok"); }, 2200);
+                };
+                if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(mail).then(done, function () { fallback(); });
+                else fallback();
+                function fallback() {
+                    const t = document.createElement("textarea"); t.value = mail; t.style.position = "fixed"; t.style.opacity = "0";
+                    document.body.appendChild(t); t.select();
+                    try { document.execCommand("copy"); done(); } catch (e) { copied.textContent = mail; }
+                    t.remove();
+                }
+            });
+        }
+        // EMONG: 끝 부분이 화면에 들어오면서 흩어진 글자가 제자리로 (스크롤을 막지 않음)
+        const foot = document.getElementById("gFoot"), em = foot && foot.querySelector(".g-emong");
+        if (!em) return;
+        const ls = Array.prototype.slice.call(em.querySelectorAll("span, i"));
+        const sc = [[-260, -140, -18], [-60, 120, 14], [140, -170, -10], [300, 90, 20], [420, -60, -24], [520, 60, 0]];
+        if (reduce) return;
+        let ticking = false;
+        function upd() {
+            ticking = false;
+            const r = foot.getBoundingClientRect(), vh = window.innerHeight;
+            let p = (vh - r.top) / (vh * 0.75);   // 끝 부분 윗선이 화면 아래에 닿을 때 0 → 화면 25% 지점에서 1
+            p = Math.max(0, Math.min(1, p));
+            const e = 1 - Math.pow(1 - p, 3);
+            const k = em.offsetWidth / 900;
+            ls.forEach(function (l, i) {
+                const s = sc[i] || [0, 0, 0], q = 1 - e;
+                l.style.transform = "translate(" + (s[0] * k * q).toFixed(1) + "px," + (s[1] * k * q).toFixed(1) + "px) rotate(" + (s[2] * q).toFixed(1) + "deg)";
+                l.style.opacity = (0.25 + 0.75 * e).toFixed(2);
+            });
+        }
+        window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+        window.addEventListener("resize", upd);
+        upd();
+    })();
 
     // 주소에 ?w=작품id 가 있으면 바로 그 작품 열기
+    // [수정] 상세에서 새로고침: 같은 작품을 보던 높이 그대로 다시 엶
+    const DKEY = "gDetailScroll";
+    let dt = null;
+    detail.addEventListener("scroll", function () {
+        clearTimeout(dt);
+        dt = setTimeout(function () { try { sessionStorage.setItem(DKEY, JSON.stringify({ id: curId, top: Math.round(detail.scrollTop) })); } catch (e) {} }, 150);
+    }, { passive: true });
+    window.addEventListener("pagehide", function () {
+        if (!detail.hidden) try { sessionStorage.setItem(DKEY, JSON.stringify({ id: curId, top: Math.round(detail.scrollTop) })); } catch (e) {}
+    });
     const first = new URLSearchParams(location.search).get("w");
-    if (first && byId[first]) { show(first, false); }
+    if (first && byId[first]) {
+        show(first, false);
+        let d = null;
+        try { d = JSON.parse(sessionStorage.getItem(DKEY) || "null"); } catch (e) {}
+        const back = d && d.id === first ? d.top : 0;
+        let moved = false;
+        ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (ev) { detail.addEventListener(ev, function () { moved = true; }, { once: true, passive: true }); });
+        const go = function () { if (!moved && back) detail.scrollTop = back; };
+        go();
+        requestAnimationFrame(function () { go(); document.documentElement.classList.remove("g-restoring"); });
+        if (back && "ResizeObserver" in window) {
+            const ro = new ResizeObserver(go);
+            ro.observe(body);
+            setTimeout(function () { ro.disconnect(); }, 2500);
+        }
+    } else if (first) {
+        document.documentElement.classList.remove("g-restoring");
+    }
 })();

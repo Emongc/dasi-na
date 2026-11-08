@@ -130,34 +130,22 @@ if (logoLink) {
 }
 
 // =========================================
-// [추가] 로고에 마우스를 올리면 건반을 한 번 누르듯 글자가 차례로 눌렸다 올라옴
+// [수정] 로고 "Again," — 마우스를 올리거나 누르면 처음부터 다시 재생 (글자가 솟아오르고 쉼표가 톡 떨어짐)
 // =========================================
 if (logoLink && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   const letters = logoLink.querySelectorAll('.piano-letter');
   let playing = false;
-  logoLink.addEventListener('mouseenter', function () {
-    if (playing || !letters.length || !letters[0].animate) return;
+  function replayLogo() {
+    if (playing || !letters.length) return;
     playing = true;
-    let last;
-    const soft = 'cubic-bezier(0.45, 0, 0.25, 1)'; // [수정] 부드럽게 가라앉았다 떠오르는 곡선
-    letters.forEach(function (el, i) {
-      const isComma = i === letters.length - 1;
-      if (isComma) {
-        // 마지막 쉼표: 살짝 오른쪽·왼쪽으로 비틀었다 제자리
-        last = el.animate(
-          [{ rotate: '0deg' }, { rotate: '10deg', offset: 0.35 }, { rotate: '-6deg', offset: 0.7 }, { rotate: '0deg' }],
-          { duration: 800, delay: i * 55, easing: soft }
-        );
-      } else {
-        // 글자: 3px만 천천히 가라앉았다가 올라옴
-        last = el.animate(
-          [{ translate: '0 0' }, { translate: '0 3px', offset: 0.45 }, { translate: '0 0' }],
-          { duration: 600, delay: i * 55, easing: soft }
-        );
-      }
-    });
-    last.onfinish = function () { playing = false; };
-  });
+    letters.forEach(function (el) { el.style.animation = 'none'; });
+    void logoLink.offsetWidth;                       // 강제로 다시 그리게 해서 애니메이션을 처음으로
+    letters.forEach(function (el) { el.style.animation = ''; });
+    setTimeout(function () { playing = false; }, 1700);
+  }
+  logoLink.addEventListener('mouseenter', replayLogo);
+  logoLink.addEventListener('click', replayLogo);
+  logoLink.addEventListener('focus', replayLogo);
 }
 
 // =========================================
@@ -639,20 +627,42 @@ document.addEventListener("DOMContentLoaded", async function () {
     const text = document.getElementById("quoteText");
     const lines = document.getElementById("talkLines");
     if (!box || !wrap || !bubble || !text) return;
+    const reduceMotionHero = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // 캐릭터 SVG를 페이지 안에 직접 넣어야 눈·입·모자를 따로 움직일 수 있다
     // (불러오기에 실패하면 <img>로 넣어둔 그림이 그대로 보인다)
-    try {
-        const res = await fetch(wrap.dataset.src);
-        if (res.ok) wrap.innerHTML = await res.text();
-    } catch (err) { /* 파일을 직접 열었을 때 등: 정지 그림으로 둔다 */ }
+    // [수정] 영상 캐릭터: 손 흔들기(반복) 위에 브이(한 번)를 겹쳐 두고, 누를 때 잠깐 바꿔 보여준다
+    let playV = function () {};
+    if (wrap.dataset.hello) {
+        const mk = function (src, cls, loop) {
+            const v = document.createElement("video");
+            v.className = "hero-vid " + cls; v.src = src; v.muted = true; v.playsInline = true; v.loop = loop;
+            v.setAttribute("playsinline", ""); v.setAttribute("aria-hidden", "true"); v.preload = "auto";
+            return v;
+        };
+        const hello = mk(wrap.dataset.hello, "hv-hello", true), vv = mk(wrap.dataset.v, "hv-v", false);
+        hello.poster = wrap.querySelector("img").getAttribute("src");
+        wrap.appendChild(hello); wrap.appendChild(vv);
+        if (!reduceMotionHero) hello.play().catch(function () {});
+        playV = function () {
+            if (reduceMotionHero || !vv.src) return;
+            vv.currentTime = 0;
+            vv.play().then(function () { wrap.classList.add("v-on"); }).catch(function () {});
+        };
+        vv.addEventListener("ended", function () { wrap.classList.remove("v-on"); });
+    } else if (wrap.dataset.src) {
+        try {
+            const res = await fetch(wrap.dataset.src);
+            if (res.ok) wrap.innerHTML = await res.text();
+        } catch (err) { /* 파일을 직접 열었을 때 등: 정지 그림으로 둔다 */ }
+    }
 
     const beanie = wrap.querySelector("#beanie");
     const pupil = wrap.querySelector("#pupil");
     const mouths = wrap.querySelectorAll(".mouth");
 
-    // 입 위치: 캐릭터 그림 안에서 가로 79%, 세로 81% 지점
-    const MOUTH = { x: 0.79, y: 0.81 };
+    // 입 위치: 캐릭터 그림 안에서의 비율 (영상 캐릭터는 브이 손 바깥쪽에서 말이 나오도록)
+    const MOUTH = wrap.dataset.hello ? { x: 0.74, y: 0.36 } : { x: 0.79, y: 0.81 };
 
     // 표정: 눈동자 / 입 / 고개 / 모자 — "어? 움직이네?" 정도로만 아주 작게
     // 캐릭터가 좌우 뒤집혀 그려져 있어서 눈동자 가로값은 음수가 앞쪽(오른쪽)이다
@@ -735,6 +745,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         bubble.classList.remove("show", "hi");
         restart(wrap, "blink");
         restart(wrap, "bob");
+        if (n >= 0) playV();
         const [line, face] = n < 0 ? ["hi.", "smile"] : quotes[n];
         setTimeout(() => setFace(face), 80);
         setTimeout(() => {
@@ -871,12 +882,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     let progress = -1, maxP = 0, lastScroll = window.scrollY, angle = 0, landed = false;
-    let frame = "down", climbAcc = 0;
-    function setFrame(f) {
-        if (f === frame || !rider) return;
-        rider.classList.remove("f-" + frame);
-        frame = f;
-        rider.classList.add("f-" + frame);
+    // [수정] 줄 타는 장면: 스프라이트 컷 번호(fi)를 스크롤만큼 앞뒤로 (위로 = 오르기, 아래로 = 거꾸로 내려오기)
+    const sheet = rider ? rider.querySelector(".rider-sheet") : null;
+    const NF = sheet ? +sheet.dataset.frames : 0, NC = sheet ? +sheet.dataset.cols : 1, NR = Math.ceil(NF / NC);
+    let fi = 0, shown = -1;
+    function setFrame(n) {
+        if (!sheet) return;
+        const k = ((Math.round(n) % NF) + NF) % NF;
+        if (k === shown) return;
+        shown = k;
+        sheet.style.backgroundPosition = ((k % NC) / (NC - 1) * 100) + "% " + (Math.floor(k / NC) / (NR - 1) * 100) + "%";
     }
 
     function update() {
@@ -908,22 +923,16 @@ document.addEventListener("DOMContentLoaded", function () {
             const pt = paths[0].getPointAtLength(lens[0] * progress);
             const x = (sr.left - r.left) + pt.x * (sr.width / 20);
             const y = pt.y * (sr.height / 1000);
-            const w = rider.offsetWidth || 64;
-            // 그림 비율 200x320, 손(줄 잡는 곳)은 위에서 약 50% 지점 / 착지하면 발이 선 끝에
-            const hy = landed ? w * 1.6 * 0.97 : w * 1.6 * 0.5;
-            rider.style.transform = "translate(" + (x - w / 2) + "px, " + (y - hy) + "px)";
+            const w = rider.offsetWidth || 64, h = w * 1.5;
+            // 컷 안의 줄은 가로 46% 지점, 맨 위가 선 끝에 이어짐 / 착지하면 발이 선 끝에
+            const hy = landed ? h * 0.95 : h * 0.02;
+            rider.style.transform = "translate(" + (x - w * 0.46) + "px, " + (y - hy) + "px)";
             rider.classList.toggle("on", progress > 0.005);
 
             const v = window.scrollY - lastScroll;
             lastScroll = window.scrollY;
-            if (landed) setFrame("wave");
-            else if (v > 0) { setFrame("down"); climbAcc = 0; }
-            else if (v < 0) {
-                // 위로 스크롤: 손을 번갈아 뻗으며 올라감 (약 26px마다 한 동작)
-                climbAcc += -v;
-                if (frame !== "up1" && frame !== "up2") setFrame("up1");
-                else if (climbAcc > 26) { climbAcc = 0; setFrame(frame === "up1" ? "up2" : "up1"); }
-            }
+            if (!landed && v !== 0) fi -= v * 0.09;   // 약 11px 스크롤마다 한 컷
+            setFrame(fi);
             // 스크롤 속도만큼 살짝 흔들렸다가 돌아옴
             const target = landed ? 0 : Math.max(-8, Math.min(8, -v * 0.4));
             angle += (target - angle) * 0.12;
@@ -1104,6 +1113,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const box = document.getElementById("resumeBox");
     if (!tabs.length || !box) return;
 
+    function playChar() {
+        chars.forEach(function (c) {
+            if (!c.play) return;
+            if (c.classList.contains("on")) {
+                if (reduceMotionRC) return;
+                try { c.currentTime = 0; const pr = c.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {}
+            } else { try { c.pause(); } catch (e) {} }
+        });
+    }
+    const reduceMotionRC = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // 상자가 화면에 들어오면 현재 탭 영상을 한 번 재생
+    if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver(function (es) {
+            es.forEach(function (e) { if (e.isIntersecting) { playChar(); io.disconnect(); } });
+        }, { threshold: 0.4 });
+        io.observe(box);
+    }
     function select(tab, focus) {
         tabs.forEach(function (t) {
             const on = t === tab;
@@ -1114,7 +1140,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (panel) panel.hidden = !on;
         });
         chars.forEach(function (c) { c.classList.toggle("on", c.dataset.char === tab.dataset.char); });
+        playChar();   // [추가] 선택된 탭의 에몽씨 영상만 처음부터 한 번 재생 (끝나면 마지막 장면에서 멈춤)
         if (focus) tab.focus();
+        try { sessionStorage.setItem("resumeTab", tab.id); } catch (e) {}   // [추가] 새로고침해도 보던 탭 유지
     }
     tabs.forEach(function (t, i) {
         t.addEventListener("click", function () { select(t); });
@@ -1125,6 +1153,11 @@ document.addEventListener("DOMContentLoaded", function () {
             if (n !== null) { e.preventDefault(); select(tabs[n], true); }
         });
     });
+    // [추가] 새로고침하면 마지막으로 보던 탭으로
+    try {
+        const last = document.getElementById(sessionStorage.getItem("resumeTab") || "");
+        if (last && tabs.indexOf(last) >= 0) select(last);
+    } catch (e) {}
 
     // ---- 크레파스 테두리 ----
     const NS = "http://www.w3.org/2000/svg";
@@ -1464,4 +1497,22 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }).observe(formMsg, { attributes: true, attributeFilter: ["class"] });
     }
+})();
+
+
+/* ==================================================
+   [추가] 다른 페이지에 다녀오거나 탭을 다시 보면, 멈춰 버린 영상을 다시 재생
+   - 손 흔드는 히어로 캐릭터 · CONTACT 춤 영상 (화면에 보일 때만)
+   ================================================== */
+(function () {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    function resume() {
+        if (document.hidden) return;
+        document.querySelectorAll(".hv-hello, .ct-dance-video").forEach(function (v) {
+            const r = v.getBoundingClientRect();
+            if (v.paused && !v.ended && r.width > 0 && r.bottom > 0 && r.top < window.innerHeight) v.play().catch(function () {});
+        });
+    }
+    window.addEventListener("pageshow", resume);
+    document.addEventListener("visibilitychange", resume);
 })();

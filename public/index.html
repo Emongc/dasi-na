@@ -10,12 +10,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&amp;family=Patrick+Hand+SC&amp;family=Gaegu:wght@400;700&amp;family=Noto+Sans+KR:wght@400;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&amp;family=Patrick+Hand+SC&amp;family=Gaegu:wght@400;700&amp;family=Noto+Sans+KR:wght@400;700&amp;family=Inter+Tight:wght@600&display=swap"
     rel="stylesheet">
 
   <!-- 외부 스타일시트 연결 -->
-  <link rel="stylesheet" href="css/style.css?v=24">
-  <link rel="stylesheet" href="css/works.css?v=22">
+  <link rel="stylesheet" href="css/style.css?v=74">
+  <link rel="stylesheet" href="css/works.css?v=73">
+  <link rel="stylesheet" href="css/cswitch.css?v=72">
 </head>
 
 <body>
@@ -49,6 +50,8 @@
         <span class="piano-letter" style="--i: 6;">,</span>
         </a>
       </h1>
+      <!-- [추가] 컨셉 토글: STUDIO(손그림) ⇄ GALLERY — WORKS 아래 띠와 같은 모양, 마우스를 올리면 설명이 뜸 -->
+      <div class="tg" data-now="studio" role="group" aria-label="컨셉 전환"><i aria-hidden="true"></i><a class="tg-a" data-cs-go href="index.html" data-tip="손그림 버전" aria-current="page">Studio</a><a class="tg-b" data-cs-go href="works-gallery.html" data-tip="갤러리 버전">Gallery</a></div>
       <!-- 모바일 햄버거 메뉴 버튼 -->
       <button id="menu-btn" aria-label="메뉴 열기" aria-expanded="false">☰</button>
     </div>
@@ -72,8 +75,9 @@
     <section class="hero-media" aria-label="메인 소개 이미지">
       <div class="hero-frame" id="heroClickBox" role="button" tabindex="0" aria-label="캐릭터를 눌러 말 걸기">
         <!-- 캐릭터: 스크립트가 SVG를 직접 넣어서 눈·입·모자를 움직인다 -->
-        <div class="hero-char-wrap" id="charWrap" data-src="img/hero-char.svg">
-          <img src="img/hero-char.svg" alt="머스타드 비니를 쓰고 오른쪽을 바라보는 에몽씨 캐릭터">
+        <!-- [수정] 캐릭터: 손 흔드는 영상이 반복, 누르면 브이 영상이 한 번 (Gemini 영상 → 배경 정리) -->
+        <div class="hero-char-wrap is-video" id="charWrap" data-hello="img/mini/emongc-hello.mp4" data-v="img/mini/emongc-v.mp4">
+          <img src="img/mini/emongc-hello-poster.webp" alt="머스타드 비니를 쓰고 손을 흔드는 에몽씨 캐릭터">
         </div>
 
         <!-- 입에서 퍼져 나가는 손그림 효과선 -->
@@ -251,10 +255,10 @@
           </div>
           <!-- 탭마다 옷·소품을 바꿔 입는 에몽씨 (img/resume 폴더) -->
           <div class="resume-chars" aria-hidden="true">
-            <img class="resume-char on" data-char="exp" src="img/resume/experience.svg" alt="">
-            <img class="resume-char" data-char="skl" src="img/resume/skills.svg" alt="">
-            <img class="resume-char" data-char="edu" src="img/resume/education.svg" alt="">
-            <img class="resume-char" data-char="cer" src="img/resume/certificates.svg" alt="">
+            <video class="resume-char on" data-char="exp" src="img/resume/emongc-exp.mp4" poster="img/resume/emongc-exp.webp" muted playsinline preload="metadata" tabindex="-1"></video>
+            <video class="resume-char" data-char="skl" src="img/resume/emongc-skl.mp4" poster="img/resume/emongc-skl.webp" muted playsinline preload="metadata" tabindex="-1"></video>
+            <video class="resume-char" data-char="edu" src="img/resume/emongc-edu.mp4" poster="img/resume/emongc-edu.webp" muted playsinline preload="metadata" tabindex="-1"></video>
+            <video class="resume-char" data-char="cer" src="img/resume/emongc-cer.mp4" poster="img/resume/emongc-cer.webp" muted playsinline preload="metadata" tabindex="-1"></video>
           </div>
         </div>
 
@@ -360,7 +364,7 @@
           <div class="ct-char-wrap">
             <!-- [수정] AI로 만든 에몽씨 춤 영상 (소리 없음, 무한 반복, 화면에 보일 때만 재생) -->
             <div class="ct-dancer">
-              <video class="ct-dance-video" src="img/mini/emongc-dance-red.mp4" poster="img/mini/emongc-dance-red-poster.webp"
+              <video class="ct-dance-video ct-v2" src="img/mini/emongc-contact.mp4" poster="img/mini/emongc-contact-poster.webp"
                      muted loop playsinline preload="metadata" aria-hidden="true"></video>
             </div>
             <p class="ct-bubble" aria-live="polite">같이 일해요!</p>
@@ -412,11 +416,15 @@
             </filter>
           </defs>
 
-          <!-- [수정] 더 굵게(1.5 → 6) + 같은 길을 한 번 더 그어 크레파스로 덧칠한 느낌 -->
-          <path d="M 10 0 Q 3 150 16 300 T 5 600 Q 15 800 10 1000" fill="none" stroke="#2B2B2B"
-            stroke-width="6" stroke-linecap="round" filter="url(#rough-line-filter)" />
-          <path d="M 11 4 Q 4 150 15 300 T 6 600 Q 14 800 10 996" fill="none" stroke="#2B2B2B"
-            stroke-width="3" stroke-linecap="round" opacity="0.7" filter="url(#rough-line-filter)" />
+          <!-- [수정] 크레파스 질감 없이: 얇고 연한 손그림 선 (같은 길을 한 번 더 그어 손으로 겹쳐 그은 느낌만) -->
+          <filter id="soft-line-filter" x="-50%" y="-2%" width="200%" height="104%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="2" result="wobble" />
+            <feDisplacementMap in="SourceGraphic" in2="wobble" scale="2.5" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+          <path d="M 10 0 Q 3 150 16 300 T 5 600 Q 15 800 10 1000" fill="none" stroke="#8C857A"
+            stroke-width="2.2" stroke-linecap="round" filter="url(#soft-line-filter)" />
+          <path d="M 11 4 Q 4 150 15 300 T 6 600 Q 14 800 10 996" fill="none" stroke="#8C857A"
+            stroke-width="1.2" stroke-linecap="round" opacity="0.6" filter="url(#soft-line-filter)" />
         </svg>
 
         <!-- 선 중간중간에 들어가는 감성적인 텍스트 요소 (선택사항) -->
@@ -426,10 +434,8 @@
         <div class="line-rider f-down" id="lineRider" aria-hidden="true">
           <div class="rider-swing">
             <!-- [수정] 크레파스 → 줄 타는 미니 에몽씨 (내려갈 때 / 올라갈 때 2컷 / 바닥 도착 인사) -->
-            <img class="rider-fig rf-down" src="img/mini/emongc-mini.svg#down" alt="">
-            <img class="rider-fig rf-up1" src="img/mini/emongc-mini.svg#up1" alt="">
-            <img class="rider-fig rf-up2" src="img/mini/emongc-mini.svg#up2" alt="">
-            <img class="rider-fig rf-wave" src="img/mini/emongc-mini.svg#wave" alt="">
+            <!-- [수정] 줄 타는 에몽씨: Gemini 영상을 76컷 한 장(스프라이트)으로 — 스크롤 올리면 오르고, 내리면 거꾸로 내려옴 -->
+            <div class="rider-sheet" data-frames="76" data-cols="10"></div>
           </div>
         </div>
         <!-- [추가] 돋보기 안내 대사 (PC / 폰 문구 다름) -->
@@ -441,8 +447,8 @@
 
       <!-- 하단 타임라인 이미지 박스 -->
       <!-- [수정] 마우스를 올리면 손그림 돋보기, 클릭(또는 Enter)하면 크게 보기 -->
-      <div class="timeline-image-container" id="timelineContainer" role="button" tabindex="0" aria-label="히스토리 크게 보기">
-        <img src="img/timeline-image.png" alt="인생 타임라인 연혁" class="responsive-timeline-img">
+      <div class="timeline-image-container crayon-frame crayon-soft" id="timelineContainer" role="button" tabindex="0" aria-label="히스토리 크게 보기">
+        <img src="img/timeline-image-light.png" alt="인생 타임라인 연혁" class="responsive-timeline-img">
         <!-- [수정] 분필로 그린 듯한 손그림 돋보기 (선이 미세하게 떨리는 3장 교차) -->
         <div class="loupe" id="timelineLoupe" aria-hidden="true">
           <div class="loupe-lens" id="loupeLens"></div>
@@ -497,7 +503,7 @@
         <div class="viewer-box">
           <button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.4 5.9c2.7 2.5 5.6 5.7 8.3 8.7 1.5 1.6 3 3.2 4.6 4.6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" fill="none"/><path d="M18.4 5.2c-2.6 2.4-5.4 5.6-8 8.6-1.6 1.9-3.2 3.6-4.8 5.3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" fill="none"/></svg></button>
           <div class="viewer-stage" id="viewerStage">
-            <img class="modal-content" id="expandedImg" src="img/timeline-image.png" alt="타임라인 확대보기" draggable="false">
+            <img class="modal-content" id="expandedImg" src="img/timeline-image-light.png" alt="타임라인 확대보기" draggable="false">
           </div>
         </div>
         <p class="viewer-tip" aria-hidden="true">톡 하면 확대 &middot; 쭉 끌어서 이동</p>
@@ -520,7 +526,8 @@
   <button id="top-btn" aria-label="페이지 맨 위로 이동"><i style="--n:0">T</i><i style="--n:1">O</i><i style="--n:2">P</i></button>
 
   <!-- JavaScript 연결 -->
-  <script src="js/script.js?v=20261109abc"></script>
+  <script src="js/script.js?v=74d"></script>
+  <script src="js/concept-switch.js?v=3"></script>
   <script src="js/works-data.js?v=24"></script>
   <script src="js/works.js?v=25"></script>
 

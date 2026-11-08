@@ -481,13 +481,16 @@
             }
             play(list[list.length - 1].src);
         } else {
-            if (w.type === "ba") {
+            const baAt = w.type === "ba" ? (typeof w.baAt === "number" ? w.baAt : 0) : -1;   // 전후 비교 슬라이더가 들어갈 자리
+            function addCompare() {
                 const s = el("div", "wkv-slide", compareHTML(w));
                 track.appendChild(s);
                 slides.push({ cap: w.baNote || "" });
                 bindCompare(s);
             }
+            if (baAt === 0) addCompare();
             galleryFiles(w).forEach(function (g, i) {
+                if (baAt > 0 && i === baAt) addCompare();
                 const s = el("div", "wkv-slide");
                 s.innerHTML = '<button type="button" class="wkv-zoom" aria-label="크게 보기"><img src="' + g.src + '" alt="' + esc(w.title + (g.cap ? " — " + g.cap : "")) + '"' + (i > 1 ? ' loading="lazy"' : "") + "></button>";
                 s.querySelector("button").addEventListener("click", function () {
@@ -496,6 +499,7 @@
                 track.appendChild(s);
                 slides.push({ cap: g.cap });
             });
+            if (baAt > 0 && baAt >= galleryFiles(w).length) addCompare();
         }
         versBox.hidden = !versBox.children.length;
         nav.hidden = slides.length < 2;
@@ -724,9 +728,21 @@
     }
     // 다른 섹션에서 상세창 열기 (예: CONTACT 춤추는 에몽씨 → 제작 과정)
     window.openWork = function (id, opts) { open(id, opts); };
+    // 상세창을 열 때 카드 영상을 멈추므로, 닫거나 다른 페이지에 다녀온 뒤에는 보이는 춤추는 에몽씨를 다시 재생
+    function resumeMascots() {
+        if (reduce || document.hidden || viewer.classList.contains("open")) return;
+        cards.forEach(function (c) {
+            if (!c.classList.contains("wk-mascot") || c.classList.contains("out")) return;
+            const v = c.querySelector("video"), r = c.getBoundingClientRect();
+            if (v && v.paused && r.width > 0 && r.bottom > 0 && r.top < window.innerHeight) v.play().catch(function () {});
+        });
+    }
+    window.addEventListener("pageshow", resumeMascots);
+    document.addEventListener("visibilitychange", resumeMascots);
     function close() {
         if (!viewer.classList.contains("open")) return;
         viewer.classList.remove("open");
+        setTimeout(resumeMascots, reduce ? 0 : 340);
         track.querySelectorAll("video, audio").forEach(function (v) { v.pause(); });
         document.documentElement.style.overflow = "";
         setTimeout(function () { viewer.hidden = true; track.innerHTML = ""; }, reduce ? 0 : 300);

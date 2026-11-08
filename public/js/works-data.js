@@ -193,7 +193,7 @@ window.WORKS = [
         process: {
             title: "만든 과정",
             items: ["스티커 디자인 시안", "다이컷 시트 · 캐릭터 1", "다이컷 시트 · 캐릭터 2", "다이컷 시트 · 캐릭터 3",
-                    "다이컷 시트 · 캐릭터 4", "캐릭터 일러스트 카드", "아이콘 스티커", "다이어리 페이지 배치"]
+                    "다이컷 시트 · 캐릭터 4", "캐릭터 일러스트 카드", "아이콘 스티커", "다이어리 페이지 배치 : 실제 스티커 붙인 디테일 살림"]
         }
     },
 
@@ -237,18 +237,19 @@ window.WORKS = [
     // ---------------- 광고·브랜딩 ----------------
     {
         id: "starbucks", cat: "ad", type: "ba", dir: "ad/starbucks",
-        show: "ba-after.webp", ratio: 1.778,
+        show: "gallery/00.webp", ratio: 1.778,
         title: "스타벅스 광고 이미지", sub: "추석 프로모션 · 앱 광고", tags: "광고 이미지 · AI 프롬프트", label: "Before → After",
         before: "ba-before.webp", after: "ba-after.webp", baNote: "레퍼런스 앱 광고 → 커피 주문 앱 광고",
-        gallery: { files: ["gallery/01.webp", "gallery/02.webp", "gallery/03.webp", "gallery/04.webp"], caps: ["최종 앱 광고", "추석 음료 프로모션 배너", "추석 프로모션 · 캐릭터 시리즈", "Before / After 요약"] },
+        gallery: { files: ["gallery/00.webp", "gallery/10.webp", "gallery/11.webp", "gallery/12.webp", "gallery/13.webp", "gallery/02.webp", "gallery/03.webp", "gallery/01.webp"], caps: ["추석 캐릭터 · 토끼와 말", "캐릭터 · 토끼", "캐릭터 · 말", "달밤 배경 · 토끼", "달밤 배경 · 말", "추석 음료 프로모션 배너 · 말", "추석 음료 프로모션 배너 · 토끼", "앱 광고로 확장 · 최종"] },
+        baAt: 8,   // 전후 비교(폰 화면)는 맨 끝에 한 번만 (없으면 맨 앞)
         why: "추석 시즌 캐릭터(토끼와 말) 프로모션에서 시작해, 다른 분야 앱 광고의 정보 구조만 가져와 커피 주문 · 리워드 · 픽업 기능을 담은 앱 다운로드 광고로 다시 설계했습니다. 단계마다 무엇을 고쳤는지 프롬프트와 함께 정리했습니다.",
         tools: "AI 이미지 생성 (대화형 프롬프트)",
         role: "콘셉트 · 프롬프트 설계 · 시안 보정 · 과정 정리",
         note: "실제 브랜드를 활용한 개인 학습용 리디자인입니다.",
         process: {
             title: "만든 과정",
-            items: ["과정 정리 표지", "STEP 1 · 추석 캐릭터 콘셉트", "STEP 2 · 추석 음료 프로모션", "STEP 3 · 앱 광고 레퍼런스 분석",
-                    "STEP 4 · 커피 주문 앱으로 전환", "STEP 5 · 시안 보정", "STEP 6 · 최종 앱 광고", "Before / After 요약"]
+            items: ["STEP 1 · 추석 캐릭터 콘셉트", "STEP 2 · 추석 음료 프로모션", "STEP 3 · 앱 광고 레퍼런스 분석",
+                    "STEP 4 · 커피 주문 앱으로 전환", "STEP 5 · 최종 앱 광고"]
         }
     },
     {

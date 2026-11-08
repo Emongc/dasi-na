@@ -1,0 +1,93 @@
+/* ==================================================
+   컨셉 토글  [ STUDIO | GALLERY ]  — index.html(손그림) · works-gallery.html(갤러리) 공통
+   · 두 페이지에서 모양이 완전히 같고, 배경색에 맞춰 색만 바뀜 (--tg-fg: 글자·선·손잡이 / --tg-bg: 손잡이 위 글자)
+   · 지금 보는 쪽에 손잡이가 있음. 마우스를 올리면 "손그림 버전 / 갤러리 버전" 설명이 뜸 (data-tip)
+   · 누르면 손잡이가 넘어간 뒤 바로 이동, 화면은 크로스 페이드 (아래 @view-transition), 도착하면 항상 맨 위부터
+   ================================================== */
+.tg {
+    --tg-fg: #171717; --tg-bg: #ffffff;
+    position: relative; display: inline-grid; grid-template-columns: 1fr 1fr; padding: 2px;
+    border: 1px solid color-mix(in srgb, var(--tg-fg) 38%, transparent); border-radius: 2px;
+    font: 600 11px/1 'Inter Tight', 'Inter', 'Noto Sans KR', sans-serif; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--tg-fg); text-decoration: none; white-space: nowrap; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.tg i {   /* 손잡이 */
+    position: absolute; top: 2px; bottom: 2px; left: 2px; width: calc(50% - 2px); background: var(--tg-fg); border-radius: 1px;
+    transform: translateX(var(--kx, 0%)); transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform;
+}
+.tg[data-now="gallery"] { --kx: 100%; }
+.tg.go[data-now="studio"] { --kx: 100%; }
+.tg.go[data-now="gallery"] { --kx: 0%; }
+.tg a { color: inherit; text-decoration: none; position: relative; z-index: 1; padding: 10px 16px; font-weight: 600; text-align: center; opacity: 0.6; transition: opacity 0.2s, color 0.2s; }
+.tg[data-now="studio"] .tg-a, .tg[data-now="gallery"] .tg-b { color: var(--tg-bg); opacity: 1; }
+.tg.go[data-now="studio"] .tg-a, .tg.go[data-now="gallery"] .tg-b { color: inherit; opacity: 0.6; }
+.tg.go[data-now="studio"] .tg-b, .tg.go[data-now="gallery"] .tg-a { color: var(--tg-bg); opacity: 1; }
+.tg a[aria-current] { cursor: default; }
+.tg a:focus-visible { outline: 2px solid var(--tg-fg); outline-offset: 2px; }
+.tg:focus-visible { outline: 2px solid var(--tg-fg); outline-offset: 3px; }
+/* 마우스를 올리면 나오는 설명 (폰은 마우스가 없어 안 뜸 → 읽어 주는 이름은 aria-label) */
+.tg a::after {
+    content: attr(data-tip); position: absolute; top: calc(100% + 11px); left: 50%; transform: translate(-50%, -3px); z-index: 5;
+    padding: 7px 10px; background: var(--tg-fg); color: var(--tg-bg); border-radius: 2px;
+    font: 500 11px/1 'Noto Sans KR', sans-serif; letter-spacing: 0.02em; text-transform: none; white-space: nowrap;
+    opacity: 0; pointer-events: none; transition: opacity 0.15s, transform 0.15s;
+}
+.tg a:last-of-type::after { left: auto; right: 0; transform: translate(0, -3px); }   /* 오른쪽 끝에서 화면 밖으로 안 나가게 */
+@media (hover: hover) {
+    .tg:hover a { opacity: 0.95; }
+    .tg a:hover::after { opacity: 1; transform: translate(-50%, 0); }
+    .tg a:last-of-type:hover::after { transform: translate(0, 0); }
+}
+
+/* 화면 전환: 크로스 페이드 (두 페이지 모두 이 파일을 불러올 때만 적용 / 지원 안 하는 브라우저는 그냥 이동) */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.26s; animation-timing-function: ease; }
+@media (prefers-reduced-motion: reduce) {
+    .tg i, .tg a { color: inherit; text-decoration: none; transition: none; }
+    ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+
+/* ---- 손그림 페이지: 상단 메뉴 ---- */
+header .tg { --tg-fg: #171717; --tg-bg: #FAFAFA; }
+@media screen and (min-width: 768px) {
+    header { flex-wrap: wrap; row-gap: 8px; }
+    header nav { margin-left: auto; }
+}
+/* 태블릿(768~1279px): 윗줄 = 로고 왼쪽 · 토글 오른쪽 / 아랫줄 = 메뉴 가운데 */
+@media screen and (min-width: 768px) and (max-width: 1279px) {
+    .header-inner { width: 100%; justify-content: space-between; }
+    header nav { width: 100%; margin: 0; }
+}
+/* PC(1280px~): 로고 · 메뉴 · 토글이 한 줄 (토글은 맨 오른쪽) */
+@media screen and (min-width: 1280px) {
+    header { flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: center; }
+    .header-inner { display: contents; }
+    header h1 { order: 1; }
+    header nav { order: 2; width: auto; margin: 0 auto; }
+    header .tg { order: 3; }
+}
+/* 폰: 로고 · 토글 · ☰ */
+@media screen and (max-width: 767px) {
+    .header-inner { gap: 8px; }
+    header .tg { margin-left: auto; margin-right: 6px; }
+    header .tg a { color: inherit; text-decoration: none; padding: 9px 11px; font-size: 10px; }
+}
+@media screen and (max-width: 359px) { header .tg a { color: inherit; text-decoration: none; padding: 9px 8px; font-size: 9px; letter-spacing: 0.12em; } }
+
+/* ---- 손그림 페이지: WORKS 머리말 아래 얇은 띠 ---- */
+
+/* ---- 갤러리 페이지: 상단 ---- */
+.g-top .tg { --tg-fg: #ffffff; --tg-bg: #000000; justify-self: end; }
+.g-top.band .tg { --tg-fg: #111111; --tg-bg: #f7f7f5; }
+@media (max-width: 560px) { .g-top .tg a { color: inherit; text-decoration: none; padding: 9px 11px; font-size: 10px; } }
+
+/* WORKS 제목 줄 오른쪽 끝의 토글 (띠·안내 글 없이 토글만) */
+#works .resume-head { align-items: center; }
+#works .resume-head .tg { margin-left: auto; --tg-fg: #171717; --tg-bg: #FAFAFA; }
+
+/* 손그림 페이지 토글: 선택된 쪽은 머스타드 칸 + 잉크색 글자, 나머지는 회색 */
+header .tg, #works .resume-head .tg { --tg-fg: #6F685D; --tg-bg: #171717; border-color: #CFC9BD; }
+header .tg i, #works .resume-head .tg i { background: #F5B82E; }
+header .tg a, #works .resume-head .tg a { opacity: 0.85; }
+header .tg a[aria-current], #works .resume-head .tg a[aria-current] { color: #171717; opacity: 1; }
+header .tg a::after, #works .resume-head .tg a::after { background: #171717; color: #FAFAFA; }

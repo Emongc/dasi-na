@@ -13,7 +13,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/gallery.css?v=41">
+  <!-- [추가] 새로고침할 때 첫 화면이 번쩍 보이지 않게: 돌아갈 자리가 있으면 자리 잡을 때까지 잠깐 숨김 -->
+  <script>
+    try {
+      var q = new URLSearchParams(location.search).get("w");
+      if (q || (sessionStorage.getItem("gScroll") && !location.hash)) document.documentElement.classList.add("g-restoring");
+      setTimeout(function () { document.documentElement.classList.remove("g-restoring"); }, 1800);   // 혹시 몰라 1.8초 뒤엔 무조건 보이기
+    } catch (e) {}
+  </script>
+  <style>html.g-restoring body { visibility: hidden; }</style>
+  <link rel="stylesheet" href="css/cswitch.css?v=71">
+  <link rel="stylesheet" href="css/gallery.css?v=71">
 </head>
 <body>
   <!-- 속이 빈 글자용: 글자 모양을 한 덩어리로 보고 바깥선만 그림 -->
@@ -33,21 +43,22 @@
       <feGaussianBlur in="fat" stdDeviation="0.9" result="fatBlur"/>
       <feComponentTransfer in="fatBlur" result="fatSmooth"><feFuncA type="linear" slope="2.4" intercept="-0.7"/></feComponentTransfer>
       <feComposite in="fatSmooth" in2="SourceAlpha" operator="out" result="ring"/>
-      <feFlood flood-color="#D9A441"/>
+      <feFlood flood-color="#F5B82E"/>
       <feComposite in2="ring" operator="in"/>
     </filter>
   </svg>
   <header class="g-top">
     <a class="g-brand" href="works-gallery.html">EMONGC<span>/</span>WORKS</a>
     <span class="g-now" id="gNow" aria-live="polite"></span>
-    <a class="g-back" href="index.html#works">← 손그림 버전으로</a>
+    <div class="tg" data-now="gallery" role="group" aria-label="컨셉 전환"><i aria-hidden="true"></i><a class="tg-a" data-cs-go href="index.html" data-tip="손그림 버전">Studio</a><a class="tg-b" data-cs-go href="works-gallery.html" data-tip="갤러리 버전" aria-current="page">Gallery</a></div>
   </header>
 
   <main id="gMain">
-    <!-- 첫 화면: 흑백 영상 위에 큰 글자 -->
+    <!-- 첫 화면: 흑백 영상 위에 큰 글자. g-stage 는 스크롤로 진행되는 연출을 위한 긴 무대 (첫 화면은 그 안에 고정) -->
+    <div class="g-stage" id="gStage">
     <section class="g-hero" aria-labelledby="gIntroTitle">
       <div class="g-hero-media" id="gHeroMedia" aria-hidden="true"></div>
-      <h1 id="gIntroTitle" class="g-intro-title">
+      <h1 id="gIntroTitle" class="g-intro-title g-pre">
         <!-- 한 줄에 한 글자씩 머스타드 → 위에서부터 읽으면 E · M · O · NG = EMONG -->
         <span>D<b class="g-hl">E</b>SIGN.</span>
         <span><i class="g-ol">CA</i><i class="g-ol g-olm">M</i><i class="g-ol">PAIGN.</i></span>
@@ -55,22 +66,34 @@
         <span>PLANNI<b class="g-hl">NG</b>.</span>
       </h1>
       <p class="g-intro-sub">디자인 · 홍보물 · 영상 · 출판 · 기획<br>말보다 결과로 보여 드릴게요.</p>
-      <span class="g-hero-down" aria-hidden="true">SELECTED WORKS ↓</span>
+      <span class="g-hero-down" aria-hidden="true">SCROLL ↓</span>
     </section>
+    </div>
 
     <!-- 목차 + 분야별 펼침면 (gallery.js 가 채움) -->
     <section class="g-list" id="gGrid" aria-label="작업 목록"></section>
 
-    <footer class="g-foot">
-      <a class="g-foot-cta" href="index.html#contact">LET'S WORK<br>TOGETHER →</a>
-      <div class="g-foot-row"><p>© Emongc · Hong</p><a href="index.html">손그림 버전 보기</a></div>
+    <!-- [수정] 끝: 스크롤하면 흩어진 E·M·O·N·G 가 모이고 → 바로 연락할 수 있는 공간 -->
+    <footer class="g-foot" id="gFoot">
+      <div class="g-emong" aria-hidden="true"><span>E</span><span>M</span><span>O</span><span>N</span><span>G</span><i>.</i></div>
+      <a class="g-foot-cta" id="gMailCta" href="index.html#contact">LET'S WORK<br>TOGETHER →</a>
+      <div class="g-mail">
+        <p class="g-mail-label">에몽과 함께 일하고 싶다면, 메일 주세요.</p>
+        <div class="g-mail-row">
+          <!-- 주소는 스크립트가 조립 (자동 수집 프로그램이 읽기 어렵게) -->
+          <a class="g-mail-addr" id="gMailAddr" data-u="emongc1209" data-d="gmail.com" href="index.html#contact">emongc1209 [at] gmail.com</a>
+          <button type="button" class="g-copy" id="gCopy">주소 복사</button>
+          <span class="g-copied" id="gCopied" role="status" aria-live="polite"></span>
+        </div>
+      </div>
+      <div class="g-foot-row"><p>© Emongc · Hong</p><a href="index.html#contact">손그림 버전에서 문의 남기기 →</a></div>
     </footer>
   </main>
 
   <!-- 작품 상세: 누르면 바로 열림 -->
   <article class="g-detail" id="gDetail" hidden aria-modal="true" role="dialog" aria-labelledby="gdTitle" tabindex="-1">
     <div class="gd-bar">
-      <button type="button" class="gd-back" id="gClose" aria-label="목록으로 돌아가기">← INDEX</button>
+      <button type="button" class="gd-back" id="gClose" aria-label="목록으로 돌아가기">← 목록으로</button>
       <span class="gd-count" id="gdCount"></span>
       <span class="gd-brand">EMONGC/WORKS</span>
     </div>
@@ -81,6 +104,7 @@
   <button type="button" class="g-totop" id="gTop" aria-label="맨 위로"><span aria-hidden="true">↑</span>TOP</button>
 
   <script src="js/works-data.js"></script>
-  <script src="js/gallery.js?v=42"></script>
+  <script src="js/gallery.js?v=63"></script>
+  <script src="js/concept-switch.js?v=3"></script>
 </body>
 </html>
