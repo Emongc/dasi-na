@@ -3511,3 +3511,119 @@ header h1, header h1 .first-letter { color: var(--main-color); }
 .ending .end-line { color: #A8A298; font-size: 1.05rem; margin: 14px 0 0; transition: opacity .6s ease 1s; }
 .end-right { margin-top: 0; }
 .end-mail { margin-top: 18px; }
+
+
+/* ==================================================
+   HERO v2: PORTFOLIO 글자가 하나씩 들어오고, 상반신 캐릭터가 프레임 아랫선 뒤에서 올라온다 (모두 한 번만)
+   ================================================== */
+.hero-word {
+    position: absolute; left: 0; right: 0; top: 11%; margin: 0; z-index: 1; pointer-events: none;
+    font-family: 'Amatic SC', cursive; font-weight: 700; line-height: 1; color: #BDB7AC;
+    font-size: min(50px, calc((100vw - 40px) * 0.055));   /* 프레임 너비의 7.5% (조용한 배경 글자) */
+    text-align: center;
+}
+.hero-word .hw-in { display: inline-flex; gap: .22em; white-space: nowrap; transform: scaleY(.85); transform-origin: 50% 100%; }
+.hero-word span span, .hero-word .hw-in > span { display: inline-block; opacity: 0; }
+.hero-word.go .hw-in > span { animation-duration: .9s; animation-fill-mode: both; animation-delay: calc(var(--i) * .1s + .3s); }
+.hero-word.go .hw-in > .d { animation-name: hwDrop; animation-timing-function: cubic-bezier(.3, .7, .3, 1); }
+.hero-word.go .hw-in > .o { animation-name: hwRoll; animation-timing-function: cubic-bezier(.25, .8, .3, 1); }
+@keyframes hwDrop {
+    0%   { opacity: 0; transform: translateY(-160%) rotate(-14deg); }
+    55%  { opacity: 1; transform: translateY(8%) rotate(4deg); }
+    75%  { transform: translateY(-5%) rotate(-2deg); }
+    100% { opacity: 1; transform: none; }
+}
+@keyframes hwRoll {
+    0%   { opacity: 0; transform: translateX(-340%) rotate(-540deg); }
+    12%  { opacity: 1; }
+    80%  { transform: translateX(6%) rotate(14deg); }
+    100% { opacity: 1; transform: none; }
+}
+.hero-frame-line { z-index: 3; }
+.hero-char-wrap.is-scenes {
+    left: 33%; top: auto; bottom: 5.4%; width: 57%; aspect-ratio: 640 / 420;
+    transform: translateX(-50%); overflow: hidden; z-index: 2;
+    mix-blend-mode: normal; background: #FAFAFA;          /* 영상 흰 바탕을 페이지 바탕색과 똑같이 맞춰 둠 */
+}
+.hero-char-wrap.is-scenes .hv-stage { position: absolute; inset: 0; transform: translateY(104%); }
+.hero-char-wrap.is-scenes .hv-stage.rise { animation: heroRise .95s cubic-bezier(.2, .9, .25, 1.05) both; }
+@keyframes heroRise { from { transform: translateY(104%); } to { transform: none; } }
+.hero-char-wrap.is-scenes.bob { animation: heroBob2 .45s cubic-bezier(.34, 1.56, .64, 1); }
+@keyframes heroBob2 { 40% { transform: translate(-50%, -1.2%); } }
+.character-speech-bubble { max-width: min(420px, calc(100% - var(--bx, 40%) - 5%)); }
+@media (prefers-reduced-motion: reduce) {
+    .hero-word .hw-in > span { opacity: 1 !important; animation: none !important; transform: none !important; }
+    .hero-char-wrap.is-scenes .hv-stage { transform: none; animation: none !important; }
+}
+@media screen and (max-width: 767px) {
+    .hero-word { top: 11%; }
+    .hero-char-wrap.is-scenes { left: 50%; width: 100%; bottom: 5.4%; }
+    .character-speech-bubble { top: 31% !important; max-width: 86%; }
+}
+
+/* ==================================================
+   HERO v2: 대사 고르기(1~10) + 4번째 말의 커피 드립 → 픽셀
+   ================================================== */
+.scene-pick {
+    position: absolute; left: 50%; top: 100%; margin-top: 16px; transform: translateX(-50%);
+    display: flex; gap: 4px; z-index: 6; pointer-events: none;
+    opacity: 0; animation: spIn .5s ease 3.3s forwards;
+}
+@keyframes spIn { to { opacity: 1; } }
+.sp-b {
+    position: relative; pointer-events: auto; width: 18px; height: 22px; padding: 0; margin: 0; cursor: pointer;
+    border: 0; background: none; font-size: 0;
+}
+.sp-b::before {                                   /* 평소엔 회색 빈 동그라미, 보고 있는 말은 머스타드로 채움 */
+    content: ""; position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px;
+    border: 1.5px solid #A59F94; border-radius: 50%; background: transparent;
+    transition: transform .25s cubic-bezier(.34, 1.56, .64, 1), background .2s, border-color .2s;
+}
+.sp-b::after {                                    /* 마우스를 올리면 번호가 작게 뜸 */
+    content: attr(data-n); position: absolute; left: 50%; top: -14px; transform: translateX(-50%);
+    font-family: 'Inter Tight', 'Noto Sans KR', sans-serif; font-size: .68rem; font-weight: 600; color: #6F685D;
+    opacity: 0; transition: opacity .2s; pointer-events: none;
+}
+.sp-b:hover::before { transform: scale(1.25); border-color: #171717; }
+.sp-b:hover::after { opacity: 1; }
+.sp-b.on::before { background: #F5B82E; border-color: #F5B82E; }
+.sp-b:focus-visible { outline: 2px solid #F5B82E; outline-offset: 2px; }
+
+.drip-scene {
+    position: absolute; left: 77%; top: 67%; width: 10.5%; height: auto; overflow: visible;
+    pointer-events: none; z-index: 3; opacity: 0; transition: opacity .3s ease;
+    fill: none; stroke: #8C857A; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.drip-scene.on { opacity: 1; }
+.drip-scene .ds-soft { opacity: .5; }
+.drip-scene .ds-drop { fill: #171717; stroke: none; opacity: 0; }
+.drip-scene .ds-px { fill: #FFF1CC; stroke: #F5B82E; stroke-width: 1.6; opacity: 0; }
+.drip-scene.on .ds-drop { animation: dsFall 1.6s ease-in both; }
+.drip-scene.on .d2, .drip-scene.on .p2 { animation-delay: 1.6s; }
+.drip-scene.on .d3, .drip-scene.on .p3 { animation-delay: 3.2s; }
+.drip-scene.on .ds-px { animation: dsLand 1.6s ease-in both; }
+@keyframes dsFall {
+    0%   { opacity: 0; transform: translateY(0); }
+    10%  { opacity: 1; }
+    52%  { opacity: 1; transform: translateY(22px); }
+    60%  { opacity: 0; transform: translateY(25px); }
+    100% { opacity: 0; transform: translateY(25px); }
+}
+@keyframes dsLand {
+    0%, 54% { opacity: 0; transform: translateY(0) rotate(0); }
+    60%     { opacity: 1; transform: translateY(0) rotate(0); }
+    100%    { opacity: 1; transform: translateY(var(--dy)) rotate(3deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .scene-pick { animation: none; opacity: 1; }
+    .drip-scene.on .ds-drop { animation: none; opacity: 0; }
+    .drip-scene.on .ds-px { animation: none; opacity: 1; transform: translateY(var(--dy)); }
+}
+@media screen and (max-width: 767px) {
+    .sp-b { min-width: 24px; }
+    .drip-scene { left: 76%; top: 46%; width: 19%; }
+}
+
+/* 영상 3개가 겹쳐 있고 지금 장면의 것만 보인다 (자세가 잡힌 뒤에 살짝 바뀜) */
+.hero-char-wrap.is-scenes .hv-scene { opacity: 0; transition: opacity .3s ease; }
+.hero-char-wrap.is-scenes .hv-scene.on { opacity: 1; }

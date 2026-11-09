@@ -105,7 +105,8 @@
     // 펼침면 구성 (분야 key → 모양). 여기 없는 분야는 "row"(같은 높이 한 줄) 로 자동
     const SPREADS = [
         { id: "film", cats: ["video"], no: "AI Film", ko: "AI 영상", unit: "Films", kind: "film" },
-        { id: "music", cats: ["music"], no: "Music", ko: "AI 음악", unit: "Tracks", kind: "music", big: "Playlist" },
+        { id: "music", cats: ["music"], no: "Music", ko: "AI 음악", unit: "Tracks", kind: "music", big: "Music",
+          lead: "AI로 만든 노래입니다.<br>가사와 분위기를 직접 기획했습니다." },
         { id: "book", cats: ["book"], no: "Book", ko: "출판 · 일러스트", unit: "Books", kind: "book", big: "Books",
           lead: "직접 만든 캐릭터와 이야기로<br>책 · 다이어리 · 스티커를 만들었습니다." },
         { id: "campaign", cats: ["promo", "ad"], no: "Campaign", ko: "홍보물 · 광고", unit: "Works", kind: "campaign", big: "Make them<br>look twice",
@@ -180,16 +181,16 @@
     const KIND = {
         film: function (sp) {
             const c = sp.works[0], rest = sp.works.slice(1);
-            return bigT("Films", sp.ko) + '<div class="g-12 g-film-head"><div class="g-c8"><span class="g-k g-m">대표작 · Cover Story</span><p class="g-ko-t">' + esc(c.title) + '</p><h2 class="g-big g-big-s">' + lines(head(c)) + '</h2></div>' +
+            return '<div class="g-12 g-headrow"><div class="g-c8">' + bigT("Films", sp.ko) + '</div><p class="g-c4 g-lead g-end">AI로 만든 영상 작품입니다.<br>기획 · 시나리오 · 프롬프트 설계까지 직접 했습니다.</p></div>' + '<div class="g-12 g-film-head"><div class="g-c8"><span class="g-k g-m">대표작 · Cover Story</span><p class="g-ko-t">' + esc(c.title) + '</p><h2 class="g-big g-big-s">' + lines(head(c)) + '</h2></div>' +
                 (rest.length ? '<div class="g-c4 g-end"><span class="g-k">다른 영상 · More Films</span></div>' : "") + "</div>" +
-                '<div class="g-12 g-al"><div class="g-c8">' + link(c, '<span class="g-pic g-vid">' + img(tileImg(c)) +
+                '<div class="g-12 g-al g-film-row"><div class="g-c8">' + link(c, '<span class="g-pic g-vid">' + img(tileImg(c)) +
                 '<video muted loop playsinline preload="none" data-src="' + esc(gVid(c)) + '"></video><span class="g-badge">▶ 영상</span></span>') + cap(c, shortRole(c)) + "</div>" +
                 (rest.length ? '<ol class="g-c4 g-rank">' + rest.map(function (w) {
                     return "<li>" + link(w, '<span class="g-rn">' + w._no + '</span><span class="g-pic g-hov">' + img(tileImg(w)) + '<video muted loop playsinline preload="none" data-src="' + esc(gVid(w)) + '"></video></span><span class="g-rt"><b>' + esc(w.title) + "</b><small>" + esc(head(w)) + "</small><em>▶ 영상 보기</em></span>") + "</li>";
                 }).join("") + "</ol>" : "") + "</div>";
         },
         music: function (sp) {
-            return bigT(esc(sp.big), sp.ko) + '<div class="g-12 g-al">' + sp.works.map(function (w, i) {
+            return '<div class="g-12 g-headrow g-musichead"><div class="g-c8"><p class="g-ko-t">' + esc(sp.ko) + '</p><h2 class="g-big g-huge">' + esc(sp.big) + '<span class="g-dot">.</span>' + '<span class="g-dancer" aria-hidden="true"><video muted loop playsinline preload="none" poster="img/mini/emongc-dance-poster.webp" data-src="' + DANCER + '"></video></span>' + '</h2></div><p class="g-c4 g-lead g-end">' + sp.lead + '</p></div>' + '<div class="g-12 g-al">' + sp.works.map(function (w, i) {
                 const span = 12 / Math.min(sp.works.length, 3);
                 return '<div class="g-track" style="grid-column:span ' + span + '">' + link(w, cd(i + 1, w.title), "g-cd-link") +
                     '<div class="g-trk"><span class="g-k g-m">Track ' + nn(i + 1) + "</span>" + '<div class="g-mrow">' + link(w, '<h3 class="g-mid">' + esc(w.title) + "</h3>") +
@@ -199,9 +200,7 @@
         },
         book: function (sp) {
             const n = sp.works.length, span = n >= 4 ? 3 : 12 / n;
-            return '<div class="g-bookhead"><p class="g-ko-t">' + esc(sp.ko) + '</p><h2 class="g-big g-huge">' + esc(sp.big) + '<span class="g-dot">.</span>' +
-                '<span class="g-dancer" aria-hidden="true"><video muted loop playsinline preload="none" poster="img/mini/emongc-dance-poster.webp" data-src="' + DANCER + '"></video></span></h2>' +
-                '<p class="g-lead">' + sp.lead + "</p></div>" +
+            return '<div class="g-12 g-headrow"><div class="g-c8">' + bigT(esc(sp.big), sp.ko) + '</div><p class="g-c4 g-lead g-end">' + sp.lead + "</p></div>" +
                 '<div class="g-12 g-al">' + sp.works.map(function (w) {
                     const f = BOOKCOVER[w.id] || tileImg(w);
                     return '<div style="grid-column:span ' + span + '">' + link(w, '<span class="g-card">' + img(f) + "</span>") + cap(w, shortRole(w)) + "</div>";
@@ -534,13 +533,15 @@
     // "어느 펼침면의 몇 px 아래를 보고 있었는지"를 저장했다가 그 자리로 돌려놓음
     const SKEY = "gScroll";
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    let pending = false;   // 자리 되돌리는 중에는 저장하지 않음 (맨 위(0)로 덮어쓰는 걸 막기)
     function anchorNow() {
         const secs = grid.querySelectorAll(".g-sp");
         let best = null;
         secs.forEach(function (sec) { if (sec.getBoundingClientRect().top <= 1) best = sec; });
-        return best ? { id: best.id, off: Math.round(-best.getBoundingClientRect().top) } : { id: null, off: Math.round(window.scrollY) };
+        const y = Math.round(window.scrollY);
+        return best ? { id: best.id, off: Math.round(-best.getBoundingClientRect().top), y: y } : { id: null, off: y, y: y };
     }
-    function saveScroll() { try { sessionStorage.setItem(SKEY, JSON.stringify(anchorNow())); } catch (e) {} }
+    function saveScroll() { if (pending) return; try { sessionStorage.setItem(SKEY, JSON.stringify(anchorNow())); } catch (e) {} }
     let st = null;
     window.addEventListener("scroll", function () { clearTimeout(st); st = setTimeout(saveScroll, 150); }, { passive: true });
     window.addEventListener("pagehide", saveScroll);
@@ -551,24 +552,32 @@
             if (!new URLSearchParams(location.search).get("w")) document.documentElement.classList.remove("g-restoring");
             return;
         }
-        let userMoved = false;
-        const stop = function () { userMoved = true; };
-        ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (ev) { window.addEventListener(ev, stop, { once: true, passive: true }); });
-        const go = function () {
-            if (userMoved) return;
-            const sec = a.id && document.getElementById(a.id);
-            const y = sec ? sec.getBoundingClientRect().top + window.scrollY + a.off : a.off;
-            window.scrollTo({ top: y, behavior: "instant" });
+        pending = true;
+        let done = false, quiet = null, ro = null;
+        const finish = function () {
+            if (done) return; done = true; pending = false;
+            if (ro) ro.disconnect();
+            clearTimeout(quiet);
         };
+        // 사람이 직접 스크롤하려는 동작이 있으면 그때부터는 건드리지 않음 (새로고침 키 자체는 무시)
+        const SCROLLKEYS = { 32: 1, 33: 1, 34: 1, 35: 1, 36: 1, 37: 1, 38: 1, 39: 1, 40: 1 };
+        ["wheel", "touchstart", "mousedown"].forEach(function (ev) { window.addEventListener(ev, finish, { once: true, passive: true }); });
+        window.addEventListener("keydown", function (e) { if (SCROLLKEYS[e.keyCode] && !e.ctrlKey && !e.metaKey) finish(); }, { passive: true });
+        const go = function () {
+            if (done) return;
+            const sec = a.id && document.getElementById(a.id);
+            const y = sec ? sec.getBoundingClientRect().top + window.scrollY + a.off : (a.y != null ? a.y : a.off);
+            if (Math.abs(window.scrollY - y) > 1) window.scrollTo({ top: y, behavior: "instant" });
+        };
+        const settle = function () { clearTimeout(quiet); quiet = setTimeout(function () { if (document.readyState === "complete") finish(); else settle(); }, 1500); };
         go();
         requestAnimationFrame(function () { go(); document.documentElement.classList.remove("g-restoring"); });
-        // 그림이 들어오며 높이가 바뀌는 동안(약 2.5초) 자리를 다시 맞춤
-        if ("ResizeObserver" in window) {
-            const ro = new ResizeObserver(go);
-            ro.observe(document.body);
-            setTimeout(function () { ro.disconnect(); }, 2500);
-        }
-        window.addEventListener("load", go);
+        // 그림·글꼴이 들어오며 높이가 바뀌는 동안은 계속 자리를 다시 맞추고, 1.5초 조용해지면 끝 (최대 10초)
+        if ("ResizeObserver" in window) { ro = new ResizeObserver(function () { go(); settle(); }); ro.observe(document.body); }
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { go(); settle(); });
+        window.addEventListener("load", function () { go(); settle(); });
+        setTimeout(finish, 10000);
+        settle();
     })();
 
     // 맨 위 배경: 영상 작품들을 번갈아 (흑백)

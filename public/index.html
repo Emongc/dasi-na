@@ -10,14 +10,31 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&amp;family=Patrick+Hand+SC&amp;family=Gaegu:wght@400;700&amp;family=Noto+Sans+KR:wght@400;700&amp;family=Inter+Tight:wght@600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&amp;family=Patrick+Hand+SC&amp;family=Gaegu:wght@400;700&amp;family=Noto+Sans+KR:wght@400;700&amp;family=Inter+Tight:wght@600&display=block"
     rel="stylesheet">
 
   <!-- 외부 스타일시트 연결 -->
   <!-- [수정] 새로고침 때 맨 위가 번쩍 보였다가 보던 자리로 가는 현상: 자리를 되돌릴 때까지 화면을 잠깐 숨김 (최대 1.5초) -->
-  <style>html.restoring body { visibility: hidden; }</style>
+  <style>html.restoring body, html.fonts-wait body { visibility: hidden; }</style>
   <script>try{var _s=JSON.parse(sessionStorage.getItem('scrollSpot')||'null');if(_s&&_s.y>0&&!location.hash){document.documentElement.classList.add('restoring');setTimeout(function(){document.documentElement.classList.remove('restoring')},1500)}}catch(e){}</script>
-  <link rel="stylesheet" href="css/style.css?v=79">
+  <!-- [추가] 글꼴(손글씨체)이 도착할 때까지 화면을 숨겼다가 한 번에 보여줌 → 다른 글꼴이 먼저 보였다가 바뀌는 장면 없애기 (최대 2초) -->
+  <script>
+    (function () {
+      var d = document, root = d.documentElement, done = false;
+      window.__fontsReady = false;
+      root.classList.add('fonts-wait');
+      function ok() {
+        if (done) return; done = true;
+        window.__fontsReady = true; root.classList.remove('fonts-wait');
+        d.dispatchEvent(new Event('fontsready'));
+      }
+      setTimeout(ok, 2000);
+      if (d.fonts && d.fonts.load) {
+        Promise.all([d.fonts.load('700 40px "Amatic SC"'), d.fonts.load('400 20px "Gaegu"'), d.fonts.load('700 20px "Noto Sans KR"')]).then(ok, ok);
+      } else ok();
+    })();
+  </script>
+  <link rel="stylesheet" href="css/style.css?v=84">
   <link rel="stylesheet" href="css/works.css?v=73">
   <link rel="stylesheet" href="css/cswitch.css?v=75">
 </head>
@@ -76,35 +93,18 @@
 
     <!-- 05. HERO: 메인 화면 상단 배너 및 영상 프레임 영역 -->
     <section class="hero-media" aria-label="메인 소개 이미지">
-      <div class="hero-frame" id="heroClickBox" role="button" tabindex="0" aria-label="캐릭터를 눌러 말 걸기">
-        <!-- 캐릭터: 스크립트가 SVG를 직접 넣어서 눈·입·모자를 움직인다 -->
-        <!-- [수정] 캐릭터: 손 흔드는 영상이 반복, 누르면 브이 영상이 한 번 (Gemini 영상 → 배경 정리) -->
-        <div class="hero-char-wrap is-video" id="charWrap" data-hello="img/mini/emongc-hello.mp4" data-v="img/mini/emongc-v.mp4">
-          <img src="img/mini/emongc-hello-poster.webp" alt="머스타드 비니를 쓰고 손을 흔드는 에몽씨 캐릭터">
+      <div class="hero-frame" id="heroClickBox">
+        <!-- PORTFOLIO: 글자가 하나씩 굴러/떨어져 들어와 앉는다 (한 번만) -->
+        <div class="hero-word" id="heroWord" role="img" aria-label="Portfolio"><span class="hw-in" aria-hidden="true"><span class="d" style="--i:0">P</span><span class="o" style="--i:1">O</span><span class="d" style="--i:2">R</span><span class="d" style="--i:3">T</span><span class="d" style="--i:4">F</span><span class="o" style="--i:5">O</span><span class="d" style="--i:6">L</span><span class="d" style="--i:7">I</span><span class="o" style="--i:8">O</span></span></div>
+        <!-- 캐릭터: 10초 인사 영상 하나 (처음 사진 = 영상 첫 장면이라 끊김 없이 이어짐) -->
+        <div class="hero-char-wrap is-video is-scenes" id="charWrap" data-intro="img/mini/emongc-intro.mp4?v=1">
+          <div class="hv-stage"><img src="img/mini/emongc-intro-poster.webp?v=1" alt="머스타드 비니를 쓰고 인사하는 에몽씨 캐릭터 상반신"></div>
         </div>
 
-        <!-- 입에서 퍼져 나가는 손그림 효과선 -->
-        <svg class="talk-lines" id="talkLines" viewBox="0 0 22 30" aria-hidden="true" focusable="false">
-          <path d="M3 11 L13 3 M4 15 L17 15 M3 19 L13 27" />
-        </svg>
-
-        <!-- 이전 말로 돌아가기 (두 번째 말부터 보임) -->
-        <button type="button" class="hero-back" id="heroBackBtn" aria-label="이전 말 보기">
-          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10.5 3.5 L5.5 8 L10.5 12.5" /></svg>
-        </button>
-
-        <!-- 마우스 올리면 나타나는 블록 글자 안내 -->
-        <span class="click-hint" aria-hidden="true"><i style="--d:0">c</i><i style="--d:1">l</i><i style="--d:2">i</i><i style="--d:3">c</i><i style="--d:4">k</i><i class="gap"></i><i style="--d:6">m</i><i style="--d:7">e</i></span>
-
-        <!-- 캐릭터가 하는 말 -->
-        <!-- [추가] 바쁜 분을 위한 지름길: 누르면 history까지 급행 (옷걸이 에몽씨가 쌩 내려감) -->
+                <!-- [추가] 바쁜 분을 위한 지름길: 누르면 history까지 급행 (옷걸이 에몽씨가 쌩 내려감) -->
         <button type="button" class="express-btn" id="expressBtn" aria-label="히스토리로 바로 이동">
           바쁘신 분은 직행 <span class="express-arrow" aria-hidden="true">↓</span>
         </button>
-
-        <div class="character-speech-bubble hi" id="speechBubble" aria-live="polite">
-          <span id="quoteText">hi.</span>
-        </div>
 
         <!-- 테두리: 아래 세로선과 같은 크레파스 질감 (조금 더 약하게). 처음 열 때 한 번 그어진다
              스크립트가 화면 크기에 맞춰 좌표를 다시 계산해서, 질감이 가로로 늘어나지 않게 한다 -->
@@ -507,7 +507,7 @@
   <button id="top-btn" aria-label="페이지 맨 위로 이동"><i style="--n:0">T</i><i style="--n:1">O</i><i style="--n:2">P</i></button>
 
   <!-- JavaScript 연결 -->
-  <script src="js/script.js?v=79"></script>
+  <script src="js/script.js?v=89"></script>
   <script src="js/concept-switch.js?v=3"></script>
   <script src="js/works-data.js?v=24"></script>
   <script src="js/works.js?v=25"></script>

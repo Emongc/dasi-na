@@ -17,6 +17,7 @@ if ('scrollRestoration' in history) {
 }
 (function () {
   const KEY = 'scrollSpot';
+  let pending = false; // 자리 되돌리는 중에는 저장하지 않음 (맨 위(0)로 덮어쓰는 걸 막기)
   function anchorNow() {
     const secs = document.querySelectorAll('section, footer');
     for (const s of secs) {
@@ -25,31 +26,40 @@ if ('scrollRestoration' in history) {
     }
     return { y: window.scrollY };
   }
-  window.addEventListener('pagehide', function () {
-    try { sessionStorage.setItem(KEY, JSON.stringify(anchorNow())); } catch (e) {}
-  });
+  function save() { if (pending) return; try { sessionStorage.setItem(KEY, JSON.stringify(anchorNow())); } catch (e) {} }
+  let st = null;
+  window.addEventListener('scroll', function () { clearTimeout(st); st = setTimeout(save, 150); }, { passive: true });
+  window.addEventListener('pagehide', save);
   let spot = null;
   try { spot = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) {}
   if (location.hash) { document.documentElement.classList.remove('restoring'); return; } // 주소에 #works 같은 목적지가 있으면 그쪽이 우선 (아래에서 처리)
   if (!spot || !spot.y) { document.documentElement.classList.remove('restoring'); return; }
-  let userMoved = false;
-  ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (ev) {
-    window.addEventListener(ev, function () { userMoved = true; }, { once: true, passive: true });
-  });
+  pending = true;
+  let done = false, quiet = null, ro = null;
+  function finish() { if (done) return; done = true; pending = false; if (ro) ro.disconnect(); clearTimeout(quiet); }
+  // 사람이 직접 스크롤하려는 동작이 있으면 그때부터는 건드리지 않음 (새로고침 키 자체는 무시)
+  const SK = { 32: 1, 33: 1, 34: 1, 35: 1, 36: 1, 37: 1, 38: 1, 39: 1, 40: 1 };
+  ['wheel', 'touchstart', 'mousedown'].forEach(function (ev) { window.addEventListener(ev, finish, { once: true, passive: true }); });
+  window.addEventListener('keydown', function (e) { if (SK[e.keyCode] && !e.ctrlKey && !e.metaKey) finish(); }, { passive: true });
   function restore() {
-    if (userMoved) return; // 사람이 이미 스크롤했으면 건드리지 않음
+    if (done) return;
     const secs = document.querySelectorAll('section, footer');
     const s = (spot.id && document.getElementById(spot.id)) || secs[spot.idx];
-    const top = s ? s.getBoundingClientRect().top + window.scrollY + spot.off : spot.y;
+    const top = Math.max(0, s ? s.getBoundingClientRect().top + window.scrollY + spot.off : spot.y);
+    if (Math.abs(window.scrollY - top) <= 1) return;
     const html = document.documentElement, prev = html.style.scrollBehavior;
     html.style.scrollBehavior = 'auto'; // 부드럽게 굴러가는 효과 없이 즉시
-    window.scrollTo(0, Math.max(0, top));
+    window.scrollTo(0, top);
     html.style.scrollBehavior = prev;
   }
+  function settle() { clearTimeout(quiet); quiet = setTimeout(function () { if (document.readyState === 'complete') finish(); else settle(); }, 1500); }
   function reveal() { document.documentElement.classList.remove('restoring'); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', restore); else restore();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(restore);
-  window.addEventListener('load', function () { restore(); reveal(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { restore(); settle(); });
+  if ('ResizeObserver' in window) { ro = new ResizeObserver(function () { restore(); settle(); }); ro.observe(document.documentElement); }
+  window.addEventListener('load', function () { restore(); reveal(); settle(); });
+  setTimeout(finish, 10000);
+  settle();
 })();
 // [수정] 다른 페이지(예: book.html)에서 index.html#works 로 오면 그 섹션으로 이동한 뒤 주소의 #만 지움
 if (location.hash) {
@@ -692,167 +702,33 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 // ==================================================
-// HERO 캐릭터: 클릭할 때마다 표정이 바뀌고, 말이 입에서 나온다
+// HERO: PORTFOLIO 글자 → 캐릭터가 올라옴 → 10초 인사 영상 한 번 (마지막 자세에서 멈춤)
 // ==================================================
-document.addEventListener("DOMContentLoaded", async function () {
-    const box = document.getElementById("heroClickBox");
+document.addEventListener("DOMContentLoaded", function () {
     const wrap = document.getElementById("charWrap");
-    const bubble = document.getElementById("speechBubble");
-    const text = document.getElementById("quoteText");
-    const lines = document.getElementById("talkLines");
-    if (!box || !wrap || !bubble || !text) return;
-    const reduceMotionHero = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    // 캐릭터 SVG를 페이지 안에 직접 넣어야 눈·입·모자를 따로 움직일 수 있다
-    // (불러오기에 실패하면 <img>로 넣어둔 그림이 그대로 보인다)
-    // [수정] 영상 캐릭터: 손 흔들기(반복) 위에 브이(한 번)를 겹쳐 두고, 누를 때 잠깐 바꿔 보여준다
-    let playV = function () {};
-    if (wrap.dataset.hello) {
-        const mk = function (src, cls, loop) {
-            const v = document.createElement("video");
-            v.className = "hero-vid " + cls; v.src = src; v.muted = true; v.playsInline = true; v.loop = loop;
-            v.setAttribute("playsinline", ""); v.setAttribute("aria-hidden", "true"); v.preload = "auto";
-            return v;
-        };
-        const hello = mk(wrap.dataset.hello, "hv-hello", true), vv = mk(wrap.dataset.v, "hv-v", false);
-        hello.poster = wrap.querySelector("img").getAttribute("src");
-        wrap.appendChild(hello); wrap.appendChild(vv);
-        if (!reduceMotionHero) hello.play().catch(function () {});
-        playV = function () {
-            if (reduceMotionHero || !vv.src) return;
-            vv.currentTime = 0;
-            vv.play().then(function () { wrap.classList.add("v-on"); }).catch(function () {});
-        };
-        vv.addEventListener("ended", function () { wrap.classList.remove("v-on"); });
-    } else if (wrap.dataset.src) {
-        try {
-            const res = await fetch(wrap.dataset.src);
-            if (res.ok) wrap.innerHTML = await res.text();
-        } catch (err) { /* 파일을 직접 열었을 때 등: 정지 그림으로 둔다 */ }
+    const word = document.getElementById("heroWord");
+    if (!wrap) return;
+    const stage = wrap.querySelector(".hv-stage") || wrap;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let vid = null;
+    if (wrap.dataset.intro) {
+        vid = document.createElement("video");
+        vid.className = "hero-vid hv-scene";
+        vid.src = wrap.dataset.intro; vid.muted = true; vid.playsInline = true; vid.loop = false; vid.preload = "auto";
+        vid.setAttribute("playsinline", ""); vid.setAttribute("aria-hidden", "true");
+        stage.appendChild(vid);
     }
-
-    const beanie = wrap.querySelector("#beanie");
-    const pupil = wrap.querySelector("#pupil");
-    const mouths = wrap.querySelectorAll(".mouth");
-
-    // 입 위치: 캐릭터 그림 안에서의 비율 (영상 캐릭터는 브이 손 바깥쪽에서 말이 나오도록)
-    const MOUTH = wrap.dataset.hello ? { x: 0.74, y: 0.36 } : { x: 0.79, y: 0.81 };
-
-    // 표정: 눈동자 / 입 / 고개 / 모자 — "어? 움직이네?" 정도로만 아주 작게
-    // 캐릭터가 좌우 뒤집혀 그려져 있어서 눈동자 가로값은 음수가 앞쪽(오른쪽)이다
-    const faces = {
-        surprised: { look: [-1, -1.5],   mouth: "o",     head: 0,    hat: [0, -2] },
-        proud:     { look: [-1.5, 0],    mouth: "grin",  head: -1,   hat: [1.5, 0] },
-        curious:   { look: [-1.5, -1.5], mouth: "smile", head: 0.8,  hat: [-1.5, 0] },
-        sideeye:   { look: [1.5, 0],     mouth: "flat",  head: 0,    hat: [1, 0] },
-        smile:     { look: [-1, 0.5],    mouth: "smile", head: 0.5,  hat: [-1, 0] },
-        excited:   { look: [-1.5, -0.5], mouth: "grin",  head: -0.8, hat: [-1, -1.5] },
-        secret:    { look: [-0.5, 1.5],  mouth: "o",     head: 0.8,  hat: [-1.5, -0.5] }
-    };
-
-    // 손그림 아이콘 (이모지 대신, 프레임과 같은 잉크 선 + 머스타드 포인트)
-    // 대사 안에 {eyes} 처럼 이름을 쓰면 그 자리에 그려진다
-    const ICON = (body) => `<svg class="ic" viewBox="0 0 16 16" aria-hidden="true">${body}</svg>`;
-    const icons = {
-        eyes:   ICON('<ellipse cx="5" cy="8" rx="3" ry="4"/><ellipse cx="11" cy="8" rx="3" ry="4"/><circle class="ink" cx="6.6" cy="8.6" r="1.3"/><circle class="ink" cx="12.6" cy="8.6" r="1.3"/>'),
-        cool:   ICON('<path d="M1 6.2 H15"/><path class="ink" d="M2 6.2 Q2 11 5.2 11 Q8 11 7.4 6.2 Z M8.6 6.2 Q8 11 10.8 11 Q14 11 14 6.2 Z"/>'),
-        search: ICON('<circle cx="6.8" cy="6.8" r="4.4"/><path d="M10.2 10.2 L14.4 14.4"/>'),
-        coffee: ICON('<path class="mus" d="M2.8 6.5 H11.6 V10.6 Q11.6 14 7.2 14 Q2.8 14 2.8 10.6 Z"/><path d="M11.6 8 Q14.6 8 14.6 9.7 Q14.6 11.4 11.6 11.4"/><path d="M5.6 1.8 Q4.6 3.2 5.6 4.6 M8.6 1.8 Q7.6 3.2 8.6 4.6"/>'),
-        down:   ICON('<path d="M8 1.8 Q8.6 7 8 13.6"/><path d="M4.2 9.8 L8 13.8 L11.8 9.8"/>'),
-        spark:  ICON('<path d="M8 1.5 Q8.6 6.8 14.5 8 Q8.6 9.2 8 14.5 Q7.4 9.2 1.5 8 Q7.4 6.8 8 1.5 Z" class="mus"/>'),
-        paper:  ICON('<path d="M3.5 1.8 H10 L12.8 4.6 V14.2 H3.5 Z"/><path d="M10 1.8 V4.6 H12.8"/><path d="M5.6 7.4 H10.6 M5.6 9.8 H10.6 M5.6 12 H8.6"/>'),
-        heart:  ICON('<path class="mus" d="M8 13.6 Q2 9.6 2 5.9 Q2 3.2 4.7 3.2 Q6.8 3.2 8 5.4 Q9.2 3.2 11.3 3.2 Q14 3.2 14 5.9 Q14 9.6 8 13.6 Z"/>'),
-        wink:   ICON('<path d="M1.8 9 Q5 6 8.2 9"/><path d="M8.6 8.8 Q11.6 11.4 14.4 8.8"/><path d="M2.6 7.6 L1.8 6.2 M5 6.6 L5 5 M7.4 7.6 L8.2 6.2"/><circle class="mus" cx="12.8" cy="4.2" r="1.6"/>'),
-        mail:   ICON('<rect x="1.8" y="3.8" width="12.4" height="9" rx="1.2"/><path d="M2.2 4.6 L8 9.2 L13.8 4.6"/><circle class="mus" cx="12.8" cy="3.6" r="2"/>')
-    };
-    const esc = (s) => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-    const render = (line) => esc(line).replace(/\{(\w+)\}/g, (m, k) => icons[k] || m);
-
-    // [대사, 표정] — 말은 항상 입 옆 같은 자리에서 나온다
-    // 줄을 바꾸고 싶은 곳에 \n 을, 아이콘은 {eyes} {cool} {search} {coffee} {paper} {heart} {wink} {down} {spark} {mail} 을 넣으면 된다
-    const quotes = [
-        ["어? 저 누르신 거예요?\n(안 누른 척 시선 회피 {eyes})", "surprised"],
-        ["제 포트폴리오 첫인상 어떠신가요?\n후회 안 하시게 될걸요? {cool}", "proud"],
-        ["궁금한 게 많으시군요?\n저에 대해 하나씩 파헤쳐 볼까요? {search}", "curious"],
-        ["커피는 바리스타처럼 내리고,\n디자인은 AI처럼 내립니다 {coffee}", "excited"],
-        ["이력서보다\n이 캐릭터를\n더 오래 보고 계신 것 같은데요? ㅋㅋ {paper}", "sideeye"],
-        ["제가 어떤 사람인지\n분위기가 느껴지시나요? {heart}", "smile"],
-        ["벌써 저랑 일하고 싶어지셨다구요?\n눈빛만 봐도 다 압니다 하하 {wink}", "proud"],
-        ["계속 누르다 보면.....비밀이...\n나올 리가 없잖아요,\n빨리 아래로 내려가서 보세요! {down}", "secret"],
-        ["디자이너? 인데... 개발도? 영상도?\nAI 활용하면 풀스택 인재잖아?! {spark}", "excited"],
-        ["끝까지 저를 눌러주셨군요!\n자, 이제 망설이지 말고\nCONTACT 버튼을 눌러볼까요? {mail}", "smile"]
-    ];
-
-    let cur = -1;   // 지금 보이는 대사 번호 (-1 = 처음 "hi.")
-    const backBtn = document.getElementById("heroBackBtn");
-
-    // 말과 효과선을 입 바로 옆에 붙인다 (화면 크기가 바뀌어도 따라감)
-    function place() {
-        const f = box.getBoundingClientRect(), c = wrap.getBoundingClientRect();
-        const mx = c.left - f.left + c.width * MOUTH.x;
-        const my = c.top - f.top + c.height * MOUTH.y;
-        const gap = c.width * 0.2;
-        box.style.setProperty("--lx", ((mx + gap) / f.width * 100) + "%");
-        box.style.setProperty("--ly", (my / f.height * 100) + "%");
-        // 입보다 살짝 위(프레임 가운데)에 있는 말 쪽을 향하도록 3선을 약간 위로
-        box.style.setProperty("--lr", "-10deg");
-        box.style.setProperty("--bx", ((mx + gap + 64) / f.width * 100) + "%");   // 3선과 글자 사이 간격
-        box.style.setProperty("--by", "50%");   // 프레임 세로 가운데에 고정
-    }
-
-    function restart(el, cls) {
-        if (!el) return;
-        el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls);
-    }
-
-    function setFace(name) {
-        const f = faces[name];
-        if (pupil) pupil.style.transform = `translate(${f.look[0]}px, ${f.look[1]}px)`;
-        mouths.forEach(m => m.classList.toggle("on", m.dataset.m === f.mouth));
-        // 고개는 기울이지 않고, 모자만 살짝 들썩
-        if (beanie) beanie.style.transform = `translateY(${f.hat[1]}px)`;
-    }
-
-    // n번째 대사 보여주기 (-1이면 처음 "hi.")
-    function show(n) {
-        cur = n;
-        bubble.classList.remove("show", "hi");
-        restart(wrap, "blink");
-        restart(wrap, "bob");
-        if (n >= 0) playV();
-        const [line, face] = n < 0 ? ["hi.", "smile"] : quotes[n];
-        setTimeout(() => setFace(face), 80);
-        setTimeout(() => {
-            text.innerHTML = render(line);
-            bubble.classList.toggle("hi", n < 0);
-            place();
-            bubble.classList.add("show");
-            restart(lines, "pop");
-        }, 170);
-        if (backBtn) backBtn.classList.toggle("on", n >= 0);
-    }
-
-    // 프레임 클릭 = 다음 말, 화살표 = 이전 말
-    function next() { show((cur + 1) % quotes.length); }
-    function prev() { if (cur >= 0) show(cur - 1); }
-
-    // 처음: 입 옆에 "hi."
-    place();
-    requestAnimationFrame(() => { bubble.classList.add("show"); if (lines) lines.classList.add("pop"); });
-    window.addEventListener("resize", place);
-
-    box.addEventListener("click", next);
-    box.addEventListener("keydown", e => {
-        if (e.target !== box) return;   // 화살표 버튼에서 누른 키는 제외
-        if (e.key === "Enter" || e.key === " " || e.key === "ArrowRight") { e.preventDefault(); next(); }
-        if (e.key === "ArrowLeft") { e.preventDefault(); prev(); }
+    const afterFonts = function (cb) { if (window.__fontsReady !== false) cb(); else document.addEventListener("fontsready", cb, { once: true }); };
+    afterFonts(function () {
+        if (reduce) { stage.classList.add("rise"); if (word) word.classList.add("go"); return; }
+        if (word) word.classList.add("go");
+        setTimeout(function () { stage.classList.add("rise"); }, 1500);
+        setTimeout(function () {
+            if (!vid) return;
+            vid.classList.add("on");
+            vid.play().catch(function () {});
+        }, 2300);
     });
-    if (backBtn) {
-        backBtn.addEventListener("click", e => { e.stopPropagation(); prev(); });   // 프레임 클릭(다음)으로 번지지 않게
-    }
-
-    // 가만히 있어도 가끔 눈을 깜빡인다
-    (function idle() { setTimeout(() => { restart(wrap, "blink"); idle(); }, 2800 + Math.random() * 2500); })();
 });
 
 // ==================================================
