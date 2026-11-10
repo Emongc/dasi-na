@@ -659,7 +659,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    box.addEventListener("click", function () { openedByKeyboard = false; openViewer(); });
+    const phoneQ = window.matchMedia("(max-width: 767px)");
+    function syncPhoneRole() { if (phoneQ.matches) { box.removeAttribute("role"); box.removeAttribute("tabindex"); box.removeAttribute("aria-label"); } else { box.setAttribute("role", "button"); box.setAttribute("tabindex", "0"); box.setAttribute("aria-label", "히스토리 크게 보기"); } }
+    syncPhoneRole(); if (phoneQ.addEventListener) phoneQ.addEventListener("change", syncPhoneRole);
+    box.addEventListener("click", function () { if (phoneQ.matches) return; openedByKeyboard = false; openViewer(); });
     box.addEventListener("keydown", function (e) {
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openedByKeyboard = true; openViewer(); }
     });
@@ -1089,6 +1092,8 @@ document.addEventListener("DOMContentLoaded", function () {
         io.observe(box);
     }
     function select(tab, focus) {
+        const phoneNow = window.matchMedia("(max-width: 767px)").matches;
+        const h0 = box.offsetHeight, wasOn = tabs.filter(function (t) { return t.classList.contains("on"); })[0];
         tabs.forEach(function (t) {
             const on = t === tab;
             t.classList.toggle("on", on);
@@ -1099,6 +1104,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         chars.forEach(function (c) { c.classList.toggle("on", c.dataset.char === tab.dataset.char); });
         playChar();   // [추가] 선택된 탭의 에몽씨 영상만 처음부터 한 번 재생 (끝나면 마지막 장면에서 멈춤)
+        if (phoneNow && wasOn && wasOn !== tab && !reduceMotionRC) {   // 폰: 탭마다 달라지는 높이를 부드럽게
+            box.style.height = "auto"; const h1 = box.offsetHeight;
+            if (h1 !== h0) {
+                box.style.height = h0 + "px"; box.style.overflow = "hidden"; void box.offsetHeight;
+                box.style.transition = "height .3s ease"; box.style.height = h1 + "px";
+                setTimeout(function () { box.style.height = ""; box.style.overflow = ""; box.style.transition = ""; if (window.__resumeRedraw) window.__resumeRedraw(); }, 340);
+            } else box.style.height = "";
+        }
         if (focus) tab.focus();
         try { sessionStorage.setItem("resumeTab", tab.id); } catch (e) {}   // [추가] 새로고침해도 보던 탭 유지
     }
@@ -1158,7 +1171,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const mobile = window.matchMedia("(max-width: 767px)").matches;
         let d;
         if (mobile) {
-            const y = side.offsetHeight;
+            const tb = box.querySelector(".resume-tabs");
+            const y = tb ? tb.offsetTop + tb.offsetHeight + 6 : side.offsetHeight;
             d = "M8 " + y + " Q " + (w * 0.5) + " " + (y + 2) + " " + (w - 8) + " " + (y - 1);
         } else {
             const x = side.offsetWidth;
@@ -1166,7 +1180,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         svg.querySelector(".rf-div").setAttribute("d", d);
     }
-    drawFrame();
+    drawFrame(); window.__resumeRedraw = drawFrame;
+    if ("ResizeObserver" in window) { let rq = 0; new ResizeObserver(function () { if (rq) return; rq = requestAnimationFrame(function () { rq = 0; drawFrame(); }); }).observe(box); }
     window.addEventListener("resize", drawFrame);
     window.addEventListener("load", drawFrame);
 

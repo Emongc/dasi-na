@@ -3627,3 +3627,45 @@ header h1, header h1 .first-letter { color: var(--main-color); }
 /* 영상 3개가 겹쳐 있고 지금 장면의 것만 보인다 (자세가 잡힌 뒤에 살짝 바뀜) */
 .hero-char-wrap.is-scenes .hv-scene { opacity: 0; transition: opacity .3s ease; }
 .hero-char-wrap.is-scenes .hv-scene.on { opacity: 1; }
+
+/* ==================================================
+   [폰 보정 v2] 767px 이하 전용 (PC·태블릿은 그대로)
+   ================================================== */
+.ind { font-style: normal; }
+.send-ico { display: none; }
+#contact .ct-send .send-txt { vertical-align: middle; }
+#contact .ct-send .send-ico { display: inline-block; vertical-align: middle; margin-left: 8px; width: 30px; height: 25px; transition: transform .45s cubic-bezier(.3,.7,.3,1); }
+#contact .ct-send:hover .send-ico, #contact .ct-send:focus-visible .send-ico, #contact .ct-send:active .send-ico { transform: translate(7px,-5px) rotate(-8deg); }
+.timeline-scroller { display: block; }
+@keyframes rpIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+@media screen and (max-width: 767px) {
+    /* 1) 맨 위: 프레임을 낮추고 캐릭터를 키움 */
+    .hero-frame { aspect-ratio: 4 / 4.2; }
+    .express-btn { top: 5.6%; }
+    .hero-char-wrap.is-scenes { width: 116%; }
+
+    /* 2) About: 들여쓰기 없애 왼쪽 라인 맞춤 */
+    .ind { display: none; }
+    .key-tag { display: block; margin-left: -1px; }
+    .bio-story.hand-drawn-box p.bio-close { text-wrap: balance; }
+
+    /* 3) RESUME: 보이는 탭만 높이에 반영, 캐릭터는 목록 아래 가운데 */
+    .resume-side { display: contents; }
+    .resume-tabs { order: 1; padding: 12px 8px 6px; }
+    .resume-panels { order: 2; }
+    .resume-panel[hidden] { display: none; }
+    .resume-panel:not([hidden]) { animation: rpIn .35s ease both; }
+    .resume-chars { display: grid; order: 3; margin: 6px 0 18px; justify-items: center; }
+    .resume-char { width: min(150px, 42vw); }
+
+    /* 4) 보내기: 종이비행기가 또렷하게 */
+    #contact .ct-send { padding: 8px 22px 9px; }
+
+    /* 5) HISTORY: 누르는 창 대신 옆으로 밀어서 보기 */
+    .timeline-image-container { cursor: default; overflow: hidden; }
+    .timeline-scroller { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; scrollbar-width: none; touch-action: pan-x pan-y pinch-zoom; }
+    .timeline-scroller::-webkit-scrollbar { display: none; }
+    .timeline-scroller .responsive-timeline-img { width: max(900px, 250%); max-width: none; display: block; }
+}
+@media (prefers-reduced-motion: reduce) { .resume-panel:not([hidden]) { animation: none; } }

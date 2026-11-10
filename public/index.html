@@ -34,8 +34,8 @@
       } else ok();
     })();
   </script>
-  <link rel="stylesheet" href="css/style.css?v=84">
-  <link rel="stylesheet" href="css/works.css?v=73">
+  <link rel="stylesheet" href="css/style.css?v=85">
+  <link rel="stylesheet" href="css/works.css?v=74">
   <link rel="stylesheet" href="css/cswitch.css?v=75">
 </head>
 
@@ -220,14 +220,14 @@
             <div class="bio-text-content">
               <p class="bio-lead">감각으로 만들고, 책임으로 완성하는 사람.</p>
               <ul class="bio-keys">
-                <li><span class="key-tag">&nbsp;&nbsp;디자인</span>
+                <li><span class="key-tag"><i class="ind">&nbsp;&nbsp;</i>디자인</span>
                   <p><strong class="key-point">감각은 작은 디테일에서 드러납니다.</strong><span class="key-more">색과 여백, 글자 하나까지 이유 있게 고릅니다.</span></p></li>
-                <li><span class="key-tag">&nbsp;&nbsp;콘텐츠</span>
+                <li><span class="key-tag"><i class="ind">&nbsp;&nbsp;</i>콘텐츠</span>
                   <p><strong class="key-point">한 장면으로도 마음을 움직일 수 있습니다.</strong><span class="key-more">영상과 포스터를 기획부터 완성까지 직접 만듭니다.</span></p></li>
-                <li><span class="key-tag">&nbsp;&nbsp;기획·운영</span>
+                <li><span class="key-tag"><i class="ind">&nbsp;&nbsp;</i>기획·운영</span>
                   <p><strong class="key-point">티 나지 않게 준비하고, 티 나게 결과를 냅니다.</strong><span class="key-more">일정과 자료를 미리 정리해, 막힘없이 진행되게 합니다.</span></p></li>
               </ul>
-              <p class="bio-close">&nbsp;&nbsp;다시(Again,) 손으로 그리듯 하나하나 정성껏 만들겠습니다.</p>
+              <p class="bio-close"><i class="ind">&nbsp;&nbsp;</i>다시(Again,) 손으로 그리듯 하나하나 정성껏 만들겠습니다.</p>
             </div>
           </div>
         </div>
@@ -393,7 +393,7 @@
               <label for="message">하고 싶은 말</label>
               <textarea id="message" rows="4" placeholder="문의 내용을 10자 이상 적어 주세요"></textarea>
             </div>
-            <button type="submit" class="submit-btn ct-send">보내기 ✉</button>
+            <button type="submit" class="submit-btn ct-send"><span class="send-txt">보내기</span><svg class="send-ico" viewBox="0 0 48 40" width="30" height="25" aria-hidden="true" focusable="false"><path d="M3 18.5 L44 3.5 L33 36.5 L23.5 24 Z" fill="#fff" stroke="#171717" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M44 3.5 L23.5 24 L21 35 L16.5 26.5" fill="none" stroke="#171717" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M5 30 H12 M2 36 H9" stroke="#171717" stroke-width="2.6" stroke-linecap="round"/></svg></button>
             <p id="form-msg"></p>
           </form>
         </div>
@@ -447,14 +447,14 @@
         <!-- [추가] 돋보기 안내 대사 (PC / 폰 문구 다름) -->
         <span class="line-text text-tmi" style="top: 85%;">
           <span class="tmi-desktop">: 아래 이미지에 mouse 도 올려보고, click 도 해볼까요?</span>
-          <span class="tmi-touch">: 누르면 TMI 대방출</span>
+          <span class="tmi-touch">: 옆으로 밀어서 TMI 대방출 →</span>
         </span>
       </div>
 
       <!-- 하단 타임라인 이미지 박스 -->
       <!-- [수정] 마우스를 올리면 손그림 돋보기, 클릭(또는 Enter)하면 크게 보기 -->
       <div class="timeline-image-container crayon-frame crayon-soft" id="timelineContainer" role="button" tabindex="0" aria-label="히스토리 크게 보기">
-        <img src="img/timeline-image-light.png?v=2" alt="인생 타임라인 연혁" class="responsive-timeline-img">
+        <div class="timeline-scroller"><img src="img/timeline-image-light.png?v=2" alt="인생 타임라인 연혁" class="responsive-timeline-img"></div>
         <!-- [수정] 분필로 그린 듯한 손그림 돋보기 (선이 미세하게 떨리는 3장 교차) -->
         <div class="loupe" id="timelineLoupe" aria-hidden="true">
           <div class="loupe-lens" id="loupeLens"></div>
@@ -507,7 +507,7 @@
   <button id="top-btn" aria-label="페이지 맨 위로 이동"><i style="--n:0">T</i><i style="--n:1">O</i><i style="--n:2">P</i></button>
 
   <!-- JavaScript 연결 -->
-  <script src="js/script.js?v=89"></script>
+  <script src="js/script.js?v=90"></script>
   <script src="js/concept-switch.js?v=3"></script>
   <script src="js/works-data.js?v=24"></script>
   <script src="js/works.js?v=25"></script>

@@ -231,8 +231,8 @@
     padding: 18px;
     box-sizing: border-box;
 }
-.wkv-slide-video { padding: 0; height: auto; aspect-ratio: 16 / 9; }
-.wkv-slide video { width: 100%; height: 100%; display: block; background: #000; }
+.wkv-slide.wkv-slide-video { padding: 0; height: auto; aspect-ratio: 16 / 9; }   /* 폰·태블릿 규칙(.wkv-slide 높이/여백)보다 우선 */
+.wkv-slide video { width: 100%; height: 100%; display: block; background: #000; object-fit: contain; }
 .wkv-zoom { display: contents; cursor: zoom-in; }
 .wkv-zoom img, .wkv-slide > img {
     max-width: 100%;
