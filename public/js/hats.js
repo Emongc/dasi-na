@@ -135,7 +135,7 @@
     }
     function show(i) {
       idx = i;
-      nEl.textContent = (i + 1) + " / " + HATS.length;
+      // nEl.textContent = (i + 1) + " / " + HATS.length;// 
       type(HATS[i].line);
       setHat(HATS[i].key);
       wrap.classList.remove("bob"); void wrap.offsetWidth; wrap.classList.add("bob");
