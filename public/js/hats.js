@@ -7,16 +7,16 @@
 (function () {
   "use strict";
   var HATS = [
-    { key: "mustard", line: ["안녕하세요,", "에몽씨예요!"] },                          // 1  머스타드 비니 (영상 속 모자)
-    { key: "fedora",  line: ["디자인하는 날.", "한 화면에 질서를 넣어요."] },            // 2  페도라
-    { key: "red",     line: ["홍보물 만드는 날.", "눈길 가는 한 줄을 찾아요."] },         // 3  빨강 비니
-    { key: "cap",     line: ["영상 만드는 날.", "상상을 움직이게 해요."] },              // 4  야구 모자
-    { key: "barista", line: ["커피 내리는 날.", "디자인도 한 방울씩 내려요."] },          // 5  바리스타 캡
-    { key: "heart",   line: ["챙기는 날.", "사람 먼저 보는 눈이 있어요."] },             // 6  하트 벙거지
-    { key: "straw",   line: ["행사하는 날.", "시작부터 끝까지 챙겨요."] },               // 7  밀짚모자
-    { key: "bowler",  line: ["정리하는 날.", "서류도 일정도 깔끔하게요."] },             // 8  중산모
-    { key: "bag",     line: ["가끔은 이런 날도 있어요.", "장난기는 덤!"] },              // 9  종이봉투
-    { key: "mustard", line: ["그래도 저는 에몽씨.", "모자는 바뀌어도 일은 끝까지."] }     // 10 다시 머스타드 비니
+    { key: "mustard", line: ["다시, 나를 그리는 시간.", "에몽씨의 작업실에 오신 걸 환영해요!"] },
+    { key: "fedora",  line: ["픽셀 하나에도 온도를.", "감각과 질서를 함께 다듬어요."] },
+    { key: "red",     line: ["눈길을 사로잡는 한 줄.", "기획부터 시선 강탈 포스터까지."] },
+    { key: "cap",     line: ["상상이 움직이는 순간.", "영상과 숏폼으로 기분 좋게 톡톡"] },
+    { key: "barista", line: ["정성스레 내린 커피 한 잔.", "그리고 꼼꼼하게 내리는 디테일."] },
+    { key: "heart",   line: ["사람을 먼저 담는 마음.", "따뜻한 시선으로 채워갑니다."] },
+    { key: "straw",   line: ["행사 준비 완료.", "시작부터 끝까지 빈틈없이 챙겨요."] },
+    { key: "bowler",  line: ["정리와 자동화는 제게 맡겨주세요.", "서류도 코드도 깔끔하게 싹둑!"] },
+    { key: "bag",     line: ["가끔은 엉뚱한 상상도 덤으로,", "장난기 가득한 일상 스케치."] },
+    { key: "mustard", line: ["진심을 담아서.", "끝까지 책임지는 에몽씨입니다."] }
   ];
   var HINT = "캐릭터를 톡 눌러보세요";
   var LAST = "img/mini/emongc-intro-last.webp?v=1";
@@ -121,24 +121,41 @@
       clearInterval(typer);
       var a = lines[0], b = lines[1] || "";
       if (reduce) { t1.textContent = a; t2.textContent = b; return; }
-      var i = 0; t1.textContent = ""; t2.textContent = "";
-      typer = setInterval(function () {
-        i++; t1.textContent = a.slice(0, Math.min(i, a.length)); t2.textContent = b.slice(0, Math.max(0, i - a.length));
-        if (i >= a.length + b.length) clearInterval(typer);
-      }, 32);
+      
+      // 1. 기존 텍스트를 즉시 지우지 않고 투명도만 살짝 낮춰서 튀는 느낌 방지
+      t1.style.opacity = "0.2";
+      t2.style.opacity = "0.2";
+      t1.textContent = ""; 
+      t2.textContent = "";
+      
+      // 2. 아주 짧은 찰나(40ms) 뒤에 레이아웃이 잡힌 상태에서 타이핑 시작
+      setTimeout(function() {
+        t1.style.opacity = "1";
+        t2.style.opacity = "1";
+        var i = 0;
+        typer = setInterval(function () {
+          i++; 
+          t1.textContent = a.slice(0, Math.min(i, a.length)); 
+          t2.textContent = b.slice(0, Math.max(0, i - a.length));
+          if (i >= a.length + b.length) clearInterval(typer);
+        }, 22); // 일정한 속도로 감기듯 타이핑
+      }, 30);
     }
     function setHat(key) {
-      if (cur) { var old = cur; old.classList.add("out"); setTimeout(function () { old.remove(); }, 260); cur = null; }
-      if (key === "mustard" || !ART[key]) return;
-      svg.insertAdjacentHTML("beforeend", '<g class="hat-g">' + ART[key] + "</g>");
-      cur = svg.lastElementChild;
+      // 모자를 추가로 얹지 않고, 영상 속 머스타드 비니 고정 상태를 유지합니다.
+      if (cur) { 
+        var old = cur; 
+        old.classList.add("out"); 
+        setTimeout(function () { old.remove(); }, 260); 
+        cur = null; 
+      }
     }
     function show(i) {
       idx = i;
       // nEl.textContent = (i + 1) + " / " + HATS.length;// 
-      type(HATS[i].line);
-      setHat(HATS[i].key);
-      wrap.classList.remove("bob"); void wrap.offsetWidth; wrap.classList.add("bob");
+      type(HATS[i].line);   // 텍스트 바뀜!
+      setHat(HATS[i].key); //모자를 얹어주는(바꾸는)함수
+      // wrap.classList.remove("bob"); void wrap.offsetWidth; wrap.classList.add("bob");
     }
     // 인사 영상을 기다리지 않고 누르면 → 영상을 마지막 장면(인사 끝난 자세)으로 건너뜀
     function skipIntro() {
@@ -160,7 +177,8 @@
       wrap.setAttribute("role", "button"); wrap.setAttribute("tabindex", "0");
       wrap.setAttribute("aria-label", "캐릭터를 눌러 모자 바꾸기");
       say.hidden = false; void say.offsetWidth; say.classList.add("on");
-      nEl.textContent = "1 / " + HATS.length; type(HATS[0].line);
+      // nEl.textContent = "1 / " + HATS.length; type(HATS[0].line);
+      type(HATS[0].line); // 처음부터 첫 문구가 나오게 함!
       hEl.textContent = HINT;
     }
     wrap.addEventListener("click", next);
