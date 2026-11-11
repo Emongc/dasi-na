@@ -3696,24 +3696,26 @@ header h1, header h1 .first-letter { color: var(--main-color); }
 .hero-char-wrap.hat-ready { cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .hero-char-wrap.hat-ready:focus-visible { outline: 2px dashed var(--point-color, #f6b830); outline-offset: 6px; }
 
-.hat-say { position: absolute; z-index: 3; left: 51%; top: 36%; width: 40%; pointer-events: none;
-    font-family: 'Gaegu', cursive; color: #2f2622; opacity: 0; transform: translateY(8px); transition: opacity .5s ease, transform .5s ease; }
+.hat-say { position: absolute; z-index: 3; left: 51%; top: 38%; width: 40%; pointer-events: none;
+    font-family: 'Gaegu', cursive; color: #a79b8c; opacity: 0; transform: translateY(8px); transition: opacity .5s ease, transform .5s ease; }
 .hat-say[hidden] { display: none; }
 .hat-say.on { opacity: 1; transform: none; }
-.hat-say .hs-n { display: block; font-family: 'Inter Tight', sans-serif; font-size: .78rem; letter-spacing: .18em; color: #9a8f82; margin-bottom: 6px; }
-.hat-say .hs-t { display: inline; font-size: clamp(1.35rem, 2.3vw, 2.2rem); font-weight: 700; line-height: 1.5; word-break: keep-all;
-    background: linear-gradient(transparent 62%, rgba(246, 184, 48, .5) 62%); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
-.hat-say .hs-hint { display: block; margin-top: 12px; font-size: 1rem; color: #9a8f82; animation: hsHint 1.6s ease-in-out infinite; }
+.hat-say .hs-n { display: block; font-family: 'Inter Tight', sans-serif; font-size: .74rem; letter-spacing: .18em; color: #c0b6a8; margin-bottom: 8px; }
+.hat-say .hs-t { display: block; font-size: clamp(1.15rem, 1.85vw, 1.7rem); font-weight: 400; line-height: 1.55; word-break: keep-all; min-height: 1.55em; }
+.hat-say .hs-t2 { margin-top: 2px; }
+.hat-say .hs-t:empty { display: none; }
+.hat-say .hs-hint { display: block; margin-top: 14px; font-size: .98rem; color: #c0b6a8; animation: hsHint 1.6s ease-in-out infinite; }
 .hat-say .hs-hint:empty { display: none; }
 @keyframes hsHint { 50% { transform: translateY(-3px); opacity: .55; } }
 
 @media (max-width: 767px) {
-    .hero-frame { aspect-ratio: 4 / 5.1; }
-    .hero-char-wrap.is-scenes { bottom: 22%; }
-    .hat-say { left: 6%; right: 6%; width: auto; top: auto; bottom: 3.2%; text-align: center; }
-    .hat-say .hs-n { font-size: .68rem; margin-bottom: 2px; }
-    .hat-say .hs-t { font-size: 1.12rem; line-height: 1.45; }
-    .hat-say .hs-hint { margin-top: 4px; font-size: .86rem; }
+    .hero-frame { aspect-ratio: 4 / 5.25; }
+    .hero-char-wrap.is-scenes { bottom: 24%; }
+    .hat-say { left: 6%; right: 6%; width: auto; top: auto; bottom: 5.4%; text-align: center; }
+    .hat-say .hs-n { font-size: .62rem; margin-bottom: 1px; }
+    .hat-say:not(.clicked) .hs-n { display: none; }
+    .hat-say .hs-t { font-size: 1.05rem; line-height: 1.45; min-height: 0; }
+    .hat-say .hs-hint { margin-top: 3px; font-size: .8rem; }
 }
 @media (prefers-reduced-motion: reduce) {
     .hat-g, .hat-g.out, .hat-drip, .hat-say .hs-hint { animation: none; }
