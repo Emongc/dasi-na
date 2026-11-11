@@ -725,12 +725,12 @@ document.addEventListener("DOMContentLoaded", function () {
     afterFonts(function () {
         if (reduce) { stage.classList.add("rise"); if (word) word.classList.add("go"); return; }
         if (word) word.classList.add("go");
-        setTimeout(function () { stage.classList.add("rise"); }, 1500);
+        setTimeout(function () { stage.classList.add("rise"); }, 1100);
         setTimeout(function () {
             if (!vid) return;
             vid.classList.add("on");
             vid.play().catch(function () {});
-        }, 2300);
+        }, 1700);
     });
 });
 

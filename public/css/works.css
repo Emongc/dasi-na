@@ -508,7 +508,8 @@
     .wk-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .wk-grid.is-feature .wk-card:not(.out):first-child { grid-column: span 3; grid-row: auto; display: block; }
     .wk-grid.is-feature .wk-card:not(.out):first-child .wk-thumb { aspect-ratio: 16 / 9; }
-    .wkv-box { grid-template-columns: 1fr; gap: 22px; }
+    .wkv-box { grid-template-columns: minmax(0, 1fr); gap: 22px; overflow-x: hidden; }
+    .wkv-info { min-width: 0; }
     .wkv-slide { height: min(56vh, 560px); }
 }
 @media screen and (max-width: 767px) {
@@ -623,3 +624,17 @@
 }
 .wk-mascot:hover .wk-mascot-hint, .wk-mascot:focus-visible .wk-mascot-hint { opacity: 1; transform: translate(-50%, 0) rotate(-3deg); }
 @media (hover: none) { .wk-mascot-hint { opacity: 0.85; transform: translate(-50%, 0) rotate(-3deg); } }
+
+/* [폰 보정] 주소창이 보일 때도 상세창 윗부분(X)이 잘리지 않게: 실제 보이는 높이(dvh) 기준 */
+@media screen and (max-width: 767px) {
+    @supports (height: 100dvh) {
+        .wkv-box, .wkv-frame { max-height: calc(100dvh - 58px); }
+    }
+}
+
+/* [폰 보정 2] 실제 보이는 높이(dvh)에 맞춤 · 상세창 안에서는 브라우저 확대 막음(사진만 두 손가락으로 확대) */
+.wkv { touch-action: pan-y; }
+@supports (height: 100dvh) {
+    .wkv, .wkv-lb, .wkv-zoomer { height: 100dvh; }
+    .wkv-lb img { max-height: calc(100dvh - 140px); }
+}

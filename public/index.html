@@ -28,14 +28,14 @@
         window.__fontsReady = true; root.classList.remove('fonts-wait');
         d.dispatchEvent(new Event('fontsready'));
       }
-      setTimeout(ok, 2000);
+      setTimeout(ok, 700);
       if (d.fonts && d.fonts.load) {
         Promise.all([d.fonts.load('700 40px "Amatic SC"'), d.fonts.load('400 20px "Gaegu"'), d.fonts.load('700 20px "Noto Sans KR"')]).then(ok, ok);
       } else ok();
     })();
   </script>
-  <link rel="stylesheet" href="css/style.css?v=85">
-  <link rel="stylesheet" href="css/works.css?v=74">
+  <link rel="stylesheet" href="css/style.css?v=86">
+  <link rel="stylesheet" href="css/works.css?v=76">
   <link rel="stylesheet" href="css/cswitch.css?v=75">
 </head>
 
@@ -100,6 +100,8 @@
         <div class="hero-char-wrap is-video is-scenes" id="charWrap" data-intro="img/mini/emongc-intro.mp4?v=1">
           <div class="hv-stage"><img src="img/mini/emongc-intro-poster.webp?v=1" alt="머스타드 비니를 쓰고 인사하는 에몽씨 캐릭터 상반신"></div>
         </div>
+        <!-- 모자 갈아쓰기 문구 (js/hats.js) -->
+        <div class="hat-say" id="hatSay" aria-live="polite" hidden><span class="hs-n"></span><span class="hs-t"></span><span class="hs-hint"></span></div>
 
                 <!-- [추가] 바쁜 분을 위한 지름길: 누르면 history까지 급행 (옷걸이 에몽씨가 쌩 내려감) -->
         <button type="button" class="express-btn" id="expressBtn" aria-label="히스토리로 바로 이동">
@@ -507,10 +509,11 @@
   <button id="top-btn" aria-label="페이지 맨 위로 이동"><i style="--n:0">T</i><i style="--n:1">O</i><i style="--n:2">P</i></button>
 
   <!-- JavaScript 연결 -->
-  <script src="js/script.js?v=90"></script>
+  <script src="js/script.js?v=91"></script>
+  <script src="js/hats.js?v=1"></script>
   <script src="js/concept-switch.js?v=3"></script>
   <script src="js/works-data.js?v=24"></script>
-  <script src="js/works.js?v=25"></script>
+  <script src="js/works.js?v=26"></script>
 
 
 

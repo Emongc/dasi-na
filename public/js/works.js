@@ -466,7 +466,7 @@
             const s = el("div", "wkv-slide wkv-slide-video");
             track.appendChild(s);
             slides.push({ cap: "" });
-            const play = function (f) { s.innerHTML = '<video src="' + src(w, f) + '" controls autoplay playsinline></video>'; };
+            const play = function (f) { s.innerHTML = '<video src="' + src(w, f) + '" controls autoplay playsinline' + (window.__wkMuted ? ' muted' : '') + '></video>'; };
             if (w.versions) {
                 list.forEach(function (v, i) {
                     const b = el("button", "wkv-ver", esc(v.label));
@@ -593,7 +593,7 @@
     let zW = 0, zH = 0, cx = 0, cy = 0, tx = 0, ty = 0, zRaf = 0, zLevel = 1, mx = 0.5, my = 0.5, zDrag = null, zMoved = false;
     function zSize() {
         const vw = window.innerWidth, nw = zImg.naturalWidth || 1600, nh = zImg.naturalHeight || 1000;
-        zW = Math.max(vw, Math.min(nw, vw * 2)) * zLevel;
+        zW = (fine ? Math.max(vw, Math.min(nw, vw * 2)) : vw) * zLevel;   // 터치: 화면 폭에 맞춰 전체가 먼저 보이고, 두 손가락으로 확대
         zH = zW * nh / nw;
         zImg.style.width = zW + "px";
         zImg.style.height = zH + "px";
@@ -626,7 +626,7 @@
     }
     function zKick() { if (!zRaf) zRaf = requestAnimationFrame(zTick); }
     function openZoom(e) {
-        zLevel = 1;
+        zLevel = 1; zPts.clear(); zPinch = null;
         mx = e.clientX / window.innerWidth;
         my = e.clientY / window.innerHeight;
         zImg.src = lbImg.src;
@@ -661,13 +661,29 @@
         zSize(); zTarget(); zKick();
         mini.hidden = zW <= window.innerWidth + 1 && zH <= window.innerHeight + 1;
     }, { passive: false });
-    // 터치: 손가락으로 밀기
+    // 터치: 한 손가락 밀기 · 두 손가락 확대/축소
+    const zPts = new Map(); let zPinch = null;
+    function zDist() { const p = Array.from(zPts.values()); return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y) || 1; }
     zm.addEventListener("pointerdown", function (e) {
         zMoved = false;
         if (e.pointerType === "mouse") return;
-        zDrag = { x: e.clientX, y: e.clientY, cx: cx, cy: cy };
+        zPts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        if (zPts.size === 2) { zDrag = null; zPinch = { d: zDist(), l: zLevel }; zMoved = true; }
+        else if (zPts.size === 1) zDrag = { x: e.clientX, y: e.clientY, cx: cx, cy: cy };
     });
     zm.addEventListener("pointermove", function (e) {
+        if (zPts.has(e.pointerId)) zPts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        if (zPinch && zPts.size === 2) {
+            const p = Array.from(zPts.values()), mxp = (p[0].x + p[1].x) / 2, myp = (p[0].y + p[1].y) / 2, oldW = zW;
+            zLevel = Math.max(1, Math.min(4, zPinch.l * zDist() / zPinch.d));
+            zSize();
+            const k = zW / oldW;
+            cx = tx = zClamp(mxp - (mxp - cx) * k, zW, window.innerWidth);
+            cy = ty = zClamp(myp - (myp - cy) * k, zH, window.innerHeight);
+            mini.hidden = zW <= window.innerWidth + 1 && zH <= window.innerHeight + 1;
+            zDraw();
+            return;
+        }
         if (!zDrag) return;
         const dx = e.clientX - zDrag.x, dy = e.clientY - zDrag.y;
         if (Math.abs(dx) + Math.abs(dy) > 6) zMoved = true;
@@ -675,8 +691,9 @@
         cy = ty = zClamp(zDrag.cy + dy, zH, window.innerHeight);
         zDraw();
     });
-    zm.addEventListener("pointerup", function () { zDrag = null; });
-    zm.addEventListener("pointercancel", function () { zDrag = null; });
+    function zUp(e) { zPts.delete(e.pointerId); zDrag = null; if (zPts.size < 2) zPinch = null; }
+    zm.addEventListener("pointerup", zUp);
+    zm.addEventListener("pointercancel", zUp);
     zm.addEventListener("click", function (e) { if (zMoved) return; e.stopPropagation(); zoomReset(); lb.querySelector(".wkv-lb-close").focus({ preventScroll: true }); });
     window.addEventListener("resize", function () { if (!zm.hidden) { zSize(); zTarget(); cx = tx; cy = ty; zDraw(); } });
     lb.querySelector(".wkv-lb-pan").addEventListener("click", openZoom);
@@ -739,8 +756,19 @@
     }
     window.addEventListener("pageshow", resumeMascots);
     document.addEventListener("visibilitychange", resumeMascots);
+    // 상세창이 열려 있는 동안 브라우저(아이폰) 화면 확대를 막고, 닫을 때 확대돼 있었으면 원래 크기로 되돌림
+    document.addEventListener("gesturestart", function (e) { if (viewer.classList.contains("open")) e.preventDefault(); }, { passive: false });
+    document.addEventListener("touchmove", function (e) { if (viewer.classList.contains("open") && e.touches.length > 1 && zm.hidden) e.preventDefault(); }, { passive: false });
+    function resetPageZoom() {
+        const vp = window.visualViewport, m = document.querySelector('meta[name="viewport"]');
+        if (!m || !vp || vp.scale <= 1.01) return;
+        const orig = m.getAttribute("content");
+        m.setAttribute("content", "width=device-width, initial-scale=1, maximum-scale=1");
+        setTimeout(function () { m.setAttribute("content", orig); }, 120);
+    }
     function close() {
         if (!viewer.classList.contains("open")) return;
+        resetPageZoom();
         viewer.classList.remove("open");
         setTimeout(resumeMascots, reduce ? 0 : 340);
         track.querySelectorAll("video, audio").forEach(function (v) { v.pause(); });
@@ -774,12 +802,13 @@
 
     // ?work=작품id (&process=1) 로 들어오면 바로 열기
     const params = new URLSearchParams(location.search);
-    const wid = params.get("work");
+    let wid = params.get("work");
+    if (wid === "emongc") wid = "emongc-making"; // 캐릭터 칸 주소로 와도 제작기 상세창으로 연결
     if (wid && byId[wid]) {
         showCat(byId[wid].cat);
         const p = params.get("process") === "1";
         history.replaceState(null, "", location.pathname);
-        window.addEventListener("load", function () { setTimeout(function () { open(wid, { process: p }); }, 400); });
+        window.addEventListener("load", function () { setTimeout(function () { window.__wkMuted = true; open(wid, { process: p }); window.__wkMuted = false; }, 400); });
     }
     window.openWork = open;
 })();
