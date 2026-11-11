@@ -662,6 +662,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const phoneQ = window.matchMedia("(max-width: 767px)");
     function syncPhoneRole() { if (phoneQ.matches) { box.removeAttribute("role"); box.removeAttribute("tabindex"); box.removeAttribute("aria-label"); } else { box.setAttribute("role", "button"); box.setAttribute("tabindex", "0"); box.setAttribute("aria-label", "히스토리 크게 보기"); } }
     syncPhoneRole(); if (phoneQ.addEventListener) phoneQ.addEventListener("change", syncPhoneRole);
+    // 폰: 연혁을 열면 결혼 반지(가운데쯤)가 화면 가운데 오도록 시작 위치 맞춤
+    (function () {
+      const sc = box.querySelector(".timeline-scroller"), im = sc && sc.querySelector("img");
+      if (!sc || !im) return;
+      const center = function () { if (phoneQ.matches && im.offsetWidth) sc.scrollLeft = im.offsetWidth * 0.4355 - sc.clientWidth / 2; };
+      if (im.complete) center(); else im.addEventListener("load", center);
+      window.addEventListener("load", center);
+    })();
     box.addEventListener("click", function () { if (phoneQ.matches) return; openedByKeyboard = false; openViewer(); });
     box.addEventListener("keydown", function (e) {
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openedByKeyboard = true; openViewer(); }

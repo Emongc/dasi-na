@@ -3667,6 +3667,11 @@ header h1, header h1 .first-letter { color: var(--main-color); }
     .timeline-scroller { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; scrollbar-width: none; touch-action: pan-x pan-y pinch-zoom; }
     .timeline-scroller::-webkit-scrollbar { display: none; }
     .timeline-scroller .responsive-timeline-img { width: max(900px, 250%); max-width: none; display: block; }
+    /* 6) CONTACT → HISTORY: 연결선이 Contact 바로 아래에서 시작하도록 간격 줄임 */
+    #contact { padding-bottom: 18px; }
+    .history-section { padding-top: 0; }
+    /* 7) About 가방: 눌렀을 때 생기는 네모 표시 없애기 */
+    .about-photo, .about-photo * , .bag-hit { -webkit-tap-highlight-color: transparent; outline: none; }
 }
 @media (prefers-reduced-motion: reduce) { .resume-panel:not([hidden]) { animation: none; } }
 
@@ -3694,7 +3699,7 @@ header h1, header h1 .first-letter { color: var(--main-color); }
     100% { transform: translateY(84px) scale(1.7, .3); opacity: 0; }
 }
 .hero-char-wrap.hat-ready { cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-.hero-char-wrap.hat-ready:focus-visible { outline: 2px dashed var(--point-color, #f6b830); outline-offset: 6px; }
+.hero-char-wrap.hat-ready, .hero-char-wrap.hat-ready:focus, .hero-char-wrap.hat-ready:focus-visible { outline: none; }
 
 .hat-say { position: absolute; z-index: 3; left: 51%; top: 38%; width: 40%; pointer-events: none;
     font-family: 'Gaegu', cursive; color: #a79b8c; opacity: 0; transform: translateY(8px); transition: opacity .5s ease, transform .5s ease; }
@@ -3711,7 +3716,7 @@ header h1, header h1 .first-letter { color: var(--main-color); }
 @media (max-width: 767px) {
     .hero-frame { aspect-ratio: 4 / 5.25; }
     .hero-char-wrap.is-scenes { bottom: 24%; }
-    .hat-say { left: 6%; right: 6%; width: auto; top: auto; bottom: 5.4%; text-align: center; }
+    .hat-say { left: 6%; right: 6%; width: auto; top: auto; bottom: 9.5%; text-align: center; }
     .hat-say .hs-n { font-size: .62rem; margin-bottom: 1px; }
     .hat-say:not(.clicked) .hs-n { display: none; }
     .hat-say .hs-t { font-size: 1.05rem; line-height: 1.45; min-height: 0; }
