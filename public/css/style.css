@@ -5797,7 +5797,7 @@ header h1 .first-letter {
 .hat-say {
     position: absolute;
     z-index: 3;
-    left: 51%;
+    left: 45%;
     top: 45%;
     width: 380px;          /* 넉넉한 가로 폭 고정 */
     max-width: 90vw;
