@@ -119,6 +119,7 @@ window.WORKS = [
         lyrics: "[Verse]\n오늘 좀 꼬였어\n뭐 하나 안 풀려\n세상이 다 나만\n밀어내는 것 같아\n잠깐만, wait\n왜 내가 작아져\n하루 좀 망쳤다고\n내가 망한 건 아냐\n[Pre-Chorus]\n오늘은 low\n내일은 몰라\n고개를 들어\n여기서부터\n[Chorus]\nBad day, bad day\n그저 오늘이 bad day\nNot me, not me\n내가 별로인 게 아냐\nBad day, bad day\n하루쯤 뭐 어때\n오늘 하나로\n나를 다 말하지 마\n[Rap]\nYeah\n꼬이면 어때, 다시 go\n바닥을 쳐도 다시 flow\n오늘의 점수는 zero\n그래도 나는 그대로\nNo no\n날 정하지 마\n한 장면 보고 다 말하지 마\n오늘은 low\n내일은 high\n아직 내 얘기는\n끝나지 않아\n[Break]\nBad day\nNot me\nBad day\nNot my life\n[Break]\nBad day\nNot me\nBad day\nNot my life\n[Final Chorus]\nBad day, bad day\n그저 오늘이 bad day\nNot me, not me\n내가 별로인 게 아냐\nBad day, bad day\n하루쯤 뭐 어때\n오늘 하나로\n나를 다 말하지 마\nBad day!\nNot me!"
     },
     {
+        // [수정 2026-11-18] cover.webp 가장자리 흰 테두리를 잘라 내고 확대 → CD 라벨이 꽉 차게
         id: "teacher", cat: "music", type: "music", dir: "music/teacher",
         title: "의미 전달 됐죠?", sub: "선생님께 바치는 노래", tags: "AI 음악 · K-pop 댄스", label: "2:56",
         cover: "cover.webp", audio: "song.mp3",
@@ -126,6 +127,30 @@ window.WORKS = [
         tools: "ChatGPT (작사) · Suno (작곡 · 노래 생성)",
         role: "콘셉트 · 작사 · 목소리 · 연출 지시 프롬프트",
         lyrics: "[Start Immediately - Male Teacher, Deep Spoken Voice]\n자! 여러분! 집! 중! 하세요!\n타이핑이 중요한 게 아니란 말입니다!\n자, 의미 전달 됐죠?\n[Female Students - Playful Spoken Response]\n네에에~ 됐죠!\n근데 집에 가면 왜 모르죠?\n[Beat Drop - Bright K-pop Dance Hip Hop]\n[Verse 1 - Female Rap, Crystal Clear Diction]\n처음엔 놀랐죠, 너무 재밌어서\n다음엔 놀랐죠, 갑자기 버럭해서!\nHTML에 CSS\n자바스크립트까지 오케이 예스!\n설명은 쏙쏙! 진도는 쭉쭉!\n우리 머릿속은 빙글빙글 빙빙!\n우리 머릿속은 빙글빙글 빙빙!\n쉬는 시간 없이, 출석도 잊고\n하나라도 더 알려주시려고!\n네 시간은 짧아! 여덟 시간 하자!\n선생님 잠깐! 화장실 좀 가자!\n열정은 만땅! 체력은 바닥!\n마음은 청춘인데 허리가 아작!\n[Pre-Chorus - Female Group Vocals, Playful]\n알죠 알죠! 선생님 마음!\n하나라도 더 알려주고 싶은 마음!\n우리도 알아요! 다 알아요!\n그 열정만큼은 진짜 최고예요!\n[Chorus - Big Catchy Female Group Vocals]\n의미 전달 됐죠? 됐죠? 됐죠?\n네네네! 됐죠! 됐죠!\n설명 들을 땐 다 알겠죠!\n혼자 해보면 왜 안 되죠?\n됐죠? 됐죠? 의미 전달 됐죠?\n알죠? 알죠? 선생님 마음 알죠!\n우리 마음도 전달됐죠?\n됐죠! 됐죠! 의미 전달 됐죠!\n[Verse 2 - Female Rap, Clear and Playful]\n깃허브에 올려! 넷틀리파이!\n내 웹사이트 드디어 세상에 공개!\n선생님 말씀! 메이크 머니!\n그런데 돈은 어디서 버니?\n그런데 돈은 어디서 버니?\n코드는 짰는데 통장은 그대로!\n버튼은 움직여도 잔고는 제로!\n배우면 배울수록 궁금한 게 많아\n이제 좀 알겠는데 수업이 끝나!\n[Beat Stop - Male Teacher, Stern Spoken Voice]\n자! 이제 이걸로 돈 버셔야죠!\n의미 전달 됐죠?\n[Female Student - Confused Spoken Voice]\n네? 돈 버는 건 아직 안 배웠는데요?\n[Short Comedic Pause]\n[Bridge - Female Emotional Singing, Softer Instrumental]\n조금만 더 일찍 만났더라면\n조금만 더 오래 배웠더라면\n버럭하시던 그 목소리마저\n그리워질 것만 같아요\n선생님 마음, 우리도 알아요\n끝까지 알려주셔서 감사해요\n[Final Chorus - Powerful Female Group Vocals]\n의미 전달 됐죠? 됐죠? 됐죠?\n네네네! 이제는 알죠!\n선생님 마음 우리도 알죠!\n우리 마음도 전달됐죠?\n됐죠? 됐죠? 의미 전달 됐죠?\n알죠? 알죠? 서로 다 알죠!\n더 배우고 싶은 이 마음까지\n선생님께 전달됐죠!\n[Outro - Male Teacher, Spoken, Music Stops]\n자! 마지막으로!\n의미 전달 됐죠?\n[Female Student - Playful Spoken Voice]\n네! 근데 선생님...\n메이크 머니는 어디서 다운로드하죠?\n[Record Scratch - Group Laughter]\n[Male Teacher - Funny Stern Spoken Voice]\n아유! 진짜! 집중하세요!\n[Female Group - Cheerful Shout]\n네에에! 의미 전달 됐죠오오!\n[End]"
+    },
+    // 취업송 Again, — 같은 가사, 두 가지 편곡 (기본 / 어쿠스틱)
+    //  · 파일: img/works/music/again/ , img/works/music/again-acoustic/ (각각 song.mp3 + cover.webp)
+    //  · [수정 2026-11-18] 커버: 두 곡 같은 미색 바탕 + 머스타드(사이트 메인 색)는 선으로만 — 바깥 테두리 원 한 줄
+    //    어쿠스틱만 위쪽에 머스타드 손그림 기타를 작게 (CD 구멍·테두리에 안 잘리게) / 테두리 원도 살짝 일렁이는 손그림 선
+    //  · [수정 2026-11-18] 메인송 표시: 두 곡 모두 연한 모눈종이 바탕 + 기본 버전은 모눈 한 칸만 머스타드 손칠("나 여기 있어요"), 어쿠스틱은 그 자리에 기타 (기타 선은 얇게)
+    //  · Gallery 의 큰 영문 문구는 js/gallery.js HEAD 에서 수정
+    {
+        id: "again", cat: "music", type: "music", dir: "music/again",
+        title: "Again,", sub: "말하자면, 출근하고 싶다는 말이야", tags: "AI 음악 · 인디 발라드", label: "2:31",
+        cover: "cover.webp", audio: "song.mp3",
+        why: "대학을 졸업하고 어학연수를 다녀오고, 늦게나마 자격증을 따서 신입으로 일했습니다. 그 뒤 결혼과 출산, 육아, 남편의 해외 발령으로 보낸 5년. 돌아와 보니 배우고 싶은 것도, 해낼 수 있을 것 같은 일도 많은데 이력서는 '나이'를 적는 칸에서 멈춰 섭니다. 그 마음을 하소연 대신 위트로 풀어낸 취업송입니다. \"말하자면, 출근하고 싶다는 말이야\"를 반복해 귀에 남기고, 경력이 끊긴 여성과 나이 때문에 지원 앞에서 망설이는 모든 여성에게 \"비어 있던 시간이 아니라 채워 온 시간\"이라고, \"나 여기 있어요\"라고 가볍지만 분명하게 말하고 싶었습니다. 제목은 사이트 이름과 같은 Again, 입니다.",
+        tools: "ChatGPT · Claude (작사 · 곡 스타일) · Suno (작곡 · 노래 생성)",
+        role: "기획 · 작사 · 곡 스타일 프롬프트",
+        lyrics: "[Hook]\n말하자면, 일을 하고 싶다는 말이야\n말하자면, 출근하고 싶다는 말이야\n아침마다 갈 곳이 있는 하루\n그게 내가 바라는 전부야\n[Rap]\n옷장 맨 안쪽에 걸어 둔\n아직 꺼내지 못한 셔츠\n언젠가 입을 날이 올 거라\n다림질만 몇 번째야\n나이를 적는 칸 앞에서\n펜 끝이 자꾸 멈춰 서\n숫자 하나에 내 시간이\n다 지워질까 봐\n[Pre-Chorus]\n누군가는 쉬었다고 말하겠지\n비어 있던 시간이라고\n하지만 내 하루는 한 번도\n비어 있던 적 없었어\n[Chorus]\n말하자면, 일을 하고 싶다는 말이야\n말하자면, 다시 시작하고 싶단 말이야\n채워 온 날들도 나였고\n지금의 나도 나야\n말하자면, 나를 한 번만 봐 달란 말이야\n[Rap]\n누군가의 이름 뒤에 서 있던 날들\n내 이름은 서류 끝에 작게 남았지\n다시 써 보는 이력서 첫 줄\n떨려도 지우지 않을래\n늦었다는 말은 남들이 하는 말\n나는 지금부터 again\n언젠가 마주 앉는 날\n고개 숙이지 않을게\n[Bridge]\n내가 채워 온 시간들을\n또박또박 말할 거야\n[Final Chorus]\n말하자면, 일을 하고 싶다는 말이야\n말하자면, 출근하고 싶다는 말이야\n채워 온 날들도 나였고\n지금의 나도 나야\n말하자면, 이제 나를 불러 달란 말이야\n[Outro]\n말하자면...\n나 여기 있어요"
+    },
+    {
+        id: "again-acoustic", cat: "music", type: "music", dir: "music/again-acoustic",
+        title: "Again, (Acoustic Ver.)", sub: "같은 노래, 더 작은 목소리로", tags: "AI 음악 · 어쿠스틱", label: "2:28",
+        cover: "cover.webp", audio: "song.mp3",
+        why: "같은 노래를 악기를 더 덜어 내고 다시 부른 어쿠스틱 버전입니다. 기본 버전이 \"나 여기 있어요\"라고 손을 드는 노래라면, 이 버전은 다림질한 셔츠를 바라보며 혼잣말처럼 마음을 다잡는 노래입니다. 같은 가사도 편곡과 목소리의 온도에 따라 전혀 다른 장면이 된다는 것을 두 버전으로 보여 주고 싶었습니다.",
+        tools: "ChatGPT · Claude (작사 · 곡 스타일) · Suno (작곡 · 노래 생성)",
+        role: "기획 · 작사 · 곡 스타일 프롬프트",
+        lyrics: "[Hook]\n말하자면, 일을 하고 싶다는 말이야\n말하자면, 출근하고 싶다는 말이야\n아침마다 갈 곳이 있는 하루\n그게 내가 바라는 전부야\n[Rap]\n옷장 맨 안쪽에 걸어 둔\n아직 꺼내지 못한 셔츠\n언젠가 입을 날이 올 거라\n다림질만 몇 번째야\n나이를 적는 칸 앞에서\n펜 끝이 자꾸 멈춰 서\n숫자 하나에 내 시간이\n다 지워질까 봐\n[Pre-Chorus]\n누군가는 쉬었다고 말하겠지\n비어 있던 시간이라고\n하지만 내 하루는 한 번도\n비어 있던 적 없었어\n[Chorus]\n말하자면, 일을 하고 싶다는 말이야\n말하자면, 다시 시작하고 싶단 말이야\n채워 온 날들도 나였고\n지금의 나도 나야\n말하자면, 나를 한 번만 봐 달란 말이야\n[Rap]\n누군가의 이름 뒤에 서 있던 날들\n내 이름은 서류 끝에 작게 남았지\n다시 써 보는 이력서 첫 줄\n떨려도 지우지 않을래\n늦었다는 말은 남들이 하는 말\n나는 지금부터 again\n언젠가 마주 앉는 날\n고개 숙이지 않을게\n[Bridge]\n내가 채워 온 시간들을\n또박또박 말할 거야\n[Final Chorus]\n말하자면, 일을 하고 싶다는 말이야\n말하자면, 출근하고 싶다는 말이야\n채워 온 날들도 나였고\n지금의 나도 나야\n말하자면, 이제 나를 불러 달란 말이야\n[Outro]\n말하자면...\n나 여기 있어요"
     },
 
     // ---------------- 출판·일러스트 ----------------

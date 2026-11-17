@@ -25,6 +25,8 @@
         "today": "It's okay not to be okay.",
         "notbad": "Bad day, not me.",
         "teacher": "Got the message?",
+        "again": "I'm still here.",
+        "again-acoustic": "Just voice and guitar.",   // [수정 2026-11-18] 담백한 목소리 = 기타와 목소리만
         "dream-book": "Who holds your dream?",
         "jamong": "Say what you feel.",
         "diary": "One character. Every day.",
@@ -58,7 +60,7 @@
     const TILE = {
         "school": ["gallery.jpg", 1.778], "dream-video": ["gallery.jpg", 1.778], "teen": ["gallery.jpg", 1.778],
         "couple": ["gallery.jpg", 1.778], "rap": ["gallery.jpg", 1.778],
-        "today": ["cover.webp", 1], "notbad": ["cover.webp", 1], "teacher": ["cover.webp", 1],
+        "today": ["cover.webp", 1], "notbad": ["cover.webp", 1], "teacher": ["cover.webp", 1], "again": ["cover.webp", 1], "again-acoustic": ["cover.webp", 1],
         "dream-book": ["img/book/p01.webp", 1], "jamong": ["gallery/01.webp", 0.667], "diary": ["gallery/01f.webp", 0.792],
         "sticker": ["gallery/01.webp", 1.03], "moon": ["gallery/01.webp", 0.708], "seminar": ["gallery/01.webp", 0.708],
         "starbucks": ["gallery/00.webp", 1.778], "costa": ["gallery/01b.webp", 0.642], "fashion": ["gallery/01.webp", 0.5625],
@@ -160,8 +162,18 @@
         return '<span class="g-disc' + (cls ? " " + cls : "") + '" aria-hidden="true"><img src="' + esc(img) + '" alt="" loading="lazy" decoding="async"><i></i></span>';
     }
     // 목록: 직접 디자인한 CD (검정 원판 + 미색 라벨 + 머스타드 트랙 번호)
+    // [수정 2026-11-18] 주제가 전용 라벨 색은 되돌림 → 모든 CD 같은 색 (검정 판 + 미색 라벨)
+    // [수정 2026-11-18] 제목에 "(…)"가 있으면 두 줄로: 큰 제목 + 작은 글씨 (예: Again, / Acoustic Ver.)
+    // [추가 2026-11-18] 곡 제목의 (…) 부분만 작게 (예: Again, (Acoustic Ver.) → 듣기 버튼과 한 줄에 들어가게)
+    //   · 크기·색은 css/gallery.css 맨 아래 ".g-ver"
+    function verTitle(t) {
+        const m = String(t).match(/^(.*?)\s*(\(.+\))\s*$/);
+        return m ? esc(m[1]) + ' <small class="g-ver">' + esc(m[2]) + "</small>" : esc(t);
+    }
     function cd(n, t) {
-        return '<span class="g-cd" aria-hidden="true"><span class="g-cd-lab"><b>' + nn(n) + "</b><em>" + esc(t) + "</em></span></span>";
+        const m = String(t).match(/^(.*?)\s*\((.+)\)\s*$/);
+        const title = m ? esc(m[1]) + "<small>" + esc(m[2]) + "</small>" : esc(t);
+        return '<span class="g-cd" aria-hidden="true"><span class="g-cd-lab"><b>' + nn(n) + "</b><em>" + title + "</em></span></span>";
     }
     function link(w, inner, cls) {
         return '<a class="g-link' + (cls ? " " + cls : "") + '" href="?w=' + encodeURIComponent(w.id) + '" data-open="' + esc(w.id) + '" aria-label="' + esc(w.title) + ' 자세히 보기">' + inner + "</a>";
@@ -193,7 +205,7 @@
             return '<div class="g-12 g-headrow g-musichead"><div class="g-c8"><p class="g-ko-t">' + esc(sp.ko) + '</p><h2 class="g-big g-huge">' + esc(sp.big) + '<span class="g-dot">.</span>' + '<span class="g-dancer" aria-hidden="true"><video muted loop playsinline preload="none" poster="img/mini/emongc-dance-poster.webp" data-src="' + DANCER + '"></video></span>' + '</h2></div><p class="g-c4 g-lead g-end">' + sp.lead + '</p></div>' + '<div class="g-12 g-al">' + sp.works.map(function (w, i) {
                 const span = 12 / Math.min(sp.works.length, 3);
                 return '<div class="g-track" style="grid-column:span ' + span + '">' + link(w, cd(i + 1, w.title), "g-cd-link") +
-                    '<div class="g-trk"><span class="g-k g-m">Track ' + nn(i + 1) + "</span>" + '<div class="g-mrow">' + link(w, '<h3 class="g-mid">' + esc(w.title) + "</h3>") +
+                    '<div class="g-trk"><span class="g-k g-m">Track ' + nn(i + 1) + "</span>" + '<div class="g-mrow">' + link(w, '<h3 class="g-mid">' + verTitle(w.title) + "</h3>") +
                     (w.audio ? '<button type="button" class="g-play" data-audio="' + esc(src(w, w.audio)) + '" aria-pressed="false">▶ 듣기</button>' : "") + "</div>" +
                     '<p class="g-en-s">' + esc(head(w)) + "</p><p>" + esc(w.sub || "") + "</p></div></div>";
             }).join("") + "</div>";
@@ -219,7 +231,7 @@
                 sp.works.map(function (w, i) {
                     const sl = files(w).slice(0, 4);
                     return '<div class="g-12 g-al g-lec' + (i ? " g-rule" : "") + '"><div class="g-c4">' + '<span class="g-n g-n-big">' + w._no + "</span>" +
-                        link(w, '<h3 class="g-mid">' + esc(w.title) + "</h3>") + '<p class="g-en-s">' + esc(head(w)) + '</p><p class="g-sm">' + esc(w.sub || "") + "</p></div>" +
+                        link(w, '<h3 class="g-mid">' + verTitle(w.title) + "</h3>") + '<p class="g-en-s">' + esc(head(w)) + '</p><p class="g-sm">' + esc(w.sub || "") + "</p></div>" +
                         '<div class="g-c8">' + link(w, '<span class="g-slides">' + sl.map(function (f) { return '<span class="g-pic">' + img(src(w, f)) + "</span>"; }).join("") + "</span>") + "</div></div>";
                 }).join("");
         },
