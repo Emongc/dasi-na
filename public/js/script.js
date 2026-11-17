@@ -1,3 +1,36 @@
+// ##################################################################
+// script.js 목차 — 메인 페이지(index.html)의 움직임·기능
+// ------------------------------------------------------------------
+// ▶ 찾는 법: Ctrl+F 로 [검색어]를 찾으면 그 위치로 이동해요.
+// ▶ 다른 JS 파일: works.js + works-data.js(작품 카드·상세창, 작품 글은 works-data.js)
+//                 hats.js(히어로 모자 갈아쓰기) · gallery.js(Gallery 페이지)
+//                 book.js(책 페이지) · concept-switch.js(Studio/Gallery 전환) · admin.js(관리자)
+//
+// [공통]   새로고침해도 보던 자리 유지 ...... [수정] 새로고침하면 보던 자리
+//          크레파스 테두리 그리기 ........... [추가] 크레파스 테두리 공통
+// [메뉴]   휴대폰 메뉴 ..................... 1. 휴대폰 메뉴
+//          로고 클릭·애니메이션 ............. [추가] 로고(Again,) / [수정] 로고 "Again,"
+//          스크롤하면 메뉴 활성화 ........... 4. 네비게이션 스크롤 스파이
+//          내리면 작아지는 메뉴 ............. [추가] 내리면 작아지는 상단 메뉴
+//          고정 메뉴 높이만큼 자리 비우기 .... [추가] 고정 메뉴의 원래 높이
+// [HERO]   캐릭터 등장 + 인사 영상 .......... HERO: PORTFOLIO 글자
+//          테두리 크기 맞추기 ............... HERO 테두리
+//          (말풍선·모자 → js/hats.js)
+// [이력서] 경력·스킬·학력·자격증 탭 ......... [수정] RESUME 탭
+// [WORKS]  탭 위·아래 손그림 선 ............. [추가] WORKS 탭 위·아래 선
+// [CONTACT] 문의 폼 → 서버 전송 ............. 3. 문의 폼
+//          편지 상자·버튼 테두리 ............ [수정] WORKS 는 js/works.js
+//          이메일 복사·전송 성공 반응 ........ [추가] CONTACT: 이메일 복사
+//          춤 영상·말풍선 ................... [추가] CONTACT 춤 영상 / [수정] CONTACT 에몽씨 말풍선
+// [HISTORY] 세로선 연출 .................... [추가] 세로선 연출
+//          타임라인 돋보기·뷰어 ............. [수정] HISTORY 이미지
+//          "바쁘신 분은 직행" 버튼 .......... [추가] "바쁘신 분은 직행"
+// [맨 아래] TOP 버튼 ........................ 2. 맨 위로 가기 버튼
+//          마지막 장면 Thank you, ........... [추가] 마지막 장면
+// [폰]     PC 권장 포스트잇 ................. [수정] 휴대폰에서 PC 권장
+// [기타]   멈춘 영상 다시 재생 .............. [추가] 다른 페이지에 다녀오거나
+// ##################################################################
+
 // =========================================
 // 다시, 나 - 기능 파일 (script.js)
 // =========================================
@@ -688,28 +721,6 @@ document.addEventListener("DOMContentLoaded", function () {
             f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
         } // 포커스가 뷰어 밖으로 나가지 않게
     });
-});
-
-// =========================================
-// CONTACT 글자 자동 한 글자씩 쪼개기 (떨림 효과용)
-// =========================================
-document.addEventListener("DOMContentLoaded", function() {
-    const contactTextEl = document.getElementById("animatedContactText");
-    
-    if (contactTextEl) {
-        const text = contactTextEl.textContent;
-        contactTextEl.innerHTML = ""; // 기존 텍스트 초기화
-        
-        for (let i = 0; i < text.length; i++) {
-            const span = document.createElement("span");
-            if (text[i] === " ") {
-                span.innerHTML = "&nbsp;";
-            } else {
-                span.textContent = text[i];
-            }
-            contactTextEl.appendChild(span);
-        }
-    }
 });
 
 // ==================================================
@@ -1522,7 +1533,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     function resume() {
         if (document.hidden) return;
-        document.querySelectorAll(".hv-hello, .ct-dance-video").forEach(function (v) {
+        document.querySelectorAll(".ct-dance-video").forEach(function (v) {
             const r = v.getBoundingClientRect();
             if (v.paused && !v.ended && r.width > 0 && r.bottom > 0 && r.top < window.innerHeight) v.play().catch(function () {});
         });

@@ -534,11 +534,9 @@
 @media (prefers-reduced-motion: reduce) {
     .wk-thumb img, .wk-stk img, .wkv, .wkv-box, .wkv-track, .wkv-proc-img img, .wkv-cdwrap, .wkv-booklet { transition: none; }
     .wk-grid.wk-in .wk-card, .wk-row:hover .wk-cd, .wk-row.cd-playing .wk-cd, .wkv-slide-music.playing .wkv-disc { animation: none; }
-    .wkv-flip-in { transition: none; }
+
 }
 
-/* 예전 #works 규칙이 섹션 전체를 손글씨로 지정해서, 설명 글은 고딕으로 되돌림 */
-#works .wk-tags { font-family: 'Noto Sans KR', sans-serif; }
 
 /* ---------- 상세창: 브랜드 장표 (works-data.js 의 brand) ---------- */
 .wkv-brand { margin-top: 18px; padding: 16px 16px 14px; background: #F6F2EA; }

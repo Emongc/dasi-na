@@ -4,4 +4,8 @@ node_modules/
 # 비밀번호가 들어 있는 환경변수 파일 (절대 올리지 않음)
 .env
 *.zip
-backup/
+backup/ 
+# local backup folders - do not upload 
+_backup1/ 
+_backup2/ 
+_backup/

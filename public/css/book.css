@@ -136,7 +136,7 @@ body {
 .bk-count { margin: 0; min-width: 110px; text-align: center; font-size: 1.3rem; font-weight: 700; }
 .bk-bar { width: min(320px, 70vw); height: 3px; margin: 12px 0 0; background: #e6e2da; }
 .bk-bar span { display: block; height: 100%; width: 0; background: rgba(217, 164, 65, 0.9); }
-.bk-hint { margin: 10px 0 0; font-size: 0.8rem; color: #8a8a8a; }
+
 
 /* ---------- 전체보기 ---------- */
 .bk-all { max-width: 1200px; margin: 0 auto; padding: 24px 24px 60px; }

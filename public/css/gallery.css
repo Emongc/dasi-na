@@ -63,8 +63,7 @@ body.g-lock .g-top { transform: translateY(-101%); }
 .g-now::after { content: " ≡"; opacity: 0.5; }
 .g-now:empty::after { content: ""; }
 .g-now:hover u { border-bottom-width: 4px; }
-.g-back { justify-self: end; font-size: 0.85rem; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
-.g-back:hover { border-color: currentColor; }
+
 
 /* ---------- 첫 화면: 흑백 영상 + 아주 큰 글자 ---------- */
 .g-hero {
@@ -112,12 +111,10 @@ body.g-lock .g-top { transform: translateY(-101%); }
 .g-stage.off { height: auto; }
 .g-ch { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.1em 0 0.06em; margin: -0.1em 0 -0.06em; }
 .g-chi { display: inline-block; will-change: transform; }
-.g-olp { will-change: transform, opacity; }
+
 /* 글자 모양으로 뚫린 검은 판: 판 안의 흰 글자 자리에서만 아래 영상이 보임 */
 .g-ko { position: absolute; inset: 0; z-index: 2; background: #000; mix-blend-mode: multiply; opacity: 0; pointer-events: none; will-change: transform, opacity; }
-.g-ko-w { position: absolute; white-space: pre; color: #fff; font-family: var(--g-en); font-weight: 800; line-height: 0.84; text-transform: uppercase; }
-.g-sig { position: absolute; z-index: 3; overflow: hidden; pointer-events: none; padding-bottom: 0.15em; }
-.g-sig-in { display: block; transform: translateY(110%); font-family: var(--g-ko); font-size: clamp(0.95rem, 1.5vw, 1.35rem); font-weight: 500; letter-spacing: -0.01em; color: #fff; white-space: nowrap; will-change: transform, opacity; }
+
 .g-hero-down { transition: opacity 0.3s; }
 .g-hero.g-knock .g-hero-media { filter: grayscale(1) contrast(1.15) brightness(1.05); }
 .g-hero.g-knock::after { opacity: 0; }
@@ -260,7 +257,7 @@ body.g-lock .g-top { transform: translateY(-101%); }
 .g-play:hover, .g-play[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 
 /* 출판: BOOKS. + 춤추는 에몽씨 (발끝 = 글자 아랫선) */
-.g-bookhead { position: relative; margin-bottom: clamp(40px, 5vw, 72px); }
+
 .g-huge { font-size: clamp(3rem, 10vw, 11.5rem); display: flex; align-items: flex-end; line-height: 0.78; }
 .g-huge .g-dot { color: var(--mus); }
 .g-dancer { display: block; flex: none; width: 0.62em; aspect-ratio: 480 / 466; margin-left: 0.04em; margin-bottom: -0.02em; }
@@ -298,7 +295,7 @@ body.g-lock .g-top { transform: translateY(-101%); }
     animation: gSpin 9s linear infinite;
 }
 /* 표지 가장자리 흰 테두리가 보이지 않게 살짝 키워 원판을 꽉 채움 */
-.g-disc img, .g-tile .g-disc img, .g-tile:hover .g-disc img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.12); }
+.g-disc img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.12); }
 /* 원판 결 + 빛 반사 */
 .g-disc::before {
     content: "";
@@ -564,7 +561,7 @@ body.g-lock .g-top { transform: translateY(-101%); }
     .g-intro-title { font-size: clamp(3.2rem, 17vw, 6rem); }
     .g-intro-sub { left: var(--g-pad); right: auto; text-align: left; top: 80px; }
     .g-hero-down { display: none; }
-    .g-sig-in { white-space: normal; max-width: calc(100vw - 32px); }
+
     .g-now { display: none; }
     .g-top { grid-template-columns: 1fr 1fr; }
     /* 목록: 펼침면을 한 줄로 쌓기 */
@@ -600,7 +597,7 @@ body.g-lock .g-top { transform: translateY(-101%); }
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .g-intro-title span { animation: none; opacity: 1; transform: none; }
-    .g-pic img, .g-media video, .gd-proc img { transition: none; }
+    .g-pic img, .gd-proc img { transition: none; }
     .g-disc { animation: none; }
 }
 
