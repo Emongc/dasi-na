@@ -80,7 +80,9 @@
 #works .wk-desc { margin: 3px 0 0; font-family: 'Noto Sans KR', sans-serif; font-size: 0.8rem; line-height: 1.5; color: #6F685D; }
 
 /* ---------- 음악: 플레이리스트 ---------- */
-.wk-grid.is-list { display: block; max-width: 760px; }
+/* [수정 2026-11-18] 음악 목록 폭: 760px 제한을 없애 위 탭 메뉴 선(WORKS 탭 위·아래 선)과 같은 길이로 끝나게
+   · 예전처럼 좁게 하려면 max-width: 760px; 를 다시 넣으면 됨 */
+.wk-grid.is-list { display: block; }
 .wk-row {
     display: grid;
     grid-template-columns: 64px minmax(0, 1fr) auto;
